@@ -1,27 +1,28 @@
 "use client";
 
-import { useState } from "react";
+import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 
-interface ProfileSetupFormProps {
-  email: string;
-}
+type FormValues = {
+  display_name: string;
+  promptpay_number: string;
+};
 
-export function ProfileSetupForm({ email }: ProfileSetupFormProps) {
-  const [displayName, setDisplayName] = useState("");
-  const [promptpayNumber, setPromptpayNumber] = useState("");
+interface ProfileSetupFormProps {}
+
+export function ProfileSetupForm({}: ProfileSetupFormProps) {
   const router = useRouter();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<FormValues>();
 
-  async function handleSubmit() {
-    if (!displayName || !promptpayNumber) return;
-
+  async function onSubmit(data: FormValues) {
     const res = await fetch("/api/users/me", {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        display_name: displayName,
-        promptpay_number: promptpayNumber,
-      }),
+      body: JSON.stringify(data),
     });
 
     if (res.ok) {
@@ -30,22 +31,43 @@ export function ProfileSetupForm({ email }: ProfileSetupFormProps) {
   }
 
   return (
-    <div>
-      <h1>ตั้งค่าโปรไฟล์</h1>
-      <p>{email}</p>
-      <input
-        placeholder="ชื่อที่แสดง"
-        type="text"
-        value={displayName}
-        onChange={(e) => setDisplayName(e.target.value)}
-      />
-      <input
-        placeholder="เบอร์ PromptPay"
-        type="tel"
-        value={promptpayNumber}
-        onChange={(e) => setPromptpayNumber(e.target.value)}
-      />
-      <button onClick={handleSubmit}>บันทึก</button>
+    <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-2">
+        <input
+          {...register("display_name", { required: "กรุณากรอกชื่อ" })}
+          placeholder="ชื่อที่แสดง"
+          type="text"
+          className="border rounded-full w-fit"
+        />
+        {errors.display_name && (
+          <p className="text-red-500">{errors.display_name.message}</p>
+        )}
+      </div>
+
+      <div className="flex flex-col gap-2">
+        <input
+          {...register("promptpay_number", {
+            required: "กรุณากรอกเบอร์",
+            pattern: {
+              value: /^0\d{9}$/,
+              message: "เบอร์โทรต้องเป็นตัวเลข 10 หลัก ที่ขึ้นต้นด้วยเลข 0",
+            },
+          })}
+          placeholder="เบอร์ PromptPay"
+          type="tel"
+          className="border rounded-full w-fit"
+        />
+        {errors.promptpay_number && (
+          <p className="text-red-500">{errors.promptpay_number.message}</p>
+        )}
+      </div>
+
+      <button
+        className="cursor-pointer border rounded-xl px-4 py-2"
+        onClick={handleSubmit(onSubmit)}
+      >
+        บันทึก
+      </button>
     </div>
   );
 }
