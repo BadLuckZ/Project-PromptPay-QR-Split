@@ -1,3 +1,4 @@
+import { BillCard } from "@/components/bills";
 import { createClient } from "@/supabase/server";
 import { Bill } from "@/types";
 
@@ -25,11 +26,7 @@ export default async function BillsPage() {
       <hr />
 
       {bills?.map((bill) => (
-        <div key={bill.id}>
-          <p>{bill.bill_name}</p>
-          <p>{bill.promptpay_number}</p>
-          <hr />
-        </div>
+        <BillCard key={bill.id} bill={bill} />
       ))}
     </div>
   );
