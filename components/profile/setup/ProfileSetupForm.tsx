@@ -3,7 +3,11 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
-export function ProfileSetupForm({ email }: { email: string }) {
+interface ProfileSetupFormProps {
+  email: string;
+}
+
+export function ProfileSetupForm({ email }: ProfileSetupFormProps) {
   const [displayName, setDisplayName] = useState("");
   const [promptpayNumber, setPromptpayNumber] = useState("");
   const router = useRouter();

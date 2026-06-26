@@ -1,4 +1,6 @@
+import { Topbar } from "@/components/Topbar";
 import { BillCard } from "@/components/bills";
+
 import { createClient } from "@/supabase/server";
 import { Bill } from "@/types";
 
@@ -19,7 +21,7 @@ export default async function BillsPage() {
 
   return (
     <div>
-      <h1>Bill ของฉัน</h1>
+      <Topbar title="Bill ของฉัน" />
       <p>{user?.email}</p>
       <p>จำนวน bill: {bills?.length ?? 0}</p>
 

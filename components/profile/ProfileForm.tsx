@@ -5,7 +5,11 @@ import { createClient } from "@/supabase/client";
 import { useRouter } from "next/navigation";
 import { User } from "@/types";
 
-export function ProfileForm({ profile }: { profile: User }) {
+interface ProfileFormProps {
+  profile: User;
+}
+
+export function ProfileForm({ profile }: ProfileFormProps) {
   const [displayName, setDisplayName] = useState(profile.display_name);
   const [promptpayNumber, setPromptpayNumber] = useState(
     profile.promptpay_number,

@@ -1,3 +1,4 @@
+import { Topbar } from "@/components/Topbar";
 import { ProfileForm } from "@/components/profile";
 import { createClient } from "@/supabase/server";
 import { User } from "@/types";
@@ -16,7 +17,7 @@ export default async function ProfilePage() {
 
   return (
     <div>
-      <h1>โปรไฟล์</h1>
+      <Topbar title="โปรไฟล์" />
       <p>{user?.email}</p>
       <ProfileForm profile={profile as User} />
     </div>

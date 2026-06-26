@@ -1,6 +1,10 @@
 import { Bill } from "@/types";
 
-export function BillCard({ bill }: { bill: Bill }) {
+interface BillCardProps {
+  bill: Bill;
+}
+
+export function BillCard({ bill }: BillCardProps) {
   return (
     <div>
       <p>{bill.bill_name}</p>
