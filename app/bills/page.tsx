@@ -1,5 +1,7 @@
+import Link from "next/link";
 import { Topbar } from "@/components/Topbar";
 import { BillCard } from "@/components/bills";
+import { Button } from "@/components/ui/button";
 
 import { createClient } from "@/supabase/server";
 import { Bill } from "@/types";
@@ -24,6 +26,8 @@ export default async function BillsPage() {
       <Topbar title="Bill ของฉัน" />
       <p>{user?.email}</p>
       <p>จำนวน bill: {bills?.length ?? 0}</p>
+
+      <Button render={<Link href="/bills/create" />}>สร้าง bill ใหม่</Button>
 
       <hr />
 
