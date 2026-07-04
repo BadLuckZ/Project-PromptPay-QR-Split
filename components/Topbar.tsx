@@ -3,10 +3,11 @@ import { ChevronLeft } from "lucide-react";
 
 interface TopbarProps {
   title: string;
+  subtitle?: string;
   backHref?: string;
 }
 
-export function Topbar({ title, backHref }: TopbarProps) {
+export function Topbar({ title, subtitle, backHref }: TopbarProps) {
   return (
     <div className="bg-primary px-4 py-4 flex items-center gap-2">
       {backHref && (
@@ -17,9 +18,14 @@ export function Topbar({ title, backHref }: TopbarProps) {
           <ChevronLeft size={20} />
         </Link>
       )}
-      <p className="text-primary-foreground text-[15px] font-medium m-0">
-        {title}
-      </p>
+      <div>
+        <p className="text-primary-foreground text-[15px] font-medium m-0">
+          {title}
+        </p>
+        {subtitle && (
+          <p className="text-primary-foreground/80 text-xs m-0">{subtitle}</p>
+        )}
+      </div>
     </div>
   );
 }
