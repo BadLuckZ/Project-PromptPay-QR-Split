@@ -39,7 +39,11 @@ export function BillList({ bills }: BillList) {
   return (
     <div className="flex flex-col flex-1 min-h-0">
       <div className="p-4 pb-2 flex flex-col gap-2.5 shrink-0">
-        <Button className="w-full" render={<Link href="/bills/create" />}>
+        <Button
+          className="w-full"
+          nativeButton={false}
+          render={<Link href="/bills/create" />}
+        >
           <Plus size={16} /> สร้าง bill ใหม่
         </Button>
 
