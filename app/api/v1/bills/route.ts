@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/supabase/server";
 import { ERROR_MESSAGES, MEMBER_AMOUNT_INVALID } from "@/lib/errors";
+import { Bill } from "@/types";
 
 interface MemberBody {
   member_name: string;
@@ -12,6 +13,62 @@ interface CreateBillBody {
   members: MemberBody[];
 }
 
+// List user's bills
+export async function GET() {
+  const supabase = await createClient();
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) {
+    return NextResponse.json(
+      { error: ERROR_MESSAGES.UNAUTHORIZED },
+      { status: 401 },
+    );
+  }
+
+  const { data: billsData, error: billsErr } = await supabase
+    .from("bills")
+    .select("*")
+    .eq("user_id", user.id)
+    .is("deleted_at", null)
+    .order("created_at", { ascending: false });
+
+  if (billsErr) {
+    return NextResponse.json(
+      { error: ERROR_MESSAGES.LOAD_BILLS_FAILED },
+      { status: 500 },
+    );
+  }
+
+  const bills = (billsData as Bill[]) ?? [];
+  const billIds = bills.map((bill) => bill.id);
+
+  const { data: membersData } = billIds.length
+    ? await supabase
+        .from("members")
+        .select("bill_id, amount, is_paid")
+        .in("bill_id", billIds)
+    : { data: [] };
+
+  const members =
+    (membersData as { bill_id: string; amount: number; is_paid: boolean }[]) ??
+    [];
+
+  const result: Bill[] = bills.map((bill) => {
+    const billMembers = members.filter((m) => m.bill_id === bill.id);
+    return {
+      ...bill,
+      memberCount: billMembers.length,
+      paidCount: billMembers.filter((m) => m.is_paid).length,
+      totalAmount: billMembers.reduce((sum, m) => sum + Number(m.amount), 0),
+    };
+  });
+
+  return NextResponse.json(result);
+}
+
+// Create a new bill
 export async function POST(req: Request) {
   const supabase = await createClient();
 

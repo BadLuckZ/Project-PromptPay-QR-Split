@@ -2,6 +2,7 @@ import { createClient } from "@/supabase/server";
 import { NextResponse } from "next/server";
 import { ERROR_MESSAGES } from "@/lib/errors";
 
+// Get User Profile
 export async function GET() {
   const supabase = await createClient();
   const {
@@ -31,6 +32,7 @@ export async function GET() {
   return NextResponse.json(profile);
 }
 
+// Update User Profile
 export async function PATCH(request: Request) {
   const supabase = await createClient();
 
