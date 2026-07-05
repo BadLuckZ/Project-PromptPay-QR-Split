@@ -8,7 +8,7 @@ export async function GET() {
   } = await supabase.auth.getUser();
 
   if (!user) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    return NextResponse.json({ error: "กรุณาเข้าสู่ระบบ" }, { status: 401 });
   }
 
   const { data: profile, error } = await supabase
@@ -18,7 +18,10 @@ export async function GET() {
     .single();
 
   if (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json(
+      { error: "ไม่สามารถโหลดข้อมูลผู้ใช้ได้" },
+      { status: 500 },
+    );
   }
 
   return NextResponse.json(profile);
@@ -31,7 +34,7 @@ export async function PATCH(request: Request) {
   } = await supabase.auth.getUser();
 
   if (!user) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    return NextResponse.json({ error: "กรุณาเข้าสู่ระบบ" }, { status: 401 });
   }
 
   const body = await request.json();
@@ -47,7 +50,10 @@ export async function PATCH(request: Request) {
     .single();
 
   if (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json(
+      { error: "บันทึกข้อมูลไม่สำเร็จ" },
+      { status: 500 },
+    );
   }
 
   return NextResponse.json(data);
