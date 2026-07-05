@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useForm, useFieldArray } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { Plus, Trash2 } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -19,7 +20,6 @@ import {
   AlertDialogCancel,
 } from "@/components/ui/alert-dialog";
 
-const OWNER_ID = 0;
 const AVATAR_COLORS = [
   "bg-warning text-warning-foreground",
   "bg-success text-success-foreground",
@@ -32,10 +32,12 @@ const SPLIT_TABS = [
 
 type SplitTab = (typeof SPLIT_TABS)[number]["value"];
 
-interface Participant {
-  id: number;
-  name: string;
-}
+type FormValues = {
+  bill_name: string;
+  total: string;
+  owner_amount: string;
+  participants: { name: string; amount: string }[];
+};
 
 interface CreateBillFormProps {
   ownerName: string;
@@ -49,44 +51,51 @@ function getInitials(name: string) {
 export function CreateBillForm({ ownerName }: CreateBillFormProps) {
   const router = useRouter();
   const [tab, setTab] = useState<SplitTab>("equal");
-  const [billName, setBillName] = useState("");
-  const [total, setTotal] = useState("");
-  const [participants, setParticipants] = useState<Participant[]>([]);
   const [newParticipantName, setNewParticipantName] = useState("");
-  const [customAmounts, setCustomAmounts] = useState<Record<number, string>>(
-    {},
-  );
   const [showConfirm, setShowConfirm] = useState(false);
-  const [nextId, setNextId] = useState(1);
-  const [billNameTouched, setBillNameTouched] = useState(false);
-  const [totalTouched, setTotalTouched] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
-  const totalCount = participants.length + 1;
+  const {
+    register,
+    handleSubmit,
+    watch,
+    control,
+    formState: { errors },
+  } = useForm<FormValues>({
+    mode: "onBlur",
+    defaultValues: {
+      bill_name: "",
+      total: "",
+      owner_amount: "",
+      participants: [],
+    },
+  });
+
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: "participants",
+  });
+
+  const billName = watch("bill_name");
+  const total = watch("total");
+  const ownerAmount = watch("owner_amount");
+  const participants = watch("participants");
+
   const totalNumber = Number(total) || 0;
+  const totalCount = fields.length + 1;
   const perPerson = totalCount > 0 ? Math.floor(totalNumber / totalCount) : 0;
 
-  const allIds = [OWNER_ID, ...participants.map((p) => p.id)];
-  const customTotal = allIds.reduce(
-    (sum, id) => sum + (Number(customAmounts[id]) || 0),
-    0,
-  );
+  const customTotal =
+    (Number(ownerAmount) || 0) +
+    participants.reduce((sum, p) => sum + (Number(p.amount) || 0), 0);
   const diff = totalNumber - customTotal;
 
   function addParticipant() {
     const name = newParticipantName.trim();
     if (!name) return;
-    setParticipants((prev) => [...prev, { id: nextId, name }]);
-    setNextId((id) => id + 1);
+    append({ name, amount: "" });
     setNewParticipantName("");
-  }
-
-  function removeParticipant(id: number) {
-    setParticipants((prev) => prev.filter((p) => p.id !== id));
-    setCustomAmounts((prev) => {
-      const next = { ...prev };
-      delete next[id];
-      return next;
-    });
   }
 
   const canSubmit =
@@ -94,7 +103,29 @@ export function CreateBillForm({ ownerName }: CreateBillFormProps) {
     totalNumber > 0 &&
     (tab === "equal" || diff === 0);
 
-  function handleConfirm() {
+  async function onSubmit(values: FormValues) {
+    setSubmitting(true);
+    setSubmitError(null);
+
+    const members = values.participants.map((p) => ({
+      member_name: p.name,
+      amount: tab === "equal" ? perPerson : Number(p.amount) || 0,
+    }));
+
+    const res = await fetch("/api/v1/bills", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ bill_name: values.bill_name, members }),
+    });
+
+    const data = await res.json();
+    setSubmitting(false);
+
+    if (!res.ok) {
+      setSubmitError(data.error ?? "เกิดข้อผิดพลาด กรุณาลองใหม่");
+      return;
+    }
+
     setShowConfirm(false);
     router.push("/bills");
   }
@@ -107,14 +138,14 @@ export function CreateBillForm({ ownerName }: CreateBillFormProps) {
           <Label htmlFor="bill-name">ชื่อ Bill</Label>
           <Input
             id="bill-name"
-            value={billName}
-            onChange={(e) => setBillName(e.target.value)}
-            onBlur={() => setBillNameTouched(true)}
-            placeholder="เช่น ข้าวเที่ยง, ดินเนอร์"
-            aria-invalid={billNameTouched && billName.trim() === ""}
+            {...register("bill_name", { required: "กรุณากรอกชื่อ Bill" })}
+            placeholder="กรุณากรอกชื่อ Bill"
+            aria-invalid={!!errors.bill_name}
           />
-          {billNameTouched && billName.trim() === "" && (
-            <p className="text-xs text-destructive">กรุณากรอกชื่อ Bill</p>
+          {errors.bill_name && (
+            <p className="text-xs text-destructive">
+              {errors.bill_name.message}
+            </p>
           )}
         </div>
 
@@ -124,14 +155,15 @@ export function CreateBillForm({ ownerName }: CreateBillFormProps) {
           <Input
             id="total"
             type="number"
-            value={total}
-            onChange={(e) => setTotal(e.target.value)}
-            onBlur={() => setTotalTouched(true)}
+            {...register("total", {
+              required: "กรุณากรอกยอดรวมมากกว่า 0",
+              validate: (v) => Number(v) > 0 || "กรุณากรอกยอดรวมมากกว่า 0",
+            })}
             placeholder="0.00"
-            aria-invalid={totalTouched && totalNumber <= 0}
+            aria-invalid={!!errors.total}
           />
-          {totalTouched && totalNumber <= 0 && (
-            <p className="text-xs text-destructive">กรุณากรอกยอดรวมมากกว่า 0</p>
+          {errors.total && (
+            <p className="text-xs text-destructive">{errors.total.message}</p>
           )}
         </div>
 
@@ -197,34 +229,34 @@ export function CreateBillForm({ ownerName }: CreateBillFormProps) {
                 </AvatarFallback>
               </Avatar>
               <div className="flex-1">
-                <p className="text-sm font-medium">{ownerName}</p>
+                <p className="text-sm font-medium">{ownerName} (ตัวเอง)</p>
                 <p className="text-xs text-muted-foreground">
                   ฿{perPerson.toLocaleString()}
                 </p>
               </div>
             </div>
 
-            {participants.map((p, i) => (
+            {fields.map((f, i) => (
               <div
-                key={p.id}
+                key={f.id}
                 className="flex items-center gap-2.5 border-b border-border py-2.5"
               >
                 <Avatar>
                   <AvatarFallback
                     className={AVATAR_COLORS[i % AVATAR_COLORS.length]}
                   >
-                    {getInitials(p.name)}
+                    {getInitials(f.name)}
                   </AvatarFallback>
                 </Avatar>
                 <div className="flex-1">
-                  <p className="text-sm">{p.name}</p>
+                  <p className="text-sm">{f.name}</p>
                   <p className="text-xs text-muted-foreground">
                     ฿{perPerson.toLocaleString()}
                   </p>
                 </div>
                 <button
                   type="button"
-                  onClick={() => removeParticipant(p.id)}
+                  onClick={() => remove(i)}
                   className="text-destructive p-1 cursor-pointer"
                   aria-label="ลบผู้เข้าร่วม"
                 >
@@ -241,46 +273,36 @@ export function CreateBillForm({ ownerName }: CreateBillFormProps) {
                   {getInitials(ownerName)}
                 </AvatarFallback>
               </Avatar>
-              <div className="flex-1 text-sm font-medium">{ownerName}</div>
+              <div className="flex-1 text-sm font-medium">
+                {ownerName} (ตัวเอง)
+              </div>
               <Input
                 type="number"
-                value={customAmounts[OWNER_ID] ?? ""}
-                onChange={(e) =>
-                  setCustomAmounts((prev) => ({
-                    ...prev,
-                    [OWNER_ID]: e.target.value,
-                  }))
-                }
+                {...register("owner_amount")}
                 placeholder="฿0"
                 className="w-24 text-right"
               />
             </div>
 
-            {participants.map((p, i) => (
-              <div key={p.id} className="flex items-center gap-2.5 py-1">
+            {fields.map((f, i) => (
+              <div key={f.id} className="flex items-center gap-2.5 py-1">
                 <Avatar>
                   <AvatarFallback
                     className={AVATAR_COLORS[i % AVATAR_COLORS.length]}
                   >
-                    {getInitials(p.name)}
+                    {getInitials(f.name)}
                   </AvatarFallback>
                 </Avatar>
-                <div className="flex-1 text-sm">{p.name}</div>
+                <div className="flex-1 text-sm">{f.name}</div>
                 <Input
                   type="number"
-                  value={customAmounts[p.id] ?? ""}
-                  onChange={(e) =>
-                    setCustomAmounts((prev) => ({
-                      ...prev,
-                      [p.id]: e.target.value,
-                    }))
-                  }
+                  {...register(`participants.${i}.amount`)}
                   placeholder="฿0"
                   className="w-24 text-right"
                 />
                 <button
                   type="button"
-                  onClick={() => removeParticipant(p.id)}
+                  onClick={() => remove(i)}
                   className="text-destructive p-1 cursor-pointer"
                   aria-label="ลบผู้เข้าร่วม"
                 >
@@ -328,10 +350,16 @@ export function CreateBillForm({ ownerName }: CreateBillFormProps) {
               {totalNumber.toLocaleString()}
             </AlertDialogDescription>
           </AlertDialogHeader>
+          {submitError && (
+            <p className="text-sm text-destructive">{submitError}</p>
+          )}
           <AlertDialogFooter>
-            <AlertDialogCancel>กลับไปแก้ไข</AlertDialogCancel>
-            <AlertDialogAction onClick={handleConfirm}>
-              สร้าง Bill
+            <AlertDialogCancel disabled={submitting}>แก้ไข</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleSubmit(onSubmit)}
+              disabled={submitting}
+            >
+              {submitting ? "กำลังสร้าง..." : "สร้าง Bill"}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

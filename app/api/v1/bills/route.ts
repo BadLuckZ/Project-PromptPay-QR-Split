@@ -2,14 +2,14 @@ import { NextResponse } from "next/server";
 import { createClient } from "@/supabase/server";
 import { ERROR_MESSAGES, MEMBER_AMOUNT_INVALID } from "@/lib/errors";
 
-interface Member {
+interface MemberBody {
   member_name: string;
   amount: number;
 }
 
 interface CreateBillBody {
   bill_name: string;
-  members: Member[];
+  members: MemberBody[];
 }
 
 export async function POST(req: Request) {
