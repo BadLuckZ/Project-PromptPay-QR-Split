@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/supabase/server";
+import { ERROR_MESSAGES, MEMBER_AMOUNT_INVALID } from "@/lib/errors";
 
 interface Member {
   member_name: string;
@@ -19,7 +20,10 @@ export async function POST(req: Request) {
     data: { user },
   } = await supabase.auth.getUser();
   if (!user) {
-    return NextResponse.json({ error: "กรุณาเข้าสู่ระบบ" }, { status: 401 });
+    return NextResponse.json(
+      { error: ERROR_MESSAGES.UNAUTHORIZED },
+      { status: 401 },
+    );
   }
 
   const { data: profile, error: profileErr } = await supabase
@@ -29,7 +33,7 @@ export async function POST(req: Request) {
     .single();
   if (profileErr || !profile) {
     return NextResponse.json(
-      { error: "ไม่พบข้อมูลผู้ใช้ กรุณาตั้งค่าโปรไฟล์" },
+      { error: ERROR_MESSAGES.PROFILE_NOT_FOUND },
       { status: 401 },
     );
   }
@@ -40,7 +44,7 @@ export async function POST(req: Request) {
     body = await req.json();
   } catch {
     return NextResponse.json(
-      { error: "รูปแบบข้อมูลไม่ถูกต้อง" },
+      { error: ERROR_MESSAGES.INVALID_BODY },
       { status: 400 },
     );
   }
@@ -48,12 +52,15 @@ export async function POST(req: Request) {
   const billName = body.bill_name?.trim();
   const members = Array.isArray(body.members) ? body.members : [];
   if (!billName) {
-    return NextResponse.json({ error: "กรุณากรอกชื่อบิล" }, { status: 400 });
+    return NextResponse.json(
+      { error: ERROR_MESSAGES.BILL_NAME_REQUIRED },
+      { status: 400 },
+    );
   }
 
   if (members.length === 0) {
     return NextResponse.json(
-      { error: "ต้องมีผู้เข้าร่วมอย่างน้อย 1 คน" },
+      { error: ERROR_MESSAGES.MEMBERS_REQUIRED },
       { status: 400 },
     );
   }
@@ -63,14 +70,14 @@ export async function POST(req: Request) {
     const amount = Number(m.amount);
     if (!name) {
       return NextResponse.json(
-        { error: "มีผู้เข้าร่วมที่ยังไม่มีชื่อ" },
+        { error: ERROR_MESSAGES.MEMBER_NAME_REQUIRED },
         { status: 400 },
       );
     }
 
     if (!Number.isFinite(amount) || amount <= 0) {
       return NextResponse.json(
-        { error: `ยอดของ "${name}" ไม่ถูกต้อง` },
+        { error: MEMBER_AMOUNT_INVALID(name) },
         { status: 400 },
       );
     }
@@ -89,7 +96,10 @@ export async function POST(req: Request) {
     .single();
 
   if (billErr || !bill) {
-    return NextResponse.json({ error: "สร้างบิลไม่สำเร็จ" }, { status: 500 });
+    return NextResponse.json(
+      { error: ERROR_MESSAGES.CREATE_BILL_FAILED },
+      { status: 500 },
+    );
   }
 
   // Insert members
@@ -104,7 +114,7 @@ export async function POST(req: Request) {
   if (memErr) {
     await supabase.from("bills").delete().eq("id", bill.id);
     return NextResponse.json(
-      { error: "บันทึกผู้เข้าร่วมไม่สำเร็จ" },
+      { error: ERROR_MESSAGES.SAVE_MEMBERS_FAILED },
       { status: 500 },
     );
   }

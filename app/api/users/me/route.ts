@@ -1,5 +1,6 @@
 import { createClient } from "@/supabase/server";
 import { NextResponse } from "next/server";
+import { ERROR_MESSAGES } from "@/lib/errors";
 
 export async function GET() {
   const supabase = await createClient();
@@ -8,7 +9,10 @@ export async function GET() {
   } = await supabase.auth.getUser();
 
   if (!user) {
-    return NextResponse.json({ error: "กรุณาเข้าสู่ระบบ" }, { status: 401 });
+    return NextResponse.json(
+      { error: ERROR_MESSAGES.UNAUTHORIZED },
+      { status: 401 },
+    );
   }
 
   const { data: profile, error } = await supabase
@@ -19,7 +23,7 @@ export async function GET() {
 
   if (error) {
     return NextResponse.json(
-      { error: "ไม่สามารถโหลดข้อมูลผู้ใช้ได้" },
+      { error: ERROR_MESSAGES.LOAD_PROFILE_FAILED },
       { status: 500 },
     );
   }
@@ -29,12 +33,16 @@ export async function GET() {
 
 export async function PATCH(request: Request) {
   const supabase = await createClient();
+
   const {
     data: { user },
   } = await supabase.auth.getUser();
 
   if (!user) {
-    return NextResponse.json({ error: "กรุณาเข้าสู่ระบบ" }, { status: 401 });
+    return NextResponse.json(
+      { error: ERROR_MESSAGES.UNAUTHORIZED },
+      { status: 401 },
+    );
   }
 
   const body = await request.json();
@@ -51,7 +59,7 @@ export async function PATCH(request: Request) {
 
   if (error) {
     return NextResponse.json(
-      { error: "บันทึกข้อมูลไม่สำเร็จ" },
+      { error: ERROR_MESSAGES.SAVE_PROFILE_FAILED },
       { status: 500 },
     );
   }
