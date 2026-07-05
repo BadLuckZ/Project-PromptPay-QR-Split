@@ -1,50 +1,32 @@
+import { headers, cookies } from "next/headers";
 import { BillList } from "@/components/bills";
 import { Topbar } from "@/components/Topbar";
-
-import { createClient } from "@/supabase/server";
 import { Bill } from "@/types";
 
 export default async function BillsPage() {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  async function getBills(): Promise<Bill[]> {
+    const headersList = await headers();
+    const cookieStore = await cookies();
+    const host = headersList.get("host");
+    const protocol =
+      headersList.get("x-forwarded-proto") ??
+      (process.env.NODE_ENV === "development" ? "http" : "https");
 
-  const { data: billsData } = await supabase
-    .from("bills")
-    .select("*")
-    .eq("user_id", user!.id)
-    .is("deleted_at", null)
-    .order("created_at", { ascending: false });
+    const res = await fetch(`${protocol}://${host}/api/v1/bills`, {
+      headers: { cookie: cookieStore.toString() },
+      cache: "no-store",
+    });
 
-  const bills = (billsData as Bill[]) ?? [];
-  const billIds = bills.map((bill) => bill.id);
+    if (!res.ok) return [];
+    return res.json();
+  }
 
-  const { data: membersData } = billIds.length
-    ? await supabase
-        .from("members")
-        .select("bill_id, amount, is_paid")
-        .in("bill_id", billIds)
-    : { data: [] };
-
-  const members =
-    (membersData as { bill_id: string; amount: number; is_paid: boolean }[]) ??
-    [];
-
-  const filteredBills: Bill[] = bills.map((bill) => {
-    const billMembers = members.filter((m) => m.bill_id === bill.id);
-    return {
-      ...bill,
-      memberCount: billMembers.length,
-      paidCount: billMembers.filter((m) => m.is_paid).length,
-      totalAmount: billMembers.reduce((sum, m) => sum + Number(m.amount), 0),
-    };
-  });
+  const bills = await getBills();
 
   return (
     <div className="flex flex-col flex-1">
       <Topbar title="Bill ของฉัน" subtitle={`${bills.length} รายการ`} />
-      <BillList bills={filteredBills} />
+      <BillList bills={bills} />
     </div>
   );
 }
