@@ -28,7 +28,7 @@ export function ProfileForm({ profile }: ProfileFormProps) {
   });
 
   async function onSubmit(data: FormValues) {
-    const res = await fetch("/api/users/me", {
+    const res = await fetch("/api/v1/users/me", {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data),

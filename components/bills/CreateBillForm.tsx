@@ -60,6 +60,8 @@ export function CreateBillForm({ ownerName }: CreateBillFormProps) {
   const [nextId, setNextId] = useState(1);
   const [billNameTouched, setBillNameTouched] = useState(false);
   const [totalTouched, setTotalTouched] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
   const totalCount = participants.length + 1;
   const totalNumber = Number(total) || 0;
@@ -94,7 +96,29 @@ export function CreateBillForm({ ownerName }: CreateBillFormProps) {
     totalNumber > 0 &&
     (tab === "equal" || diff === 0);
 
-  function handleConfirm() {
+  async function handleConfirm() {
+    setSubmitting(true);
+    setSubmitError(null);
+
+    const members = participants.map((p) => ({
+      member_name: p.name,
+      amount: tab === "equal" ? perPerson : Number(customAmounts[p.id]) || 0,
+    }));
+
+    const res = await fetch("/api/v1/bills", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ bill_name: billName, members }),
+    });
+
+    const data = await res.json();
+    setSubmitting(false);
+
+    if (!res.ok) {
+      setSubmitError(data.error ?? "เกิดข้อผิดพลาด กรุณาลองใหม่");
+      return;
+    }
+
     setShowConfirm(false);
     router.push("/bills");
   }
@@ -328,10 +352,13 @@ export function CreateBillForm({ ownerName }: CreateBillFormProps) {
               {totalNumber.toLocaleString()}
             </AlertDialogDescription>
           </AlertDialogHeader>
+          {submitError && (
+            <p className="text-sm text-destructive">{submitError}</p>
+          )}
           <AlertDialogFooter>
-            <AlertDialogCancel>กลับไปแก้ไข</AlertDialogCancel>
-            <AlertDialogAction onClick={handleConfirm}>
-              สร้าง Bill
+            <AlertDialogCancel disabled={submitting}>แก้ไข</AlertDialogCancel>
+            <AlertDialogAction onClick={handleConfirm} disabled={submitting}>
+              {submitting ? "กำลังสร้าง..." : "สร้าง Bill"}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
