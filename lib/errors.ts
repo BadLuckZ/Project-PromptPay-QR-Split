@@ -9,6 +9,7 @@ export const ERROR_MESSAGES = {
   SAVE_MEMBERS_FAILED: "บันทึกผู้เข้าร่วมไม่สำเร็จ",
   LOAD_PROFILE_FAILED: "ไม่สามารถโหลดข้อมูลผู้ใช้ได้",
   SAVE_PROFILE_FAILED: "บันทึกข้อมูลไม่สำเร็จ",
+  LOAD_BILLS_FAILED: "ไม่สามารถโหลดรายการบิลได้",
 } as const;
 
 export const MEMBER_AMOUNT_INVALID = (name: string) => {
