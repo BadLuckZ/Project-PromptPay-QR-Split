@@ -17,3 +17,21 @@ export interface Bill {
   created_at: string;
   deleted_at: string | null;
 }
+
+export interface Member {
+  id: string;
+  bill_id: string;
+  member_name: string;
+  amount: number;
+  is_paid: boolean;
+  created_at: string;
+}
+
+export interface MemberQRView {
+  member_name: string;
+  amount: number;
+  bill_name: string;
+  owner_name: string;
+  promptpay_number: string;
+  deleted_at: string | null;
+}
