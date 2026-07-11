@@ -1,8 +1,8 @@
 import { notFound } from "next/navigation";
 import { Topbar } from "@/components/Topbar";
 import { QRDisplay } from "@/components/qr";
+import { SUPABASE } from "@/lib/supabase";
 import { createPromptPayQRDataUrl } from "@/lib/promptpay";
-import { createClient } from "@/supabase/server";
 import { MemberQRView } from "@/types";
 
 interface PayPageProps {
@@ -12,8 +12,7 @@ interface PayPageProps {
 export default async function PayPage({ params }: PayPageProps) {
   const { memberId } = await params;
 
-  const supabase = await createClient();
-  const { data } = await supabase
+  const { data } = await SUPABASE
     .from("members")
     .select(
       "member_name, amount, bill:bills(bill_name, owner_name, promptpay_number, deleted_at)",
