@@ -5,7 +5,7 @@ import Link from "next/link";
 import { Plus } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { BillCard } from "@/components/bills/BillCard";
+import { BillListCard } from "@/components/bills/BillListCard";
 import { Bill } from "@/types";
 
 interface BillList {
@@ -67,7 +67,7 @@ export function BillList({ bills }: BillList) {
           </p>
         ) : (
           filtered.map((bill, i) => (
-            <BillCard key={bill.id} bill={bill} accentIndex={i} />
+            <BillListCard key={bill.id} bill={bill} accentIndex={i} />
           ))
         )}
       </div>
