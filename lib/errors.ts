@@ -12,6 +12,9 @@ export const ERROR_MESSAGES = {
   LOAD_BILLS_FAILED: "ไม่สามารถโหลดรายการบิลได้",
   BILL_NOT_FOUND: "ไม่พบบิลนี้",
   LOAD_BILL_FAILED: "ไม่สามารถโหลดข้อมูลบิลได้",
+  MEMBER_NOT_FOUND: "ไม่พบผู้เข้าร่วมนี้",
+  UPDATE_MEMBER_FAILED: "อัปเดตสถานะไม่สำเร็จ",
+  INVALID_IS_PAID: "ค่าสถานะการจ่ายไม่ถูกต้อง",
 } as const;
 
 export const MEMBER_AMOUNT_INVALID = (name: string) => {

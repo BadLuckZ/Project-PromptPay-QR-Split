@@ -34,6 +34,8 @@ export function BillDashboard({
   const [members, setMembers] = useState(initialMembers);
   const [copiedKey, setCopiedKey] = useState<string | null>(null);
   const [closed, setClosed] = useState(bill.closed_at !== null);
+  const [updatingId, setUpdatingId] = useState<string | null>(null);
+  const [toggleError, setToggleError] = useState<string | null>(null);
 
   const sortedMembers = [...members].sort((a, b) => {
     if (a.is_paid !== b.is_paid) return a.is_paid ? 1 : -1;
@@ -67,10 +69,33 @@ export function BillDashboard({
     copy(links, "all");
   }
 
-  function togglePaid(memberId: string) {
+  async function togglePaid(memberId: string) {
+    const target = members.find((m) => m.id === memberId);
+    if (!target) return;
+
+    const nextIsPaid = !target.is_paid;
+    setToggleError(null);
+    setUpdatingId(memberId);
     setMembers((prev) =>
-      prev.map((m) => (m.id === memberId ? { ...m, is_paid: !m.is_paid } : m)),
+      prev.map((m) => (m.id === memberId ? { ...m, is_paid: nextIsPaid } : m)),
     );
+
+    const res = await fetch(`/api/v1/members/${memberId}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ is_paid: nextIsPaid }),
+    });
+
+    setUpdatingId(null);
+
+    if (!res.ok) {
+      setMembers((prev) =>
+        prev.map((m) =>
+          m.id === memberId ? { ...m, is_paid: !nextIsPaid } : m,
+        ),
+      );
+      setToggleError("อัปเดตสถานะไม่สำเร็จ กรุณาลองใหม่อีกครั้ง");
+    }
   }
 
   return (
@@ -130,6 +155,8 @@ export function BillDashboard({
         ผู้เข้าร่วม {members.length} คน
       </p>
 
+      {toggleError && <p className="text-xs text-destructive">{toggleError}</p>}
+
       <div className="flex flex-col divide-y divide-border rounded-lg border border-border bg-card">
         <div className="flex items-center gap-2.5 p-3">
           <Avatar>
@@ -149,7 +176,7 @@ export function BillDashboard({
             member={member}
             accentIndex={i}
             copied={copiedKey === member.id}
-            disabled={closed}
+            disabled={closed || updatingId === member.id}
             onCopyLink={() => copy(payLink(member.id), member.id)}
             onTogglePaid={() => togglePaid(member.id)}
           />
