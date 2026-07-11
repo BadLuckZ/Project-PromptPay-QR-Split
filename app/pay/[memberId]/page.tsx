@@ -1,3 +1,4 @@
+import { AlertCircle } from "lucide-react";
 import { notFound } from "next/navigation";
 import { Topbar } from "@/components/Topbar";
 import { QRDisplay } from "@/components/qr";
@@ -12,8 +13,7 @@ interface PayPageProps {
 export default async function PayPage({ params }: PayPageProps) {
   const { memberId } = await params;
 
-  const { data } = await SUPABASE
-    .from("members")
+  const { data } = await SUPABASE.from("members")
     .select(
       "member_name, amount, bill:bills(bill_name, owner_name, promptpay_number, deleted_at)",
     )
@@ -22,8 +22,25 @@ export default async function PayPage({ params }: PayPageProps) {
 
   const bill = Array.isArray(data?.bill) ? data.bill[0] : data?.bill;
 
-  if (!data || !bill || bill.deleted_at) {
+  if (!data || !bill) {
     notFound();
+  }
+
+  if (bill.deleted_at) {
+    return (
+      <div className="flex flex-col flex-1">
+        <Topbar title="ชำระเงิน" />
+        <div className="flex flex-col items-center gap-3 p-8 text-center">
+          <div className="flex size-12 items-center justify-center rounded-full bg-danger text-danger-foreground">
+            <AlertCircle size={24} />
+          </div>
+          <p className="font-medium">บิลนี้ถูกลบแล้ว</p>
+          <p className="text-sm text-muted-foreground">
+            ลิงก์ชำระเงินนี้ไม่สามารถใช้งานได้อีกต่อไป
+          </p>
+        </div>
+      </div>
+    );
   }
 
   const member: MemberQRView = {
