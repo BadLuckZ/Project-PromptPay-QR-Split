@@ -15,9 +15,23 @@ interface BillListCardProps {
   accentIndex?: number;
 }
 
+const STATUS_STYLES: Record<"closed" | "paid" | "pending", string> = {
+  closed: "bg-muted text-muted-foreground",
+  paid: "bg-success text-success-foreground",
+  pending: "bg-warning text-warning-foreground",
+};
+
 export function BillListCard({ bill, accentIndex = 0 }: BillListCardProps) {
+  const isClosed = bill.closed_at !== null;
   const isPaid = bill.memberCount > 0 && bill.paidCount >= bill.memberCount;
   const pendingCount = bill.memberCount - bill.paidCount;
+
+  const status = isClosed ? "closed" : isPaid ? "paid" : "pending";
+  const statusLabel = isClosed
+    ? "ปิดแล้ว"
+    : isPaid
+      ? "ชำระครบแล้ว"
+      : `ค้างชำระ ${pendingCount} คน`;
 
   return (
     <Link
@@ -42,12 +56,10 @@ export function BillListCard({ bill, accentIndex = 0 }: BillListCardProps) {
         <span
           className={cn(
             "text-xs rounded-full px-2.5 py-1",
-            isPaid
-              ? "bg-success text-success-foreground"
-              : "bg-warning text-warning-foreground",
+            STATUS_STYLES[status],
           )}
         >
-          {isPaid ? "ชำระครบแล้ว" : `ค้างชำระ ${pendingCount} คน`}
+          {statusLabel}
         </span>
         <ChevronRight size={16} className="text-muted-foreground" />
       </div>

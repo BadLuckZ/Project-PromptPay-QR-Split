@@ -16,24 +16,56 @@ import {
 } from "@/components/ui/alert-dialog";
 
 interface BillActionsProps {
+  billId: string;
   closed: boolean;
   onClosedChange: (closed: boolean) => void;
 }
 
 export function BillDashboardActions({
+  billId,
   closed,
   onClosedChange,
 }: BillActionsProps) {
   const router = useRouter();
   const [showCloseConfirm, setShowCloseConfirm] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  function confirmClose() {
+  async function confirmClose() {
+    setSubmitting(true);
+    setError(null);
+
+    const res = await fetch(`/api/v1/bills/${billId}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ closed: !closed }),
+    });
+
+    setSubmitting(false);
+
+    if (!res.ok) {
+      setError("อัปเดตสถานะบิลไม่สำเร็จ กรุณาลองใหม่อีกครั้ง");
+      return;
+    }
+
     onClosedChange(!closed);
     setShowCloseConfirm(false);
   }
 
-  function confirmDelete() {
+  async function confirmDelete() {
+    setSubmitting(true);
+    setError(null);
+
+    const res = await fetch(`/api/v1/bills/${billId}`, { method: "DELETE" });
+
+    setSubmitting(false);
+
+    if (!res.ok) {
+      setError("ลบบิลไม่สำเร็จ กรุณาลองใหม่อีกครั้ง");
+      return;
+    }
+
     setShowDeleteConfirm(false);
     router.push("/bills");
   }
@@ -43,7 +75,10 @@ export function BillDashboardActions({
       <Button
         variant="outline"
         className="w-full"
-        onClick={() => setShowCloseConfirm(true)}
+        onClick={() => {
+          setError(null);
+          setShowCloseConfirm(true);
+        }}
       >
         {closed ? <Lock size={16} /> : <CheckCircle2 size={16} />}
         {closed ? "เปิดบิลอีกครั้ง" : "ปิดบิล"}
@@ -51,7 +86,10 @@ export function BillDashboardActions({
 
       <button
         type="button"
-        onClick={() => setShowDeleteConfirm(true)}
+        onClick={() => {
+          setError(null);
+          setShowDeleteConfirm(true);
+        }}
         className="cursor-pointer py-1 text-center text-xs text-destructive/70 hover:text-destructive"
       >
         ลบบิลนี้
@@ -69,10 +107,11 @@ export function BillDashboardActions({
                 : "จะถือว่าบิลนี้ชำระครบแล้ว จะไม่สามารถแก้ไขสถานะการจ่ายของสมาชิกได้จนกว่าจะเปิดอีกครั้ง"}
             </AlertDialogDescription>
           </AlertDialogHeader>
+          {error && <p className="text-sm text-destructive">{error}</p>}
           <AlertDialogFooter>
-            <AlertDialogCancel>ยกเลิก</AlertDialogCancel>
-            <AlertDialogAction onClick={confirmClose}>
-              {closed ? "เปิดบิล" : "ปิดบิล"}
+            <AlertDialogCancel disabled={submitting}>ยกเลิก</AlertDialogCancel>
+            <AlertDialogAction onClick={confirmClose} disabled={submitting}>
+              {submitting ? "กำลังบันทึก..." : closed ? "เปิดบิล" : "ปิดบิล"}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
@@ -87,10 +126,15 @@ export function BillDashboardActions({
               และไม่สามารถกู้คืนได้
             </AlertDialogDescription>
           </AlertDialogHeader>
+          {error && <p className="text-sm text-destructive">{error}</p>}
           <AlertDialogFooter>
-            <AlertDialogCancel>ยกเลิก</AlertDialogCancel>
-            <AlertDialogAction variant="destructive" onClick={confirmDelete}>
-              ลบบิล
+            <AlertDialogCancel disabled={submitting}>ยกเลิก</AlertDialogCancel>
+            <AlertDialogAction
+              variant="destructive"
+              onClick={confirmDelete}
+              disabled={submitting}
+            >
+              {submitting ? "กำลังลบ..." : "ลบบิล"}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
