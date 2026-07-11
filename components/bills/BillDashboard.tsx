@@ -183,7 +183,11 @@ export function BillDashboard({
         ))}
       </div>
 
-      <BillDashboardActions closed={closed} onClosedChange={setClosed} />
+      <BillDashboardActions
+        billId={bill.id}
+        closed={closed}
+        onClosedChange={setClosed}
+      />
     </div>
   );
 }
