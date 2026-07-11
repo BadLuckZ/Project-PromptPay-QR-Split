@@ -13,7 +13,7 @@ export function QRDisplay({ member, qrCodeDataUrl }: QRDisplayProps) {
     <div className="flex flex-col gap-4 p-4">
       <div className="flex flex-col items-center gap-1 rounded-2xl bg-primary px-6 py-8 text-center">
         <p className="text-sm text-primary-foreground/80">
-          {member.member_name}: Bill {member.bill_name}
+          Member: {member.member_name} - Bill {member.bill_name}
         </p>
         <p className="text-2xl font-semibold text-primary-foreground">
           ฿{member.amount.toLocaleString()}
