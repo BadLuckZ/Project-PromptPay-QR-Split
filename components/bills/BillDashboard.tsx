@@ -12,6 +12,7 @@ interface BillDashboardBill {
   id: string;
   bill_name: string;
   owner_name: string;
+  closed_at: string | null;
 }
 
 interface BillDashboardProps {
@@ -32,7 +33,7 @@ export function BillDashboard({
 }: BillDashboardProps) {
   const [members, setMembers] = useState(initialMembers);
   const [copiedKey, setCopiedKey] = useState<string | null>(null);
-  const [closed, setClosed] = useState(false);
+  const [closed, setClosed] = useState(bill.closed_at !== null);
 
   const sortedMembers = [...members].sort((a, b) => {
     if (a.is_paid !== b.is_paid) return a.is_paid ? 1 : -1;

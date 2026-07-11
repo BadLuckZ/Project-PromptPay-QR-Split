@@ -10,6 +10,8 @@ export const ERROR_MESSAGES = {
   LOAD_PROFILE_FAILED: "ไม่สามารถโหลดข้อมูลผู้ใช้ได้",
   SAVE_PROFILE_FAILED: "บันทึกข้อมูลไม่สำเร็จ",
   LOAD_BILLS_FAILED: "ไม่สามารถโหลดรายการบิลได้",
+  BILL_NOT_FOUND: "ไม่พบบิลนี้",
+  LOAD_BILL_FAILED: "ไม่สามารถโหลดข้อมูลบิลได้",
 } as const;
 
 export const MEMBER_AMOUNT_INVALID = (name: string) => {
