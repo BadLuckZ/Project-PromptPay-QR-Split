@@ -39,7 +39,7 @@ type FormValues = {
   participants: { name: string; amount: string }[];
 };
 
-interface CreateBillFormProps {
+interface BillFormProps {
   ownerName: string;
 }
 
@@ -48,7 +48,7 @@ function getInitials(name: string) {
   return parts.length > 1 ? parts[0][0] + parts[1][0] : name.slice(0, 2);
 }
 
-export function CreateBillForm({ ownerName }: CreateBillFormProps) {
+export function BillForm({ ownerName }: BillFormProps) {
   const router = useRouter();
   const [tab, setTab] = useState<SplitTab>("equal");
   const [newParticipantName, setNewParticipantName] = useState("");

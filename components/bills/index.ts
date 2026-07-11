@@ -1,3 +1,4 @@
 export * from "./BillCard";
-export * from "./CreateBillForm";
+export * from "./BillForm";
 export * from "./BillList";
+export * from "./BillDashboard";
