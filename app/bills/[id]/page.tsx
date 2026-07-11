@@ -1,5 +1,8 @@
+import { cookies, headers } from "next/headers";
+import { notFound } from "next/navigation";
 import { Topbar } from "@/components/Topbar";
-import { createClient } from "@/supabase/server";
+import { BillDashboard } from "@/components/bills";
+import { Bill, Member } from "@/types";
 
 interface BillDetailPageProps {
   params: Promise<{ id: string }>;
@@ -8,17 +11,32 @@ interface BillDetailPageProps {
 export default async function BillDetailPage({ params }: BillDetailPageProps) {
   const { id } = await params;
 
-  const supabase = await createClient();
-  const { data: bill } = await supabase
-    .from("bills")
-    .select("bill_name")
-    .eq("id", id)
-    .single();
+  const headersList = await headers();
+  const host = headersList.get("host");
+  const protocol =
+    headersList.get("x-forwarded-proto") ??
+    (process.env.NODE_ENV === "development" ? "http" : "https");
+  const origin = `${protocol}://${host}`;
+
+  const cookieStore = await cookies();
+  const res = await fetch(`${origin}/api/v1/bills/${id}`, {
+    headers: { cookie: cookieStore.toString() },
+    cache: "no-store",
+  });
+
+  if (!res.ok) {
+    notFound();
+  }
+
+  const { bill, members } = (await res.json()) as {
+    bill: Bill;
+    members: Member[];
+  };
 
   return (
     <div className="flex flex-col flex-1">
-      <Topbar title={bill?.bill_name ?? "รายละเอียด Bill"} backHref="/bills" />
-      <p>Bill Name: {bill?.bill_name}</p>
+      <Topbar title={bill.bill_name} backHref="/bills" />
+      <BillDashboard bill={bill} members={members} origin={origin} />
     </div>
   );
 }
