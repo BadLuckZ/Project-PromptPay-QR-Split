@@ -28,16 +28,18 @@ export default async function PayPage({ params }: PayPageProps) {
 
   if (bill.deleted_at) {
     return (
-      <div className="flex flex-col flex-1">
+      <div className="flex flex-1 flex-col">
         <Topbar title="ชำระเงิน" />
-        <div className="flex flex-col items-center gap-3 p-8 text-center">
-          <div className="flex size-12 items-center justify-center rounded-full bg-danger text-danger-foreground">
-            <AlertCircle size={24} />
+        <div className="flex flex-1 flex-col items-center justify-center p-4">
+          <div className="flex w-full max-w-sm flex-col items-center gap-3 rounded-2xl border border-border bg-card p-8 text-center shadow-sm">
+            <div className="flex size-14 items-center justify-center rounded-full bg-danger text-danger-foreground">
+              <AlertCircle size={28} />
+            </div>
+            <p className="font-medium">บิลนี้ถูกลบแล้ว</p>
+            <p className="text-sm text-muted-foreground">
+              ลิงก์ชำระเงินนี้ไม่สามารถใช้งานได้อีกต่อไป
+            </p>
           </div>
-          <p className="font-medium">บิลนี้ถูกลบแล้ว</p>
-          <p className="text-sm text-muted-foreground">
-            ลิงก์ชำระเงินนี้ไม่สามารถใช้งานได้อีกต่อไป
-          </p>
         </div>
       </div>
     );
@@ -58,10 +60,13 @@ export default async function PayPage({ params }: PayPageProps) {
   );
 
   return (
-    <div className="flex flex-col flex-1">
+    <div className="flex flex-1 flex-col">
       <Topbar title="ชำระเงิน" />
-
-      <QRDisplay member={member} qrCodeDataUrl={qrCodeDataUrl} />
+      <div className="flex flex-1 flex-col items-center justify-center">
+        <div className="w-full max-w-sm">
+          <QRDisplay member={member} qrCodeDataUrl={qrCodeDataUrl} />
+        </div>
+      </div>
     </div>
   );
 }
