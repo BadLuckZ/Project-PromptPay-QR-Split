@@ -3,27 +3,14 @@
 import { useState } from "react";
 import { useForm, useFieldArray } from "react-hook-form";
 import { useRouter } from "next/navigation";
-import { Plus, Trash2 } from "lucide-react";
+import { Plus } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import {
-  AlertDialog,
-  AlertDialogContent,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogAction,
-  AlertDialogCancel,
-} from "@/components/ui/alert-dialog";
-
-const AVATAR_COLORS = [
-  "bg-warning text-warning-foreground",
-  "bg-success text-success-foreground",
-];
+import { BillFormEqualTab } from "@/components/bills/BillFormEqualTab";
+import { BillFormCustomTab } from "@/components/bills/BillFormCustomTab";
+import { BillFormAction } from "@/components/bills/BillFormAction";
 
 const SPLIT_TABS = [
   { value: "equal", label: "หารเท่ากัน" },
@@ -32,7 +19,7 @@ const SPLIT_TABS = [
 
 type SplitTab = (typeof SPLIT_TABS)[number]["value"];
 
-type FormValues = {
+export type FormValues = {
   bill_name: string;
   total: string;
   owner_amount: string;
@@ -43,16 +30,10 @@ interface BillFormProps {
   ownerName: string;
 }
 
-function getInitials(name: string) {
-  const parts = name.trim().split(/\s+/);
-  return parts.length > 1 ? parts[0][0] + parts[1][0] : name.slice(0, 2);
-}
-
 export function BillForm({ ownerName }: BillFormProps) {
   const router = useRouter();
   const [tab, setTab] = useState<SplitTab>("equal");
   const [newParticipantName, setNewParticipantName] = useState("");
-  const [showConfirm, setShowConfirm] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
 
@@ -126,7 +107,6 @@ export function BillForm({ ownerName }: BillFormProps) {
       return;
     }
 
-    setShowConfirm(false);
     router.push("/bills");
   }
 
@@ -212,158 +192,35 @@ export function BillForm({ ownerName }: BillFormProps) {
 
         {/* Content based on Tab */}
         {tab === "equal" ? (
-          <div className="flex flex-col gap-3">
-            <div className="rounded-lg border border-primary-tint bg-success p-4">
-              <p className="text-xs text-success-foreground mb-1">
-                คนละเท่ากัน ({totalCount} คน)
-              </p>
-              <p className="text-2xl font-medium text-success-foreground">
-                ฿{perPerson.toLocaleString()}
-              </p>
-            </div>
-
-            <div className="flex items-center gap-2.5 border-b border-border py-2.5">
-              <Avatar>
-                <AvatarFallback className="bg-success text-success-foreground">
-                  {getInitials(ownerName)}
-                </AvatarFallback>
-              </Avatar>
-              <div className="flex-1">
-                <p className="text-sm font-medium">{ownerName} (ตัวเอง)</p>
-                <p className="text-xs text-muted-foreground">
-                  ฿{perPerson.toLocaleString()}
-                </p>
-              </div>
-            </div>
-
-            {fields.map((f, i) => (
-              <div
-                key={f.id}
-                className="flex items-center gap-2.5 border-b border-border py-2.5"
-              >
-                <Avatar>
-                  <AvatarFallback
-                    className={AVATAR_COLORS[i % AVATAR_COLORS.length]}
-                  >
-                    {getInitials(f.name)}
-                  </AvatarFallback>
-                </Avatar>
-                <div className="flex-1">
-                  <p className="text-sm">{f.name}</p>
-                  <p className="text-xs text-muted-foreground">
-                    ฿{perPerson.toLocaleString()}
-                  </p>
-                </div>
-                <button
-                  type="button"
-                  onClick={() => remove(i)}
-                  className="text-destructive p-1 cursor-pointer"
-                  aria-label="ลบผู้เข้าร่วม"
-                >
-                  <Trash2 size={14} />
-                </button>
-              </div>
-            ))}
-          </div>
+          <BillFormEqualTab
+            ownerName={ownerName}
+            perPerson={perPerson}
+            totalCount={totalCount}
+            fields={fields}
+            onRemove={remove}
+          />
         ) : (
-          <div className="flex flex-col gap-3">
-            <div className="flex items-center gap-2.5 py-1">
-              <Avatar>
-                <AvatarFallback className="bg-success text-success-foreground">
-                  {getInitials(ownerName)}
-                </AvatarFallback>
-              </Avatar>
-              <div className="flex-1 text-sm font-medium">
-                {ownerName} (ตัวเอง)
-              </div>
-              <Input
-                type="number"
-                {...register("owner_amount")}
-                placeholder="฿0"
-                className="w-24 text-right"
-              />
-            </div>
-
-            {fields.map((f, i) => (
-              <div key={f.id} className="flex items-center gap-2.5 py-1">
-                <Avatar>
-                  <AvatarFallback
-                    className={AVATAR_COLORS[i % AVATAR_COLORS.length]}
-                  >
-                    {getInitials(f.name)}
-                  </AvatarFallback>
-                </Avatar>
-                <div className="flex-1 text-sm">{f.name}</div>
-                <Input
-                  type="number"
-                  {...register(`participants.${i}.amount`)}
-                  placeholder="฿0"
-                  className="w-24 text-right"
-                />
-                <button
-                  type="button"
-                  onClick={() => remove(i)}
-                  className="text-destructive p-1 cursor-pointer"
-                  aria-label="ลบผู้เข้าร่วม"
-                >
-                  <Trash2 size={14} />
-                </button>
-              </div>
-            ))}
-
-            <div className="flex justify-between border-t border-border pt-2 text-sm">
-              <span className="text-muted-foreground">รวมที่กรอก</span>
-              <span className="font-medium">
-                ฿{customTotal.toLocaleString()}
-              </span>
-            </div>
-
-            {diff !== 0 && total && (
-              <p className="text-sm text-warning-foreground bg-warning border border-warning-border rounded-md px-3 py-2">
-                {diff > 0
-                  ? `ยอดขาดอีก ฿${diff.toLocaleString()}`
-                  : `ยอดเกินมา ฿${Math.abs(diff).toLocaleString()}`}
-              </p>
-            )}
-          </div>
+          <BillFormCustomTab
+            ownerName={ownerName}
+            total={total}
+            customTotal={customTotal}
+            diff={diff}
+            fields={fields}
+            register={register}
+            onRemove={remove}
+          />
         )}
       </div>
 
-      {/* Button */}
-      <div className="p-4 pt-0">
-        <Button
-          className="w-full"
-          disabled={!canSubmit}
-          onClick={() => setShowConfirm(true)}
-        >
-          สร้าง Bill
-        </Button>
-      </div>
-
-      {/* Modal */}
-      <AlertDialog open={showConfirm} onOpenChange={setShowConfirm}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>ยืนยันการสร้าง bill</AlertDialogTitle>
-            <AlertDialogDescription>
-              &quot;{billName || "Bill ใหม่"}&quot; {totalCount} คน รวม ฿
-              {totalNumber.toLocaleString()}
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          {submitError && (
-            <p className="text-sm text-destructive">{submitError}</p>
-          )}
-          <AlertDialogFooter>
-            <AlertDialogCancel disabled={submitting}>แก้ไข</AlertDialogCancel>
-            <AlertDialogAction
-              onClick={handleSubmit(onSubmit)}
-              disabled={submitting}
-            >
-              {submitting ? "กำลังสร้าง..." : "สร้าง Bill"}
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+      <BillFormAction
+        canSubmit={canSubmit}
+        billName={billName}
+        totalCount={totalCount}
+        totalNumber={totalNumber}
+        submitting={submitting}
+        submitError={submitError}
+        onConfirm={handleSubmit(onSubmit)}
+      />
     </div>
   );
 }

@@ -1,16 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import { TrendingUp, Clock, Copy, Check, Info } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { TrendingUp, Clock, Copy, Check, Info, Lock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarBadge } from "@/components/ui/avatar";
+import { BillDashboardCard } from "@/components/bills/BillDashboardCard";
+import { BillDashboardActions } from "@/components/bills/BillDashboardActions";
 import { Member } from "@/types";
-
-const AVATAR_COLORS = [
-  "bg-success text-success-foreground",
-  "bg-warning text-warning-foreground",
-];
 
 interface BillDashboardBill {
   id: string;
@@ -36,6 +32,7 @@ export function BillDashboard({
 }: BillDashboardProps) {
   const [members, setMembers] = useState(initialMembers);
   const [copiedKey, setCopiedKey] = useState<string | null>(null);
+  const [closed, setClosed] = useState(false);
 
   const sortedMembers = [...members].sort((a, b) => {
     if (a.is_paid !== b.is_paid) return a.is_paid ? 1 : -1;
@@ -77,6 +74,13 @@ export function BillDashboard({
 
   return (
     <div className="flex flex-col flex-1 gap-4 p-4">
+      {closed && (
+        <div className="flex items-center gap-1.5 rounded-lg bg-muted px-3 py-2 text-xs text-muted-foreground">
+          <Lock size={12} />
+          บิลนี้ถูกปิดไปแล้ว
+        </div>
+      )}
+
       <div className="grid grid-cols-2 gap-3">
         <div className="rounded-lg bg-success p-3.5">
           <div className="flex items-center justify-between text-success-foreground">
@@ -111,7 +115,12 @@ export function BillDashboard({
         </div>
       </div>
 
-      <Button variant="outline" className="w-full" onClick={copyAllLinks}>
+      <Button
+        variant="outline"
+        className="w-full"
+        onClick={copyAllLinks}
+        disabled={closed}
+      >
         {copiedKey === "all" ? <Check size={16} /> : <Copy size={16} />}
         copy ทุก link
       </Button>
@@ -134,63 +143,19 @@ export function BillDashboard({
         </div>
 
         {sortedMembers.map((member, i) => (
-          <div
+          <BillDashboardCard
             key={member.id}
-            className={cn(
-              "flex items-center gap-2.5 p-3",
-              member.is_paid && "opacity-50 blur-[0.3px]",
-            )}
-          >
-            <Avatar>
-              <AvatarFallback
-                className={AVATAR_COLORS[i % AVATAR_COLORS.length]}
-              >
-                {getInitials(member.member_name)}
-              </AvatarFallback>
-              {member.is_paid && (
-                <AvatarBadge>
-                  <Check size={10} />
-                </AvatarBadge>
-              )}
-            </Avatar>
-            <div className="flex-1">
-              <p className={cn("text-sm", member.is_paid && "line-through")}>
-                {member.member_name}
-              </p>
-              <p className="text-xs text-muted-foreground">
-                ฿{Number(member.amount).toLocaleString()}
-              </p>
-            </div>
-            {!member.is_paid && (
-              <button
-                type="button"
-                onClick={() => copy(payLink(member.id), member.id)}
-                className="p-1.5 text-muted-foreground cursor-pointer"
-                aria-label={`คัดลอกลิงก์ ${member.member_name}`}
-              >
-                {copiedKey === member.id ? (
-                  <Check size={14} />
-                ) : (
-                  <Copy size={14} />
-                )}
-              </button>
-            )}
-            <button
-              type="button"
-              onClick={() => togglePaid(member.id)}
-              className={cn(
-                "inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs cursor-pointer shrink-0",
-                member.is_paid
-                  ? "bg-success text-success-foreground"
-                  : "border border-border text-muted-foreground",
-              )}
-            >
-              {member.is_paid && <Check size={12} />}
-              {member.is_paid ? "จ่ายแล้ว" : "ยังไม่จ่าย"}
-            </button>
-          </div>
+            member={member}
+            accentIndex={i}
+            copied={copiedKey === member.id}
+            disabled={closed}
+            onCopyLink={() => copy(payLink(member.id), member.id)}
+            onTogglePaid={() => togglePaid(member.id)}
+          />
         ))}
       </div>
+
+      <BillDashboardActions closed={closed} onClosedChange={setClosed} />
     </div>
   );
 }

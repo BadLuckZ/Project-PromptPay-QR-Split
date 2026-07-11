@@ -6,7 +6,7 @@ interface QRDisplayProps {
   qrCodeDataUrl: string;
 }
 
-export function QRDisplay({ member, qrCodeDataUrl }: QRDisplayProps) {
+export function PayQRDisplay({ member, qrCodeDataUrl }: QRDisplayProps) {
   const timestamp = new Date().toISOString().slice(0, 16).replace(/[-:T]/g, "");
 
   return (

@@ -1,7 +1,7 @@
 import { AlertCircle } from "lucide-react";
 import { notFound } from "next/navigation";
 import { Topbar } from "@/components/Topbar";
-import { QRDisplay } from "@/components/qr";
+import { PayQRDisplay } from "@/components/pay";
 import { SUPABASE } from "@/lib/supabase";
 import { createPromptPayQRDataUrl } from "@/lib/promptpay";
 import { MemberQRView } from "@/types";
@@ -64,7 +64,7 @@ export default async function PayPage({ params }: PayPageProps) {
       <Topbar title="ชำระเงิน" />
       <div className="flex flex-1 flex-col items-center justify-center">
         <div className="w-full max-w-sm">
-          <QRDisplay member={member} qrCodeDataUrl={qrCodeDataUrl} />
+          <PayQRDisplay member={member} qrCodeDataUrl={qrCodeDataUrl} />
         </div>
       </div>
     </div>

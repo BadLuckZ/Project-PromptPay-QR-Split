@@ -10,12 +10,12 @@ const ACCENT_BORDERS = [
   "border-l-chart-4",
 ];
 
-interface BillCardProps {
+interface BillListCardProps {
   bill: Bill;
   accentIndex?: number;
 }
 
-export function BillCard({ bill, accentIndex = 0 }: BillCardProps) {
+export function BillListCard({ bill, accentIndex = 0 }: BillListCardProps) {
   const isPaid = bill.memberCount > 0 && bill.paidCount >= bill.memberCount;
   const pendingCount = bill.memberCount - bill.paidCount;
 

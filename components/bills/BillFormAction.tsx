@@ -1,0 +1,71 @@
+"use client";
+
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import {
+  AlertDialog,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogAction,
+  AlertDialogCancel,
+} from "@/components/ui/alert-dialog";
+
+interface BillFormActionProps {
+  canSubmit: boolean;
+  billName: string;
+  totalCount: number;
+  totalNumber: number;
+  submitting: boolean;
+  submitError: string | null;
+  onConfirm: () => void;
+}
+
+export function BillFormAction({
+  canSubmit,
+  billName,
+  totalCount,
+  totalNumber,
+  submitting,
+  submitError,
+  onConfirm,
+}: BillFormActionProps) {
+  const [showConfirm, setShowConfirm] = useState(false);
+
+  return (
+    <>
+      <div className="p-4 pt-0">
+        <Button
+          className="w-full"
+          disabled={!canSubmit}
+          onClick={() => setShowConfirm(true)}
+        >
+          สร้าง Bill
+        </Button>
+      </div>
+
+      <AlertDialog open={showConfirm} onOpenChange={setShowConfirm}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>ยืนยันการสร้าง bill</AlertDialogTitle>
+            <AlertDialogDescription>
+              &quot;{billName || "Bill ใหม่"}&quot; {totalCount} คน รวม ฿
+              {totalNumber.toLocaleString()}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          {submitError && (
+            <p className="text-sm text-destructive">{submitError}</p>
+          )}
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={submitting}>แก้ไข</AlertDialogCancel>
+            <AlertDialogAction onClick={onConfirm} disabled={submitting}>
+              {submitting ? "กำลังสร้าง..." : "สร้าง Bill"}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    </>
+  );
+}
