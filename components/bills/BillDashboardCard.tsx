@@ -1,7 +1,7 @@
 "use client";
 
 import { Copy, Check } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn, getInitials } from "@/lib/utils";
 import { Avatar, AvatarFallback, AvatarBadge } from "@/components/ui/avatar";
 import { Member } from "@/types";
 
@@ -9,11 +9,6 @@ const AVATAR_COLORS = [
   "bg-success text-success-foreground",
   "bg-warning text-warning-foreground",
 ];
-
-function getInitials(name: string) {
-  const parts = name.trim().split(/\s+/);
-  return parts.length > 1 ? parts[0][0] + parts[1][0] : name.slice(0, 2);
-}
 
 interface BillDashboardCardProps {
   member: Member;

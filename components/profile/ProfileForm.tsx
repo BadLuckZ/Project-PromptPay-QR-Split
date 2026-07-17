@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { getInitials } from "@/lib/utils";
 import { User } from "@/types";
 
 type FormValues = {
@@ -21,18 +22,6 @@ type FormValues = {
 interface ProfileFormProps {
   profile: User;
   email: string;
-}
-
-function getInitials(name: string) {
-  const initials = name
-    .trim()
-    .split(/\s+/)
-    .filter(Boolean)
-    .slice(0, 2)
-    .map((part) => part[0])
-    .join("");
-
-  return initials ? initials.toUpperCase() : "??";
 }
 
 export function ProfileForm({ profile, email }: ProfileFormProps) {

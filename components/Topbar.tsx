@@ -1,15 +1,12 @@
 import Link from "next/link";
 import { ChevronLeft } from "lucide-react";
+import { getInitials } from "@/lib/utils";
 
 interface TopbarProps {
   title: string;
   subtitle?: string;
   backHref?: string;
   profileName?: string;
-}
-
-function getInitial(name: string) {
-  return name.trim()[0]?.toUpperCase() ?? "?";
 }
 
 export function Topbar({
@@ -41,7 +38,7 @@ export function Topbar({
           href="/profile"
           className="flex size-10! shrink-0 items-center justify-center rounded-full bg-primary-tint/40 text-primary-foreground text-sm font-medium"
         >
-          {getInitial(profileName)}
+          {getInitials(profileName)}
         </Link>
       )}
     </div>
