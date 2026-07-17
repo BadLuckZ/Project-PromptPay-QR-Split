@@ -4,7 +4,7 @@ export default function BillsLoading() {
   return (
     <div className="flex flex-col flex-1 animate-pulse">
       {/* Topbar Loading */}
-      <TopbarLoading />
+      <TopbarLoading haveSubtitle haveProfile />
 
       <div className="p-4 pt-5 pb-3 flex flex-col gap-3">
         {/* Button Loading */}
