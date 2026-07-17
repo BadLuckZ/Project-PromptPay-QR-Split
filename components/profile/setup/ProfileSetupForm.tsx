@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { getInitials } from "@/lib/utils";
 
 type FormValues = {
   display_name: string;
@@ -16,18 +17,6 @@ type FormValues = {
 
 interface ProfileSetupFormProps {
   email: string;
-}
-
-function getInitials(name: string) {
-  const initials = name
-    .trim()
-    .split(/\s+/)
-    .filter(Boolean)
-    .slice(0, 2)
-    .map((part) => part[0])
-    .join("");
-
-  return initials ? initials.toUpperCase() : "??";
 }
 
 export function ProfileSetupForm({ email }: ProfileSetupFormProps) {
@@ -93,6 +82,7 @@ export function ProfileSetupForm({ email }: ProfileSetupFormProps) {
             {...register("display_name", { required: "กรุณากรอกชื่อ" })}
             placeholder="ชื่อ-นามสกุล"
             type="text"
+            disabled={isSubmitting}
             className="rounded-lg"
           />
           {errors.display_name && (
@@ -115,6 +105,7 @@ export function ProfileSetupForm({ email }: ProfileSetupFormProps) {
             })}
             placeholder="08x-xxx-xxxx"
             type="tel"
+            disabled={isSubmitting}
             className="rounded-lg"
           />
           {errors.promptpay_number && (

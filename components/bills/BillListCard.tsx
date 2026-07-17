@@ -37,13 +37,13 @@ export function BillListCard({ bill, accentIndex = 0 }: BillListCardProps) {
     <Link
       href={`/bills/${bill.id}`}
       className={cn(
-        "flex items-center justify-between gap-3 rounded-lg border border-l-4 border-border bg-card p-3.5",
+        "flex items-center justify-between gap-4 rounded-lg border border-l-4 border-border bg-card p-4",
         ACCENT_BORDERS[accentIndex % ACCENT_BORDERS.length],
       )}
     >
-      <div className="flex flex-col gap-1">
+      <div className="flex flex-col gap-1.5">
         <p className="text-sm font-medium">{bill.bill_name}</p>
-        <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+        <div className="flex items-center gap-2 text-xs text-muted-foreground">
           <span className="inline-flex items-center gap-1">
             <Users size={12} />
             {bill.memberCount} คน

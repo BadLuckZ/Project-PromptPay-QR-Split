@@ -2,7 +2,8 @@ import { cookies, headers } from "next/headers";
 import { notFound } from "next/navigation";
 import { Topbar } from "@/components/Topbar";
 import { BillDashboard } from "@/components/bills";
-import { Bill, Member } from "@/types";
+import { fetch as fetchWithCookies } from "@/lib/fetch";
+import { Bill, Member, User } from "@/types";
 
 interface BillDetailPageProps {
   params: Promise<{ id: string }>;
@@ -33,9 +34,18 @@ export default async function BillDetailPage({ params }: BillDetailPageProps) {
     members: Member[];
   };
 
+  const profileRes = await fetchWithCookies("/api/v1/users/me", {
+    cache: "no-store",
+  });
+  const profile: User | null = profileRes.ok ? await profileRes.json() : null;
+
   return (
     <div className="flex flex-col flex-1">
-      <Topbar title={bill.bill_name} backHref="/bills" />
+      <Topbar
+        title={bill.bill_name}
+        backHref="/bills"
+        profileName={profile?.display_name}
+      />
       <BillDashboard bill={bill} members={members} origin={origin} />
     </div>
   );

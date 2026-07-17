@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarBadge } from "@/components/ui/avatar";
 import { BillDashboardCard } from "@/components/bills/BillDashboardCard";
 import { BillDashboardActions } from "@/components/bills/BillDashboardActions";
+import { getInitials } from "@/lib/utils";
 import { Member } from "@/types";
 
 interface BillDashboardBill {
@@ -19,11 +20,6 @@ interface BillDashboardProps {
   bill: BillDashboardBill;
   members: Member[];
   origin: string;
-}
-
-function getInitials(name: string) {
-  const parts = name.trim().split(/\s+/);
-  return parts.length > 1 ? parts[0][0] + parts[1][0] : name.slice(0, 2);
 }
 
 export function BillDashboard({

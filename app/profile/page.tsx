@@ -1,4 +1,3 @@
-import { Topbar } from "@/components/Topbar";
 import { ProfileForm } from "@/components/profile";
 import { createClient } from "@/supabase/server";
 import { fetch } from "@/lib/fetch";
@@ -13,11 +12,5 @@ export default async function ProfilePage() {
   const res = await fetch("/api/v1/users/me", { cache: "no-store" });
   const profile: User | null = res.ok ? await res.json() : null;
 
-  return (
-    <div>
-      <Topbar title="โปรไฟล์" />
-      <p>{user?.email}</p>
-      <ProfileForm profile={profile as User} />
-    </div>
-  );
+  return <ProfileForm profile={profile as User} email={user!.email!} />;
 }
