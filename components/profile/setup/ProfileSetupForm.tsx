@@ -93,6 +93,7 @@ export function ProfileSetupForm({ email }: ProfileSetupFormProps) {
             {...register("display_name", { required: "กรุณากรอกชื่อ" })}
             placeholder="ชื่อ-นามสกุล"
             type="text"
+            disabled={isSubmitting}
             className="rounded-lg"
           />
           {errors.display_name && (
@@ -115,6 +116,7 @@ export function ProfileSetupForm({ email }: ProfileSetupFormProps) {
             })}
             placeholder="08x-xxx-xxxx"
             type="tel"
+            disabled={isSubmitting}
             className="rounded-lg"
           />
           {errors.promptpay_number && (
