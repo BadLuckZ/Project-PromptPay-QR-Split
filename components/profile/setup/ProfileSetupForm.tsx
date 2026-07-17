@@ -3,11 +3,13 @@
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 
+import { useState } from "react";
 import { Topbar } from "@/components/Topbar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { SessionExpiredDialog } from "@/components/SessionExpiredDialog";
 import { getInitials } from "@/lib/utils";
 
 type FormValues = {
@@ -21,6 +23,7 @@ interface ProfileSetupFormProps {
 
 export function ProfileSetupForm({ email }: ProfileSetupFormProps) {
   const router = useRouter();
+  const [sessionExpired, setSessionExpired] = useState(false);
   const {
     register,
     handleSubmit,
@@ -36,6 +39,11 @@ export function ProfileSetupForm({ email }: ProfileSetupFormProps) {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data),
     });
+
+    if (res.status === 401) {
+      setSessionExpired(true);
+      return;
+    }
 
     if (res.ok) {
       router.push("/bills");
@@ -125,6 +133,8 @@ export function ProfileSetupForm({ email }: ProfileSetupFormProps) {
           </Button>
         </div>
       </form>
+
+      <SessionExpiredDialog open={sessionExpired} />
     </div>
   );
 }

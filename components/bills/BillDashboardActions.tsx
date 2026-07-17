@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Lock, CheckCircle2, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { SessionExpiredDialog } from "@/components/SessionExpiredDialog";
 import {
   AlertDialog,
   AlertDialogContent,
@@ -31,6 +32,7 @@ export function BillDashboardActions({
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [sessionExpired, setSessionExpired] = useState(false);
 
   async function confirmClose() {
     setSubmitting(true);
@@ -43,6 +45,11 @@ export function BillDashboardActions({
     });
 
     setSubmitting(false);
+
+    if (res.status === 401) {
+      setSessionExpired(true);
+      return;
+    }
 
     if (!res.ok) {
       setError("อัปเดตสถานะบิลไม่สำเร็จ กรุณาลองใหม่อีกครั้ง");
@@ -60,6 +67,11 @@ export function BillDashboardActions({
     const res = await fetch(`/api/v1/bills/${billId}`, { method: "DELETE" });
 
     setSubmitting(false);
+
+    if (res.status === 401) {
+      setSessionExpired(true);
+      return;
+    }
 
     if (!res.ok) {
       setError("ลบบิลไม่สำเร็จ กรุณาลองใหม่อีกครั้ง");
@@ -172,6 +184,8 @@ export function BillDashboardActions({
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      <SessionExpiredDialog open={sessionExpired} />
     </div>
   );
 }

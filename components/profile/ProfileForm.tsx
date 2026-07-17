@@ -7,6 +7,7 @@ import { LogOut } from "lucide-react";
 
 import { createClient } from "@/supabase/client";
 import { Topbar } from "@/components/Topbar";
+import { SessionExpiredDialog } from "@/components/SessionExpiredDialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -27,6 +28,7 @@ interface ProfileFormProps {
 export function ProfileForm({ profile, email }: ProfileFormProps) {
   const router = useRouter();
   const [isLoggingOut, setIsLoggingOut] = useState(false);
+  const [sessionExpired, setSessionExpired] = useState(false);
   const {
     register,
     handleSubmit,
@@ -47,6 +49,11 @@ export function ProfileForm({ profile, email }: ProfileFormProps) {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data),
     });
+
+    if (res.status === 401) {
+      setSessionExpired(true);
+      return;
+    }
 
     if (res.ok) {
       router.push("/bills");
@@ -157,6 +164,8 @@ export function ProfileForm({ profile, email }: ProfileFormProps) {
           </button>
         </div>
       </form>
+
+      <SessionExpiredDialog open={sessionExpired} />
     </div>
   );
 }

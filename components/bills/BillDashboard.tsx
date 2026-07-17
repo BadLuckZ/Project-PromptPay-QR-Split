@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarBadge } from "@/components/ui/avatar";
 import { BillDashboardCard } from "@/components/bills/BillDashboardCard";
 import { BillDashboardActions } from "@/components/bills/BillDashboardActions";
+import { SessionExpiredDialog } from "@/components/SessionExpiredDialog";
 import { getInitials } from "@/lib/utils";
 import { Member } from "@/types";
 
@@ -32,6 +33,7 @@ export function BillDashboard({
   const [closed, setClosed] = useState(bill.closed_at !== null);
   const [updatingId, setUpdatingId] = useState<string | null>(null);
   const [toggleError, setToggleError] = useState<string | null>(null);
+  const [sessionExpired, setSessionExpired] = useState(false);
 
   const sortedMembers = [...members].sort((a, b) => {
     if (a.is_paid !== b.is_paid) return a.is_paid ? 1 : -1;
@@ -83,6 +85,16 @@ export function BillDashboard({
     });
 
     setUpdatingId(null);
+
+    if (res.status === 401) {
+      setMembers((prev) =>
+        prev.map((m) =>
+          m.id === memberId ? { ...m, is_paid: !nextIsPaid } : m,
+        ),
+      );
+      setSessionExpired(true);
+      return;
+    }
 
     if (!res.ok) {
       setMembers((prev) =>
@@ -184,6 +196,8 @@ export function BillDashboard({
         closed={closed}
         onClosedChange={setClosed}
       />
+
+      <SessionExpiredDialog open={sessionExpired} />
     </div>
   );
 }
