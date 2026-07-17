@@ -1,9 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { Inter } from "next/font/google";
 import { cn } from "@/lib/utils";
-
-const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 
 export const metadata: Metadata = {
   title: "PromptPay QR Split",
@@ -21,7 +18,6 @@ export default function RootLayout({
       className={cn(
         "h-full antialiased",
         "font-sans",
-        inter.variable,
         "mx-auto max-w-md bg-black/90",
       )}
     >

@@ -9,7 +9,7 @@ interface TopbarProps {
 
 export function Topbar({ title, subtitle, backHref }: TopbarProps) {
   return (
-    <div className="bg-primary px-4 py-4 flex items-center gap-2">
+    <div className="bg-primary px-4 py-4 flex items-center gap-2 pb-6">
       {backHref && (
         <Link
           href={backHref}
@@ -19,7 +19,7 @@ export function Topbar({ title, subtitle, backHref }: TopbarProps) {
         </Link>
       )}
       <div>
-        <p className="text-primary-foreground text-[15px] font-medium m-0">
+        <p className="text-primary-foreground text-base font-medium m-0">
           {title}
         </p>
         {subtitle && (
