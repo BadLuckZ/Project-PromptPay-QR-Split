@@ -1,13 +1,25 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Image from "next/image";
 
 import { createClient } from "@/supabase/client";
 
 export default function LoginPage() {
   const supabase = createClient();
+  const [isLoading, setIsLoading] = useState(false);
+
+  // Prevent coming back from signing in with google
+  useEffect(() => {
+    function handlePageShow(event: PageTransitionEvent) {
+      if (event.persisted) setIsLoading(false);
+    }
+    window.addEventListener("pageshow", handlePageShow);
+    return () => window.removeEventListener("pageshow", handlePageShow);
+  }, []);
 
   async function signInWithGoogle() {
+    setIsLoading(true);
     await supabase.auth.signInWithOAuth({
       provider: "google",
       options: {
@@ -42,10 +54,15 @@ export default function LoginPage() {
         <button
           type="button"
           onClick={signInWithGoogle}
-          className="mt-6 flex w-full px-2 max-w-sm items-center justify-center gap-3 rounded-xl border border-border bg-card py-3.5 text-sm font-medium text-foreground shadow-xs transition-colors hover:bg-muted"
+          disabled={isLoading}
+          className="mt-6 flex w-full px-2 max-w-sm items-center justify-center gap-3 rounded-xl border border-border bg-card py-3.5 text-sm font-medium text-foreground shadow-xs transition-colors hover:bg-muted disabled:cursor-not-allowed disabled:opacity-60"
         >
-          <Image src="/google-logo.svg" alt="" width={20} height={20} />
-          เข้าสู่ระบบด้วย Google
+          {isLoading ? (
+            <span className="size-5 animate-spin rounded-full border-2 border-muted-foreground/30 border-t-foreground" />
+          ) : (
+            <Image src="/google-logo.svg" alt="" width={20} height={20} />
+          )}
+          {isLoading ? "กำลังเข้าสู่ระบบ..." : "เข้าสู่ระบบด้วย Google"}
         </button>
 
         {/* TODO: Consent Message */}
