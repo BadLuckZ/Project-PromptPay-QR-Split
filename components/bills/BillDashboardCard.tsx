@@ -5,8 +5,6 @@ import { cn, getInitials } from "@/lib/utils";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Member } from "@/types";
 
-
-
 interface BillDashboardCardProps {
   member: Member;
   accentIndex?: number;
