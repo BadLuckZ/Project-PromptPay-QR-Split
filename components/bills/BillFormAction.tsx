@@ -56,7 +56,7 @@ export function BillFormAction({
           <AlertDialogHeader>
             <AlertDialogTitle>ยืนยันการสร้าง Bill</AlertDialogTitle>
             <AlertDialogDescription>
-              &quot;{billName || "Bill ใหม่"}&quot; {totalCount} คน รวม ฿
+              <b>{billName || "Bill ใหม่"}</b> จำนวน {totalCount} คน รวม ฿
               {totalNumber.toLocaleString()}
             </AlertDialogDescription>
           </AlertDialogHeader>

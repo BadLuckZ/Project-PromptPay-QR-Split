@@ -35,6 +35,9 @@ export function BillForm({ ownerName }: BillFormProps) {
   const router = useRouter();
   const [tab, setTab] = useState<SplitTab>("equal");
   const [newParticipantName, setNewParticipantName] = useState("");
+  const [participantNameError, setParticipantNameError] = useState<
+    string | null
+  >(null);
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [sessionExpired, setSessionExpired] = useState(false);
@@ -77,6 +80,16 @@ export function BillForm({ ownerName }: BillFormProps) {
   function addParticipant() {
     const name = newParticipantName.trim();
     if (!name) return;
+
+    const isDuplicate = [ownerName, ...participants.map((p) => p.name)].some(
+      (existing) => existing.trim().toLowerCase() === name.toLowerCase(),
+    );
+    if (isDuplicate) {
+      setParticipantNameError("มีชื่อนี้ในบิลแล้ว กรุณาใช้ชื่ออื่น");
+      return;
+    }
+
+    setParticipantNameError(null);
     append({ name, amount: "" });
     setNewParticipantName("");
   }
@@ -158,28 +171,37 @@ export function BillForm({ ownerName }: BillFormProps) {
         </div>
 
         {/* New Participant */}
-        <div className="flex items-center gap-2">
-          <Input
-            value={newParticipantName}
-            onChange={(e) => setNewParticipantName(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === "Enter") {
-                e.preventDefault();
-                addParticipant();
-              }
-            }}
-            placeholder="ชื่อผู้เข้าร่วม"
-            disabled={submitting}
-          />
-          <Button
-            type="button"
-            variant="outline"
-            size="icon"
-            disabled={submitting || newParticipantName.trim() === ""}
-            onClick={addParticipant}
-          >
-            <Plus size={16} />
-          </Button>
+        <div className="flex flex-col gap-1.5">
+          <div className="flex items-center gap-2">
+            <Input
+              value={newParticipantName}
+              onChange={(e) => {
+                setNewParticipantName(e.target.value);
+                setParticipantNameError(null);
+              }}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  e.preventDefault();
+                  addParticipant();
+                }
+              }}
+              placeholder="ชื่อผู้เข้าร่วม"
+              disabled={submitting}
+              aria-invalid={!!participantNameError}
+            />
+            <Button
+              type="button"
+              variant="outline"
+              size="icon"
+              disabled={submitting || newParticipantName.trim() === ""}
+              onClick={addParticipant}
+            >
+              <Plus size={16} />
+            </Button>
+          </div>
+          {participantNameError && (
+            <p className="text-xs text-destructive">{participantNameError}</p>
+          )}
         </div>
 
         {/* Tabs */}
