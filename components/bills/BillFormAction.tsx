@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { Receipt } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   AlertDialog,
@@ -47,9 +48,13 @@ export function BillFormAction({
       </div>
 
       <AlertDialog open={showConfirm} onOpenChange={setShowConfirm}>
-        <AlertDialogContent>
+        <AlertDialogContent className="flex flex-col items-center text-center">
+          <div className="flex size-14 items-center justify-center rounded-full bg-primary-tint/40 text-primary-dark">
+            <Receipt size={26} />
+          </div>
+
           <AlertDialogHeader>
-            <AlertDialogTitle>ยืนยันการสร้าง bill</AlertDialogTitle>
+            <AlertDialogTitle>ยืนยันการสร้าง Bill</AlertDialogTitle>
             <AlertDialogDescription>
               &quot;{billName || "Bill ใหม่"}&quot; {totalCount} คน รวม ฿
               {totalNumber.toLocaleString()}
@@ -58,9 +63,18 @@ export function BillFormAction({
           {submitError && (
             <p className="text-sm text-destructive">{submitError}</p>
           )}
-          <AlertDialogFooter>
-            <AlertDialogCancel disabled={submitting}>แก้ไข</AlertDialogCancel>
-            <AlertDialogAction onClick={onConfirm} disabled={submitting}>
+          <AlertDialogFooter className="w-full">
+            <AlertDialogCancel
+              disabled={submitting}
+              className="h-11 w-full rounded-xl"
+            >
+              ยกเลิก
+            </AlertDialogCancel>
+            <AlertDialogAction
+              onClick={onConfirm}
+              disabled={submitting}
+              className="h-11 w-full rounded-xl"
+            >
               {submitting ? "กำลังสร้าง..." : "สร้าง Bill"}
             </AlertDialogAction>
           </AlertDialogFooter>

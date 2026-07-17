@@ -126,7 +126,7 @@ export function BillDashboardActions({
             <AlertDialogDescription>
               {closed
                 ? "สมาชิกจะสามารถดูและจ่ายบิลนี้ต่อได้ตามปกติ"
-                : "จะถือว่าบิลนี้ชำระครบแล้ว จะไม่สามารถแก้ไขสถานะการจ่ายของสมาชิกได้จนกว่าจะเปิดอีกครั้ง"}
+                : "จะถือว่าบิลนี้ชำระครบแล้ว ไม่สามารถแก้ไขสถานะการจ่ายได้จนกว่าจะเปิดอีกครั้ง"}
             </AlertDialogDescription>
           </AlertDialogHeader>
           {error && <p className="text-sm text-destructive">{error}</p>}
