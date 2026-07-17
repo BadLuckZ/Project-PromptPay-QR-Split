@@ -47,7 +47,6 @@ export function BillFormCustomTab({
         <BillFormCard
           key={f.id}
           name={f.name}
-          accentIndex={i}
           className="py-1"
           onRemove={() => onRemove(i)}
           disabled={disabled}

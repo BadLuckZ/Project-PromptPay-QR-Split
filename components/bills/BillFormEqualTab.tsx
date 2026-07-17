@@ -45,7 +45,6 @@ export function BillFormEqualTab({
         <BillFormCard
           key={f.id}
           name={f.name}
-          accentIndex={i}
           meta={meta}
           onRemove={() => onRemove(i)}
           disabled={disabled}

@@ -5,15 +5,9 @@ import { Trash2 } from "lucide-react";
 import { cn, getInitials } from "@/lib/utils";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 
-const AVATAR_COLORS = [
-  "bg-warning text-warning-foreground",
-  "bg-success text-success-foreground",
-];
-
 interface BillFormCardProps {
   name: string;
   isOwner?: boolean;
-  accentIndex?: number;
   meta?: string;
   trailing?: ReactNode;
   onRemove?: () => void;
@@ -24,7 +18,6 @@ interface BillFormCardProps {
 export function BillFormCard({
   name,
   isOwner = false,
-  accentIndex = 0,
   meta,
   trailing,
   onRemove,
@@ -38,7 +31,7 @@ export function BillFormCard({
           className={
             isOwner
               ? "bg-success text-success-foreground"
-              : AVATAR_COLORS[accentIndex % AVATAR_COLORS.length]
+              : "bg-warning text-warning-foreground"
           }
         >
           {getInitials(name)}
