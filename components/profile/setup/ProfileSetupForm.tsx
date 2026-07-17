@@ -3,20 +3,43 @@
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 
+import { Topbar } from "@/components/Topbar";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+
 type FormValues = {
   display_name: string;
   promptpay_number: string;
 };
 
-interface ProfileSetupFormProps {}
+interface ProfileSetupFormProps {
+  email: string;
+}
 
-export function ProfileSetupForm({}: ProfileSetupFormProps) {
+function getInitials(name: string) {
+  const initials = name
+    .trim()
+    .split(/\s+/)
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((part) => part[0])
+    .join("");
+
+  return initials ? initials.toUpperCase() : "??";
+}
+
+export function ProfileSetupForm({ email }: ProfileSetupFormProps) {
   const router = useRouter();
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    watch,
+    formState: { errors, isSubmitting },
   } = useForm<FormValues>();
+
+  const displayName = watch("display_name", "");
 
   async function onSubmit(data: FormValues) {
     const res = await fetch("/api/v1/users/me", {
@@ -31,43 +54,86 @@ export function ProfileSetupForm({}: ProfileSetupFormProps) {
   }
 
   return (
-    <div className="flex flex-col gap-4">
-      <div className="flex flex-col gap-2">
-        <input
-          {...register("display_name", { required: "กรุณากรอกชื่อ" })}
-          placeholder="ชื่อที่แสดง"
-          type="text"
-          className="border rounded-full w-fit"
-        />
-        {errors.display_name && (
-          <p className="text-red-500">{errors.display_name.message}</p>
-        )}
+    <div className="flex min-h-dvh flex-col bg-background">
+      <Topbar title="ตั้งค่าโปรไฟล์" />
+
+      <div className="flex flex-col items-center pt-6">
+        <Avatar size="lg" className="size-16! bg-card">
+          <AvatarFallback className="bg-primary-tint text-2xl font-medium text-primary-dark">
+            {getInitials(displayName)}
+          </AvatarFallback>
+        </Avatar>
+        <p className="mt-2 text-xs text-muted-foreground">
+          Avatar จากชื่อที่ตั้ง
+        </p>
       </div>
 
-      <div className="flex flex-col gap-2">
-        <input
-          {...register("promptpay_number", {
-            required: "กรุณากรอกเบอร์",
-            pattern: {
-              value: /^0\d{9}$/,
-              message: "เบอร์โทรต้องเป็นตัวเลข 10 หลัก ที่ขึ้นต้นด้วยเลข 0",
-            },
-          })}
-          placeholder="เบอร์ PromptPay"
-          type="tel"
-          className="border rounded-full w-fit"
-        />
-        {errors.promptpay_number && (
-          <p className="text-red-500">{errors.promptpay_number.message}</p>
-        )}
-      </div>
-
-      <button
-        className="cursor-pointer border rounded-xl px-4 py-2"
-        onClick={handleSubmit(onSubmit)}
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="flex flex-1 flex-col gap-5 px-4 pt-8"
       >
-        บันทึก
-      </button>
+        <div className="flex items-center gap-3 rounded-2xl bg-secondary px-3 py-3">
+          <div className="flex size-9 shrink-0 items-center justify-center rounded-full bg-card">
+            <img src="/google-logo.svg" alt="" width={18} height={18} />
+          </div>
+          <div className="min-w-0 flex-1">
+            <p className="truncate text-sm text-secondary-foreground/80">
+              {email}
+            </p>
+          </div>
+          <span className="shrink-0 rounded-full bg-card px-2.5 py-1 text-xs text-primary">
+            เชื่อมต่อแล้ว
+          </span>
+        </div>
+
+        <div className="flex flex-col gap-2">
+          <Label htmlFor="display_name">ชื่อที่แสดง</Label>
+          <Input
+            id="display_name"
+            {...register("display_name", { required: "กรุณากรอกชื่อ" })}
+            placeholder="ชื่อ-นามสกุล"
+            type="text"
+            className="rounded-lg"
+          />
+          {errors.display_name && (
+            <p className="text-xs text-destructive">
+              {errors.display_name.message}
+            </p>
+          )}
+        </div>
+
+        <div className="flex flex-col gap-2">
+          <Label htmlFor="promptpay_number">เบอร์โทรศัพท์ (PromptPay)</Label>
+          <Input
+            id="promptpay_number"
+            {...register("promptpay_number", {
+              required: "กรุณากรอกเบอร์โทรศัพท์",
+              pattern: {
+                value: /^0\d{9}$/,
+                message: "เบอร์โทรต้องเป็นตัวเลข 10 หลัก ที่ขึ้นต้นด้วยเลข 0",
+              },
+            })}
+            placeholder="08x-xxx-xxxx"
+            type="tel"
+            className="rounded-lg"
+          />
+          {errors.promptpay_number && (
+            <p className="text-xs text-destructive">
+              {errors.promptpay_number.message}
+            </p>
+          )}
+        </div>
+
+        <div className="mt-auto pt-8 pb-6">
+          <Button
+            type="submit"
+            disabled={isSubmitting}
+            className="h-12 w-full rounded-xl text-base"
+          >
+            {isSubmitting ? "กำลังบันทึก..." : "บันทึกโปรไฟล์"}
+          </Button>
+        </div>
+      </form>
     </div>
   );
 }
