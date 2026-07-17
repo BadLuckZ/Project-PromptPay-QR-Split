@@ -18,7 +18,12 @@ export default function RootLayout({
   return (
     <html
       lang="th"
-      className={cn("h-full antialiased", "font-sans", inter.variable)}
+      className={cn(
+        "h-full antialiased",
+        "font-sans",
+        inter.variable,
+        "mx-auto max-w-md bg-black/90",
+      )}
     >
       <body className="min-h-full flex flex-col">{children}</body>
     </html>
