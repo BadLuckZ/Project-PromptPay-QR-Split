@@ -78,14 +78,5 @@ export default async function PayPage({ params }: PayPageProps) {
     member.amount,
   );
 
-  return (
-    <div className="flex flex-1 flex-col">
-      <Topbar title="ชำระเงิน" />
-      <div className="flex flex-1 flex-col items-center justify-center">
-        <div className="w-full max-w-sm">
-          <PayQRDisplay member={member} qrCodeDataUrl={qrCodeDataUrl} />
-        </div>
-      </div>
-    </div>
-  );
+  return <PayQRDisplay member={member} qrCodeDataUrl={qrCodeDataUrl} />;
 }

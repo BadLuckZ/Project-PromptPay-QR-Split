@@ -12,5 +12,5 @@ export async function createPromptPayQRSvg(phone: string, amount: number | strin
 
 export async function createPromptPayQRDataUrl(phone: string, amount: number | string): Promise<string> {
   const payload = createPromptPayPayload(phone, amount);
-  return QRCode.toDataURL(payload);
+  return QRCode.toDataURL(payload, { errorCorrectionLevel: "H" });
 }
