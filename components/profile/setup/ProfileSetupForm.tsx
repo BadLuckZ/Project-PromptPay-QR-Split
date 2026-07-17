@@ -2,7 +2,6 @@
 
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
-import Image from "next/image";
 
 import { Topbar } from "@/components/Topbar";
 import { Button } from "@/components/ui/button";
@@ -75,7 +74,7 @@ export function ProfileSetupForm({ email }: ProfileSetupFormProps) {
       >
         <div className="flex items-center gap-3 rounded-2xl bg-secondary px-3 py-3">
           <div className="flex size-9 shrink-0 items-center justify-center rounded-full bg-card">
-            <Image src="/google-logo.svg" alt="" width={18} height={18} />
+            <img src="/google-logo.svg" alt="" width={18} height={18} />
           </div>
           <div className="min-w-0 flex-1">
             <p className="truncate text-sm text-secondary-foreground/80">
