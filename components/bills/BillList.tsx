@@ -32,7 +32,7 @@ export function BillList({ bills }: BillList) {
 
   return (
     <div className="flex flex-col flex-1 min-h-0">
-      <div className="p-4 pb-2 flex flex-col gap-2.5 shrink-0">
+      <div className="p-4 pt-6 pb-4 flex flex-col gap-3.5 shrink-0">
         <Button
           className="w-full"
           nativeButton={false}
@@ -41,14 +41,14 @@ export function BillList({ bills }: BillList) {
           <Plus size={16} /> สร้าง Bill ใหม่
         </Button>
 
-        <div className="flex gap-1.5">
+        <div className="flex gap-2">
           {FILTERS.map((f) => (
             <button
               key={f.value}
               type="button"
               onClick={() => setFilter(f.value)}
               className={cn(
-                "text-xs px-3.5 py-1.5 rounded-full border cursor-pointer",
+                "text-xs px-3 py-2 rounded-full border cursor-pointer",
                 filter === f.value
                   ? "bg-primary text-primary-foreground border-primary"
                   : "bg-card text-muted-foreground border-border",
@@ -60,9 +60,9 @@ export function BillList({ bills }: BillList) {
         </div>
       </div>
 
-      <div className="flex-1 overflow-y-auto px-4 pb-4 flex flex-col gap-2.5">
+      <div className="flex-1 overflow-y-auto px-4 pb-4 flex flex-col gap-3">
         {filtered.length === 0 ? (
-          <p className="text-center text-sm text-muted-foreground pt-10">
+          <p className="text-center text-sm text-muted-foreground pt-12">
             ไม่มี Bill ในหมวดนี้
           </p>
         ) : (

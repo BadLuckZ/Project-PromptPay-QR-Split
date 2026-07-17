@@ -9,7 +9,11 @@ export default async function CreateBillPage() {
 
   return (
     <div className="flex flex-col flex-1">
-      <Topbar title="สร้าง Bill ใหม่" backHref="/bills" />
+      <Topbar
+        title="สร้าง Bill ใหม่"
+        backHref="/bills"
+        profileName={profile?.display_name}
+      />
       <BillForm ownerName={profile?.display_name ?? "คุณ (เจ้าของ)"} />
     </div>
   );

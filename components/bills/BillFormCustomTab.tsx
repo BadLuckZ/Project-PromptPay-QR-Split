@@ -13,6 +13,7 @@ interface BillFormCustomTabProps {
   fields: FieldArrayWithId<FormValues, "participants", "id">[];
   register: UseFormRegister<FormValues>;
   onRemove: (index: number) => void;
+  disabled?: boolean;
 }
 
 export function BillFormCustomTab({
@@ -23,6 +24,7 @@ export function BillFormCustomTab({
   fields,
   register,
   onRemove,
+  disabled = false,
 }: BillFormCustomTabProps) {
   return (
     <div className="flex flex-col gap-3">
@@ -35,6 +37,7 @@ export function BillFormCustomTab({
             type="number"
             {...register("owner_amount")}
             placeholder="฿0"
+            disabled={disabled}
             className="w-24 text-right"
           />
         }
@@ -47,11 +50,13 @@ export function BillFormCustomTab({
           accentIndex={i}
           className="py-1"
           onRemove={() => onRemove(i)}
+          disabled={disabled}
           trailing={
             <Input
               type="number"
               {...register(`participants.${i}.amount`)}
               placeholder="฿0"
+              disabled={disabled}
               className="w-24 text-right"
             />
           }

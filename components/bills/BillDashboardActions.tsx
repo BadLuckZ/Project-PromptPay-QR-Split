@@ -2,8 +2,9 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Lock, CheckCircle2 } from "lucide-react";
+import { Lock, CheckCircle2, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { SessionExpiredDialog } from "@/components/SessionExpiredDialog";
 import {
   AlertDialog,
   AlertDialogContent,
@@ -31,6 +32,7 @@ export function BillDashboardActions({
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [sessionExpired, setSessionExpired] = useState(false);
 
   async function confirmClose() {
     setSubmitting(true);
@@ -43,6 +45,11 @@ export function BillDashboardActions({
     });
 
     setSubmitting(false);
+
+    if (res.status === 401) {
+      setSessionExpired(true);
+      return;
+    }
 
     if (!res.ok) {
       setError("อัปเดตสถานะบิลไม่สำเร็จ กรุณาลองใหม่อีกครั้ง");
@@ -60,6 +67,11 @@ export function BillDashboardActions({
     const res = await fetch(`/api/v1/bills/${billId}`, { method: "DELETE" });
 
     setSubmitting(false);
+
+    if (res.status === 401) {
+      setSessionExpired(true);
+      return;
+    }
 
     if (!res.ok) {
       setError("ลบบิลไม่สำเร็จ กรุณาลองใหม่อีกครั้ง");
@@ -96,7 +108,17 @@ export function BillDashboardActions({
       </button>
 
       <AlertDialog open={showCloseConfirm} onOpenChange={setShowCloseConfirm}>
-        <AlertDialogContent>
+        <AlertDialogContent className="flex flex-col items-center text-center">
+          <div
+            className={`flex size-14 items-center justify-center rounded-full ${
+              closed
+                ? "bg-success text-success-foreground"
+                : "bg-warning text-warning-foreground"
+            }`}
+          >
+            {closed ? <Lock size={26} /> : <CheckCircle2 size={26} />}
+          </div>
+
           <AlertDialogHeader>
             <AlertDialogTitle>
               {closed ? "เปิดบิลนี้อีกครั้ง?" : "ปิดบิลนี้?"}
@@ -108,9 +130,22 @@ export function BillDashboardActions({
             </AlertDialogDescription>
           </AlertDialogHeader>
           {error && <p className="text-sm text-destructive">{error}</p>}
-          <AlertDialogFooter>
-            <AlertDialogCancel disabled={submitting}>ยกเลิก</AlertDialogCancel>
-            <AlertDialogAction onClick={confirmClose} disabled={submitting}>
+          <AlertDialogFooter className="w-full">
+            <AlertDialogCancel
+              disabled={submitting}
+              className="h-11 w-full rounded-xl"
+            >
+              ยกเลิก
+            </AlertDialogCancel>
+            <AlertDialogAction
+              onClick={confirmClose}
+              disabled={submitting}
+              className={`h-11 w-full rounded-xl text-white ${
+                closed
+                  ? "bg-success-foreground hover:bg-success-foreground/90"
+                  : "bg-warning-foreground hover:bg-warning-foreground/90"
+              }`}
+            >
               {submitting ? "กำลังบันทึก..." : closed ? "เปิดบิล" : "ปิดบิล"}
             </AlertDialogAction>
           </AlertDialogFooter>
@@ -118,7 +153,11 @@ export function BillDashboardActions({
       </AlertDialog>
 
       <AlertDialog open={showDeleteConfirm} onOpenChange={setShowDeleteConfirm}>
-        <AlertDialogContent>
+        <AlertDialogContent className="flex flex-col items-center text-center">
+          <div className="flex size-14 items-center justify-center rounded-full bg-danger text-danger-foreground">
+            <Trash2 size={26} />
+          </div>
+
           <AlertDialogHeader>
             <AlertDialogTitle>ลบบิลนี้?</AlertDialogTitle>
             <AlertDialogDescription>
@@ -127,18 +166,26 @@ export function BillDashboardActions({
             </AlertDialogDescription>
           </AlertDialogHeader>
           {error && <p className="text-sm text-destructive">{error}</p>}
-          <AlertDialogFooter>
-            <AlertDialogCancel disabled={submitting}>ยกเลิก</AlertDialogCancel>
+          <AlertDialogFooter className="w-full">
+            <AlertDialogCancel
+              disabled={submitting}
+              className="h-11 w-full rounded-xl"
+            >
+              ยกเลิก
+            </AlertDialogCancel>
             <AlertDialogAction
               variant="destructive"
               onClick={confirmDelete}
               disabled={submitting}
+              className="h-11 w-full rounded-xl bg-destructive text-destructive-foreground hover:bg-destructive/90"
             >
               {submitting ? "กำลังลบ..." : "ลบบิล"}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      <SessionExpiredDialog open={sessionExpired} />
     </div>
   );
 }

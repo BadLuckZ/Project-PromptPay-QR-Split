@@ -19,11 +19,5 @@ export default async function ProfileSetupPage() {
     redirect("/bills");
   }
 
-  return (
-    <div>
-      <h1>ตั้งค่าโปรไฟล์</h1>
-      <p>{user?.email}</p>
-      <ProfileSetupForm />
-    </div>
-  );
+  return <ProfileSetupForm email={user!.email!} />;
 }

@@ -10,6 +10,7 @@ interface BillFormEqualTabProps {
   totalCount: number;
   fields: FieldArrayWithId<FormValues, "participants", "id">[];
   onRemove: (index: number) => void;
+  disabled?: boolean;
 }
 
 export function BillFormEqualTab({
@@ -18,6 +19,7 @@ export function BillFormEqualTab({
   totalCount,
   fields,
   onRemove,
+  disabled = false,
 }: BillFormEqualTabProps) {
   const meta = `฿${perPerson.toLocaleString()}`;
 
@@ -46,6 +48,7 @@ export function BillFormEqualTab({
           accentIndex={i}
           meta={meta}
           onRemove={() => onRemove(i)}
+          disabled={disabled}
           className="border-b border-border py-2.5"
         />
       ))}

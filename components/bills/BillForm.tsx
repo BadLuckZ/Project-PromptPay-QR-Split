@@ -11,6 +11,7 @@ import { Label } from "@/components/ui/label";
 import { BillFormEqualTab } from "@/components/bills/BillFormEqualTab";
 import { BillFormCustomTab } from "@/components/bills/BillFormCustomTab";
 import { BillFormAction } from "@/components/bills/BillFormAction";
+import { SessionExpiredDialog } from "@/components/SessionExpiredDialog";
 
 const SPLIT_TABS = [
   { value: "equal", label: "หารเท่ากัน" },
@@ -36,6 +37,7 @@ export function BillForm({ ownerName }: BillFormProps) {
   const [newParticipantName, setNewParticipantName] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
+  const [sessionExpired, setSessionExpired] = useState(false);
 
   const {
     register,
@@ -99,8 +101,14 @@ export function BillForm({ ownerName }: BillFormProps) {
       body: JSON.stringify({ bill_name: values.bill_name, members }),
     });
 
-    const data = await res.json();
     setSubmitting(false);
+
+    if (res.status === 401) {
+      setSessionExpired(true);
+      return;
+    }
+
+    const data = await res.json();
 
     if (!res.ok) {
       setSubmitError(data.error ?? "เกิดข้อผิดพลาด กรุณาลองใหม่");
@@ -120,6 +128,7 @@ export function BillForm({ ownerName }: BillFormProps) {
             id="bill-name"
             {...register("bill_name", { required: "กรุณากรอกชื่อ Bill" })}
             placeholder="กรุณากรอกชื่อ Bill"
+            disabled={submitting}
             aria-invalid={!!errors.bill_name}
           />
           {errors.bill_name && (
@@ -140,6 +149,7 @@ export function BillForm({ ownerName }: BillFormProps) {
               validate: (v) => Number(v) > 0 || "กรุณากรอกยอดรวมมากกว่า 0",
             })}
             placeholder="0.00"
+            disabled={submitting}
             aria-invalid={!!errors.total}
           />
           {errors.total && (
@@ -159,12 +169,13 @@ export function BillForm({ ownerName }: BillFormProps) {
               }
             }}
             placeholder="ชื่อผู้เข้าร่วม"
+            disabled={submitting}
           />
           <Button
             type="button"
             variant="outline"
             size="icon"
-            disabled={newParticipantName.trim() === ""}
+            disabled={submitting || newParticipantName.trim() === ""}
             onClick={addParticipant}
           >
             <Plus size={16} />
@@ -178,8 +189,9 @@ export function BillForm({ ownerName }: BillFormProps) {
               key={t.value}
               type="button"
               onClick={() => setTab(t.value)}
+              disabled={submitting}
               className={cn(
-                "flex-1 -mb-px border-b-2 pb-2.5 text-sm font-medium cursor-pointer",
+                "flex-1 -mb-px border-b-2 pb-2.5 text-sm font-medium cursor-pointer disabled:pointer-events-none disabled:opacity-60",
                 tab === t.value
                   ? "border-primary text-primary"
                   : "border-transparent text-muted-foreground",
@@ -198,6 +210,7 @@ export function BillForm({ ownerName }: BillFormProps) {
             totalCount={totalCount}
             fields={fields}
             onRemove={remove}
+            disabled={submitting}
           />
         ) : (
           <BillFormCustomTab
@@ -208,6 +221,7 @@ export function BillForm({ ownerName }: BillFormProps) {
             fields={fields}
             register={register}
             onRemove={remove}
+            disabled={submitting}
           />
         )}
       </div>
@@ -221,6 +235,8 @@ export function BillForm({ ownerName }: BillFormProps) {
         submitError={submitError}
         onConfirm={handleSubmit(onSubmit)}
       />
+
+      <SessionExpiredDialog open={sessionExpired} />
     </div>
   );
 }
