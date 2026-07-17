@@ -15,7 +15,7 @@ export default async function ProfilePage() {
 
   return (
     <div>
-      <Topbar title="โปรไฟล์" />
+      <Topbar title="โปรไฟล์" profileName={profile?.display_name} />
       <p>{user?.email}</p>
       <ProfileForm profile={profile as User} />
     </div>
