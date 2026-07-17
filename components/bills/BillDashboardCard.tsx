@@ -2,13 +2,8 @@
 
 import { Copy, Check } from "lucide-react";
 import { cn, getInitials } from "@/lib/utils";
-import { Avatar, AvatarFallback, AvatarBadge } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Member } from "@/types";
-
-const AVATAR_COLORS = [
-  "bg-success text-success-foreground",
-  "bg-warning text-warning-foreground",
-];
 
 interface BillDashboardCardProps {
   member: Member;
@@ -21,7 +16,6 @@ interface BillDashboardCardProps {
 
 export function BillDashboardCard({
   member,
-  accentIndex = 0,
   copied,
   disabled,
   onCopyLink,
@@ -36,16 +30,12 @@ export function BillDashboardCard({
     >
       <Avatar>
         <AvatarFallback
-          className={AVATAR_COLORS[accentIndex % AVATAR_COLORS.length]}
+          className={member.is_paid ? "bg-success text-success-foreground" : "bg-warning text-warning-foreground"}
         >
           {getInitials(member.member_name)}
         </AvatarFallback>
-        {member.is_paid && (
-          <AvatarBadge>
-            <Check size={10} />
-          </AvatarBadge>
-        )}
       </Avatar>
+
       <div className="flex-1">
         <p className={cn("text-sm", member.is_paid && "line-through")}>
           {member.member_name}
@@ -54,6 +44,7 @@ export function BillDashboardCard({
           ฿{Number(member.amount).toLocaleString()}
         </p>
       </div>
+
       {!member.is_paid && (
         <button
           type="button"
@@ -78,6 +69,7 @@ export function BillDashboardCard({
         {member.is_paid && <Check size={12} />}
         {member.is_paid ? "จ่ายแล้ว" : "ยังไม่จ่าย"}
       </button>
+
     </div>
   );
 }

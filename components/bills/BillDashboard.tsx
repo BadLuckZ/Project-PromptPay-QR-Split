@@ -1,9 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { TrendingUp, Clock, Copy, Check, Info, Lock } from "lucide-react";
+import { TrendingUp, Clock, Copy, Check, Lock } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Avatar, AvatarFallback, AvatarBadge } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { BillDashboardCard } from "@/components/bills/BillDashboardCard";
 import { BillDashboardActions } from "@/components/bills/BillDashboardActions";
 import { SessionExpiredDialog } from "@/components/SessionExpiredDialog";
@@ -156,7 +156,7 @@ export function BillDashboard({
         disabled={closed}
       >
         {copiedKey === "all" ? <Check size={16} /> : <Copy size={16} />}
-        copy ทุก link
+        Copy ทุก Link
       </Button>
 
       <p className="text-sm text-muted-foreground">
@@ -168,12 +168,9 @@ export function BillDashboard({
       <div className="flex flex-col divide-y divide-border rounded-lg border border-border bg-card">
         <div className="flex items-center gap-2.5 p-3">
           <Avatar>
-            <AvatarFallback className="bg-primary-tint text-primary-dark">
+            <AvatarFallback className="bg-success text-success-foreground">
               {getInitials(bill.owner_name)}
             </AvatarFallback>
-            <AvatarBadge>
-              <Info size={10} />
-            </AvatarBadge>
           </Avatar>
           <p className="flex-1 text-sm font-medium">{bill.owner_name} (คุณ)</p>
         </div>
@@ -182,7 +179,6 @@ export function BillDashboard({
           <BillDashboardCard
             key={member.id}
             member={member}
-            accentIndex={i}
             copied={copiedKey === member.id}
             disabled={closed || updatingId === member.id}
             onCopyLink={() => copy(payLink(member.id), member.id)}
