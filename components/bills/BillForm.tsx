@@ -11,6 +11,7 @@ import { Label } from "@/components/ui/label";
 import { BillFormEqualTab } from "@/components/bills/BillFormEqualTab";
 import { BillFormCustomTab } from "@/components/bills/BillFormCustomTab";
 import { BillFormAction } from "@/components/bills/BillFormAction";
+import { SessionExpiredDialog } from "@/components/SessionExpiredDialog";
 
 const SPLIT_TABS = [
   { value: "equal", label: "หารเท่ากัน" },
@@ -36,6 +37,7 @@ export function BillForm({ ownerName }: BillFormProps) {
   const [newParticipantName, setNewParticipantName] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
+  const [sessionExpired, setSessionExpired] = useState(false);
 
   const {
     register,
@@ -99,8 +101,14 @@ export function BillForm({ ownerName }: BillFormProps) {
       body: JSON.stringify({ bill_name: values.bill_name, members }),
     });
 
-    const data = await res.json();
     setSubmitting(false);
+
+    if (res.status === 401) {
+      setSessionExpired(true);
+      return;
+    }
+
+    const data = await res.json();
 
     if (!res.ok) {
       setSubmitError(data.error ?? "เกิดข้อผิดพลาด กรุณาลองใหม่");
@@ -227,6 +235,8 @@ export function BillForm({ ownerName }: BillFormProps) {
         submitError={submitError}
         onConfirm={handleSubmit(onSubmit)}
       />
+
+      <SessionExpiredDialog open={sessionExpired} />
     </div>
   );
 }
