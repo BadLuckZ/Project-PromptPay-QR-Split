@@ -43,6 +43,7 @@ export default async function BillDetailPage({ params }: BillDetailPageProps) {
     <div className="flex flex-col flex-1">
       <Topbar
         title={bill.bill_name}
+        subtitle={bill.closed_at ? "ปิดแล้ว" : "เปิดอยู่"}
         backHref="/bills"
         profileName={profile?.display_name}
       />

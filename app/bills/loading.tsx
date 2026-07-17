@@ -1,14 +1,10 @@
+import TopbarLoading from "@/components/TopbarLoading";
+
 export default function BillsLoading() {
   return (
     <div className="flex flex-col flex-1 animate-pulse">
       {/* Topbar Loading */}
-      <div className="bg-primary px-4 py-4 pb-6 flex items-center gap-2">
-        <div className="flex-1 flex flex-col gap-2">
-          <div className="h-3 w-28 rounded-full bg-white/30" />
-          <div className="h-2.5 w-16 rounded-full bg-white/20" />
-        </div>
-        <div className="size-9 shrink-0 rounded-full bg-white/25" />
-      </div>
+      <TopbarLoading />
 
       <div className="p-4 pt-5 pb-3 flex flex-col gap-3">
         {/* Button Loading */}
