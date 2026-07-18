@@ -19,6 +19,7 @@ export const ERROR_MESSAGES = {
   UPDATE_MEMBER_FAILED: "อัปเดตสถานะไม่สำเร็จ",
   INVALID_IS_PAID: "ค่าสถานะการจ่ายไม่ถูกต้อง",
   INVALID_CLOSED: "ค่าสถานะบิลไม่ถูกต้อง",
+  BILL_CLOSED: "บิลนี้ปิดรับชำระแล้ว ไม่สามารถแก้ไขสถานะการจ่ายได้",
 } as const;
 
 export const MEMBER_AMOUNT_INVALID = (name: string) => {
