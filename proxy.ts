@@ -32,7 +32,10 @@ export async function proxy(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser();
 
-  if (!user && request.nextUrl.pathname !== "/login") {
+  // let only web request go to /login
+  // let API request still returns their status (not /login API status)
+  const isApiRoute = request.nextUrl.pathname.startsWith("/api");
+  if (!user && !isApiRoute && request.nextUrl.pathname !== "/login") {
     return NextResponse.redirect(new URL("/login", request.url));
   }
 
