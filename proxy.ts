@@ -1,6 +1,9 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
+// Session stored for 7 days
+const SOFT_SESSION_TIMEOUT_MS = 7 * 24 * 60 * 60 * 1000;
+
 export async function proxy(request: NextRequest) {
   let supabaseResponse = NextResponse.next({ request });
 
@@ -32,10 +35,21 @@ export async function proxy(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser();
 
+  let authenticated = !!user;
+
+  // Auto log out
+  if (user?.last_sign_in_at) {
+    const lastSignInAt = new Date(user.last_sign_in_at).getTime();
+    if (Date.now() - lastSignInAt > SOFT_SESSION_TIMEOUT_MS) {
+      await supabase.auth.signOut();
+      authenticated = false;
+    }
+  }
+
   // let only web request go to /login
   // let API request still returns their status (not /login API status)
   const isApiRoute = request.nextUrl.pathname.startsWith("/api");
-  if (!user && !isApiRoute && request.nextUrl.pathname !== "/login") {
+  if (!authenticated && !isApiRoute && request.nextUrl.pathname !== "/login") {
     return NextResponse.redirect(new URL("/login", request.url));
   }
 
