@@ -29,6 +29,7 @@ export function ProfileForm({ profile, email }: ProfileFormProps) {
   const router = useRouter();
   const [isLoggingOut, setIsLoggingOut] = useState(false);
   const [sessionExpired, setSessionExpired] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
   const {
     register,
     handleSubmit,
@@ -44,6 +45,8 @@ export function ProfileForm({ profile, email }: ProfileFormProps) {
   const displayName = watch("display_name", "");
 
   async function onSubmit(data: FormValues) {
+    setSubmitError(null);
+
     const res = await fetch("/api/v1/users/me", {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
@@ -55,9 +58,14 @@ export function ProfileForm({ profile, email }: ProfileFormProps) {
       return;
     }
 
-    if (res.ok) {
-      router.push("/bills");
+    const result = await res.json();
+
+    if (!res.ok) {
+      setSubmitError(result.error ?? "บันทึกข้อมูลไม่สำเร็จ กรุณาลองใหม่อีกครั้ง");
+      return;
     }
+
+    router.push("/bills");
   }
 
   async function handleLogout() {
@@ -141,6 +149,9 @@ export function ProfileForm({ profile, email }: ProfileFormProps) {
         </div>
 
         <div className="mt-auto flex flex-col items-center gap-3 pt-8 pb-6">
+          {submitError && (
+            <p className="text-xs text-destructive">{submitError}</p>
+          )}
           <Button
             type="submit"
             disabled={isSubmitting}

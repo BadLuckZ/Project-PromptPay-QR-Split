@@ -97,12 +97,13 @@ export function BillDashboard({
     }
 
     if (!res.ok) {
+      const data = await res.json();
       setMembers((prev) =>
         prev.map((m) =>
           m.id === memberId ? { ...m, is_paid: !nextIsPaid } : m,
         ),
       );
-      setToggleError("อัปเดตสถานะไม่สำเร็จ กรุณาลองใหม่อีกครั้ง");
+      setToggleError(data.error ?? "อัปเดตสถานะไม่สำเร็จ กรุณาลองใหม่อีกครั้ง");
     }
   }
 
