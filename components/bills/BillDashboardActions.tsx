@@ -51,8 +51,10 @@ export function BillDashboardActions({
       return;
     }
 
+    const data = await res.json();
+
     if (!res.ok) {
-      setError("อัปเดตสถานะบิลไม่สำเร็จ กรุณาลองใหม่อีกครั้ง");
+      setError(data.error ?? "อัปเดตสถานะบิลไม่สำเร็จ กรุณาลองใหม่อีกครั้ง");
       return;
     }
 
@@ -73,8 +75,10 @@ export function BillDashboardActions({
       return;
     }
 
+    const data = await res.json();
+
     if (!res.ok) {
-      setError("ลบบิลไม่สำเร็จ กรุณาลองใหม่อีกครั้ง");
+      setError(data.error ?? "ลบบิลไม่สำเร็จ กรุณาลองใหม่อีกครั้ง");
       return;
     }
 

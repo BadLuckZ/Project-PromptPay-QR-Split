@@ -1,8 +1,8 @@
-import { cookies, headers } from "next/headers";
+import { headers } from "next/headers";
 import { notFound } from "next/navigation";
 import { Topbar } from "@/components/Topbar";
 import { BillDashboard } from "@/components/bills";
-import { fetch as fetchWithCookies } from "@/lib/fetch";
+import { fetch } from "@/lib/fetch";
 import { Bill, Member, User } from "@/types";
 
 interface BillDetailPageProps {
@@ -19,11 +19,10 @@ export default async function BillDetailPage({ params }: BillDetailPageProps) {
     (process.env.NODE_ENV === "development" ? "http" : "https");
   const origin = `${protocol}://${host}`;
 
-  const cookieStore = await cookies();
-  const res = await fetch(`${origin}/api/v1/bills/${id}`, {
-    headers: { cookie: cookieStore.toString() },
-    cache: "no-store",
-  });
+  const [res, profileRes] = await Promise.all([
+    fetch(`/api/v1/bills/${id}`, { cache: "no-store" }),
+    fetch("/api/v1/users/me", { cache: "no-store" }),
+  ]);
 
   if (!res.ok) {
     notFound();
@@ -34,9 +33,6 @@ export default async function BillDetailPage({ params }: BillDetailPageProps) {
     members: Member[];
   };
 
-  const profileRes = await fetchWithCookies("/api/v1/users/me", {
-    cache: "no-store",
-  });
   const profile: User | null = profileRes.ok ? await profileRes.json() : null;
 
   return (

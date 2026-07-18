@@ -24,6 +24,7 @@ interface ProfileSetupFormProps {
 export function ProfileSetupForm({ email }: ProfileSetupFormProps) {
   const router = useRouter();
   const [sessionExpired, setSessionExpired] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
   const {
     register,
     handleSubmit,
@@ -34,6 +35,8 @@ export function ProfileSetupForm({ email }: ProfileSetupFormProps) {
   const displayName = watch("display_name", "");
 
   async function onSubmit(data: FormValues) {
+    setSubmitError(null);
+
     const res = await fetch("/api/v1/users/me", {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
@@ -45,9 +48,14 @@ export function ProfileSetupForm({ email }: ProfileSetupFormProps) {
       return;
     }
 
-    if (res.ok) {
-      router.push("/bills");
+    const result = await res.json();
+
+    if (!res.ok) {
+      setSubmitError(result.error ?? "บันทึกโปรไฟล์ไม่สำเร็จ กรุณาลองใหม่อีกครั้ง");
+      return;
     }
+
+    router.push("/bills");
   }
 
   return (
@@ -123,7 +131,10 @@ export function ProfileSetupForm({ email }: ProfileSetupFormProps) {
           )}
         </div>
 
-        <div className="mt-auto pt-8 pb-6">
+        <div className="mt-auto flex flex-col items-center gap-3 pt-8 pb-6">
+          {submitError && (
+            <p className="text-xs text-destructive">{submitError}</p>
+          )}
           <Button
             type="submit"
             disabled={isSubmitting}

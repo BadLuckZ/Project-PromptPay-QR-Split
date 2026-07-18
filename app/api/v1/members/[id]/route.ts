@@ -42,6 +42,27 @@ export async function PATCH(req: Request, { params }: RouteContext) {
     );
   }
 
+  const { data: existing, error: fetchErr } = await supabase
+    .from("members")
+    .select("id, bill:bills(closed_at)")
+    .eq("id", id)
+    .single();
+
+  if (fetchErr || !existing) {
+    return NextResponse.json(
+      { error: ERROR_MESSAGES.MEMBER_NOT_FOUND },
+      { status: 404 },
+    );
+  }
+
+  const bill = Array.isArray(existing.bill) ? existing.bill[0] : existing.bill;
+  if (bill?.closed_at) {
+    return NextResponse.json(
+      { error: ERROR_MESSAGES.BILL_CLOSED },
+      { status: 400 },
+    );
+  }
+
   const { data: member, error } = await supabase
     .from("members")
     .update({ is_paid: body.is_paid })

@@ -47,13 +47,42 @@ export async function PATCH(request: Request) {
     );
   }
 
-  const body = await request.json();
+  let body: { display_name: string; promptpay_number: string };
+  try {
+    body = await request.json();
+  } catch {
+    return NextResponse.json(
+      { error: ERROR_MESSAGES.INVALID_BODY },
+      { status: 400 },
+    );
+  }
+
+  const displayName = body.display_name?.trim();
+  if (!displayName) {
+    return NextResponse.json(
+      { error: ERROR_MESSAGES.DISPLAY_NAME_REQUIRED },
+      { status: 400 },
+    );
+  }
+  if (displayName.length > 100) {
+    return NextResponse.json(
+      { error: ERROR_MESSAGES.DISPLAY_NAME_TOO_LONG },
+      { status: 400 },
+    );
+  }
+
+  if (!/^0\d{9}$/.test(body.promptpay_number ?? "")) {
+    return NextResponse.json(
+      { error: ERROR_MESSAGES.PROMPTPAY_NUMBER_INVALID },
+      { status: 400 },
+    );
+  }
 
   const { data, error } = await supabase
     .from("users")
     .upsert({
       id: user.id,
-      display_name: body.display_name,
+      display_name: displayName,
       promptpay_number: body.promptpay_number,
     })
     .select()
