@@ -10,21 +10,28 @@ interface PayPageProps {
   params: Promise<{ memberId: string }>;
 }
 
+interface MemberPaymentInfo {
+  member_name: string;
+  amount: number;
+  bill_name: string;
+  owner_name: string;
+  promptpay_number: string;
+  deleted_at: string | null;
+  closed_at: string | null;
+}
+
 export default async function PayPage({ params }: PayPageProps) {
   const { memberId } = await params;
 
-  const { data } = await SUPABASE.from("members")
-    .select(
-      "member_name, amount, bill:bills(bill_name, owner_name, promptpay_number, deleted_at, closed_at)",
-    )
-    .eq("id", memberId)
-    .single();
+  const { data } = await SUPABASE.rpc("get_member_payment_info", {
+    p_member_id: memberId,
+  }).maybeSingle<MemberPaymentInfo>();
 
-  const bill = Array.isArray(data?.bill) ? data.bill[0] : data?.bill;
-
-  if (!data || !bill) {
+  if (!data) {
     notFound();
   }
+
+  const bill = data;
 
   if (bill.deleted_at) {
     return (
