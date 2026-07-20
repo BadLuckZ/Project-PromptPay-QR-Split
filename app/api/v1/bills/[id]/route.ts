@@ -42,6 +42,7 @@ export async function GET(_req: Request, { params }: RouteContext) {
     .order("created_at", { ascending: true });
 
   if (membersErr) {
+    console.error("[bills.id.GET] failed to load members", membersErr);
     return NextResponse.json(
       { error: ERROR_MESSAGES.LOAD_BILL_FAILED },
       { status: 500 },
@@ -96,6 +97,7 @@ export async function PATCH(req: Request, { params }: RouteContext) {
     .single();
 
   if (error || !bill) {
+    if (error) console.error("[bills.id.PATCH] failed to update bill", error);
     return NextResponse.json(
       { error: ERROR_MESSAGES.BILL_NOT_FOUND },
       { status: 404 },
@@ -129,6 +131,7 @@ export async function DELETE(_req: Request, { params }: RouteContext) {
     .single();
 
   if (error || !bill) {
+    if (error) console.error("[bills.id.DELETE] failed to delete bill", error);
     return NextResponse.json(
       { error: ERROR_MESSAGES.BILL_NOT_FOUND },
       { status: 404 },

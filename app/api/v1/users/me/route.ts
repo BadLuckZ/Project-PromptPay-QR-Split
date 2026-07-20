@@ -23,6 +23,7 @@ export async function GET() {
     .single();
 
   if (error) {
+    console.error("[users.me.GET] failed to load profile", error);
     return NextResponse.json(
       { error: ERROR_MESSAGES.LOAD_PROFILE_FAILED },
       { status: 500 },
@@ -89,6 +90,7 @@ export async function PATCH(request: Request) {
     .single();
 
   if (error) {
+    console.error("[users.me.PATCH] failed to save profile", error);
     return NextResponse.json(
       { error: ERROR_MESSAGES.SAVE_PROFILE_FAILED },
       { status: 500 },

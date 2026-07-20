@@ -35,6 +35,7 @@ export async function GET() {
     .order("created_at", { ascending: false });
 
   if (billsErr) {
+    console.error("[bills.GET] failed to load bills", billsErr);
     return NextResponse.json(
       { error: ERROR_MESSAGES.LOAD_BILLS_FAILED },
       { status: 500 },
@@ -89,6 +90,7 @@ export async function POST(req: Request) {
     .eq("id", user.id)
     .single();
   if (profileErr || !profile) {
+    console.error("[bills.POST] profile lookup failed", profileErr);
     return NextResponse.json(
       { error: ERROR_MESSAGES.PROFILE_NOT_FOUND },
       { status: 401 },
@@ -153,6 +155,7 @@ export async function POST(req: Request) {
     .single();
 
   if (billErr || !bill) {
+    console.error("[bills.POST] failed to create bill", billErr);
     return NextResponse.json(
       { error: ERROR_MESSAGES.CREATE_BILL_FAILED },
       { status: 500 },
@@ -169,6 +172,7 @@ export async function POST(req: Request) {
 
   const { error: memErr } = await supabase.from("members").insert(rows);
   if (memErr) {
+    console.error("[bills.POST] failed to save members", memErr);
     await supabase.from("bills").delete().eq("id", bill.id);
     return NextResponse.json(
       { error: ERROR_MESSAGES.SAVE_MEMBERS_FAILED },

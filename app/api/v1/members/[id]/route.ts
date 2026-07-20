@@ -71,6 +71,7 @@ export async function PATCH(req: Request, { params }: RouteContext) {
     .single();
 
   if (error || !member) {
+    if (error) console.error("[members.id.PATCH] failed to update member", error);
     return NextResponse.json(
       { error: ERROR_MESSAGES.MEMBER_NOT_FOUND },
       { status: 404 },

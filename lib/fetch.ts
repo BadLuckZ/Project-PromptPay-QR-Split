@@ -14,6 +14,7 @@ export async function fetch(path: string, init?: RequestInit) {
     (process.env.NODE_ENV === "development" ? "http" : "https");
 
   if (ALLOWED_HOSTS.length > 0 && (!host || !ALLOWED_HOSTS.includes(host))) {
+    console.error("[fetch] rejected request with disallowed host header", host);
     throw new Error("Invalid host header");
   }
 
