@@ -15,17 +15,17 @@ export function PayQRDisplay({ member, qrCodeDataUrl }: QRDisplayProps) {
   const handleSave = async (event: MouseEvent<HTMLAnchorElement>) => {
     if (typeof navigator === "undefined" || !navigator.share || !navigator.canShare) return;
 
-    const res = await fetch(qrCodeDataUrl);
-    const blob = await res.blob();
-    const file = new File([blob], fileName, { type: blob.type });
-
-    if (!navigator.canShare({ files: [file] })) return;
-
-    event.preventDefault();
     try {
+      const res = await fetch(qrCodeDataUrl);
+      const blob = await res.blob();
+      const file = new File([blob], fileName, { type: blob.type });
+
+      if (!navigator.canShare({ files: [file] })) return;
+
+      event.preventDefault();
       await navigator.share({ files: [file] });
     } catch {
-      // user cancelled share sheet, no fallback needed
+      // share unsupported/blocked or user cancelled, fall back to <a download>
     }
   };
 
