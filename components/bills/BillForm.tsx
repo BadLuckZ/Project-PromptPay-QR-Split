@@ -191,7 +191,11 @@ export function BillForm({ ownerName }: BillFormProps) {
             />
             <Button
               type="button"
-              variant="outline"
+              variant={
+                !submitting && newParticipantName.trim() !== ""
+                  ? "default"
+                  : "outline"
+              }
               size="icon"
               disabled={submitting || newParticipantName.trim() === ""}
               onClick={addParticipant}
