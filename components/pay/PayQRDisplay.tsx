@@ -1,3 +1,6 @@
+"use client";
+
+import type { MouseEvent } from "react";
 import { Download, Smartphone } from "lucide-react";
 import { getInitials } from "@/lib/utils";
 import { MemberQRView } from "@/types";
@@ -9,6 +12,24 @@ interface QRDisplayProps {
 
 export function PayQRDisplay({ member, qrCodeDataUrl }: QRDisplayProps) {
   const timestamp = new Date().toISOString().slice(0, 16).replace(/[-:T]/g, "");
+  const fileName = `${member.bill_name}_${member.member_name}_${timestamp}.png`;
+
+  const handleSave = async (event: MouseEvent<HTMLAnchorElement>) => {
+    if (typeof navigator === "undefined" || !navigator.share || !navigator.canShare) return;
+
+    try {
+      const res = await fetch(qrCodeDataUrl);
+      const blob = await res.blob();
+      const file = new File([blob], fileName, { type: blob.type });
+
+      if (!navigator.canShare({ files: [file] })) return;
+
+      event.preventDefault();
+      await navigator.share({ files: [file] });
+    } catch {
+      // share unsupported/blocked or user cancelled, fall back to <a download>
+    }
+  };
 
   return (
     <div className="flex flex-1 flex-col">
@@ -58,7 +79,8 @@ export function PayQRDisplay({ member, qrCodeDataUrl }: QRDisplayProps) {
 
         <a
           href={qrCodeDataUrl}
-          download={`${member.bill_name}_${member.member_name}_${timestamp}.png`}
+          download={fileName}
+          onClick={handleSave}
           className="mt-auto flex items-center justify-center gap-2 rounded-xl bg-primary px-4 py-3.5 text-sm font-medium text-primary-foreground"
         >
           <Download size={16} />
