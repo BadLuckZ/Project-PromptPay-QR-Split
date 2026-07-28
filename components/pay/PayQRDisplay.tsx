@@ -1,3 +1,5 @@
+"use client";
+
 import type { MouseEvent } from "react";
 import { Download, Smartphone } from "lucide-react";
 import { getInitials } from "@/lib/utils";
