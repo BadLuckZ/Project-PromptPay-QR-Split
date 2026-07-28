@@ -25,12 +25,16 @@ export function BillDashboardCard({
     <div
       className={cn(
         "flex items-center gap-2.5 p-3",
-        member.is_paid && "opacity-50 blur-[0.3px]",
+        member.is_paid && "opacity-50",
       )}
     >
       <Avatar>
         <AvatarFallback
-          className={member.is_paid ? "bg-success text-success-foreground" : "bg-warning text-warning-foreground"}
+          className={
+            member.is_paid
+              ? "bg-success text-success-foreground"
+              : "bg-warning text-warning-foreground"
+          }
         >
           {getInitials(member.member_name)}
         </AvatarFallback>
@@ -60,16 +64,15 @@ export function BillDashboardCard({
         onClick={onTogglePaid}
         disabled={disabled}
         className={cn(
-          "inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs cursor-pointer shrink-0 disabled:pointer-events-none disabled:opacity-60",
+          "inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-medium cursor-pointer shrink-0 shadow-sm active:scale-95 transition-transform disabled:pointer-events-none disabled:opacity-60",
           member.is_paid
             ? "bg-success text-success-foreground"
-            : "border border-border text-muted-foreground",
+            : "bg-warning border border-warning-border text-warning-foreground",
         )}
       >
         {member.is_paid && <Check size={12} />}
         {member.is_paid ? "จ่ายแล้ว" : "ยังไม่จ่าย"}
       </button>
-
     </div>
   );
 }
