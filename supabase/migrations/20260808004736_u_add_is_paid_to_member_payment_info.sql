@@ -1,6 +1,7 @@
 -- get_member_payment_info ไม่ได้คืนค่า is_paid ทำให้ member ที่ถูก mark จ่ายแล้ว ยังเปิดหน้า QR Code ได้อยู่
 
-CREATE OR REPLACE FUNCTION get_member_payment_info(p_member_id UUID)
+DROP FUNCTION IF EXISTS get_member_payment_info(UUID);
+CREATE FUNCTION get_member_payment_info(p_member_id UUID)
 RETURNS TABLE (
   member_name VARCHAR(100),
   amount DECIMAL(10,2),
