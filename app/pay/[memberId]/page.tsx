@@ -1,4 +1,4 @@
-import { AlertCircle, Lock } from "lucide-react";
+import { AlertCircle, CheckCircle2, Lock } from "lucide-react";
 import { notFound } from "next/navigation";
 import { Topbar } from "@/components/Topbar";
 import { PayQRDisplay } from "@/components/pay";
@@ -18,6 +18,7 @@ interface MemberPaymentInfo {
   promptpay_number: string;
   deleted_at: string | null;
   closed_at: string | null;
+  is_paid: boolean;
 }
 
 export default async function PayPage({ params }: PayPageProps) {
@@ -64,6 +65,25 @@ export default async function PayPage({ params }: PayPageProps) {
             <p className="font-medium">บิลนี้ปิดรับชำระแล้ว</p>
             <p className="text-sm text-muted-foreground">
               เจ้าของบิลปิดการรับชำระเงินในบิลนี้แล้ว
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (bill.is_paid) {
+    return (
+      <div className="flex flex-1 flex-col">
+        <Topbar title="ชำระเงิน" subtitle={bill.bill_name} />
+        <div className="flex flex-1 flex-col items-center justify-center p-4">
+          <div className="flex w-full max-w-sm flex-col items-center gap-3 rounded-2xl border border-border bg-card p-8 text-center shadow-sm">
+            <div className="flex size-14 items-center justify-center rounded-full bg-success text-success-foreground">
+              <CheckCircle2 size={28} />
+            </div>
+            <p className="font-medium">รายการนี้ชำระเงินแล้ว</p>
+            <p className="text-sm text-muted-foreground">
+              ไม่สามารถเปิดหน้าชำระเงินนี้ได้อีก
             </p>
           </div>
         </div>
