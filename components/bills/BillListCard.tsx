@@ -4,10 +4,11 @@ import { cn } from "@/lib/utils";
 import { Bill } from "@/types";
 
 const ACCENT_BORDERS = [
-  "border-l-chart-5",
   "border-l-chart-1",
   "border-l-chart-2",
+  "border-l-chart-3",
   "border-l-chart-4",
+  "border-l-chart-5",
 ];
 
 interface BillListCardProps {
