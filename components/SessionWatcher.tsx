@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 
 import { createClient } from "@/supabase/client";
 import { SessionExpiredDialog } from "@/components/SessionExpiredDialog";
+import { consumeUserLogout } from "@/lib/auth";
 
 // Check user session every 30 minutes
 const POLL_INTERVAL_MS = 30 * 60 * 1000;
@@ -20,6 +21,9 @@ export function SessionWatcher() {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((event) => {
       if (event === "SIGNED_OUT") {
+        if (consumeUserLogout()) return;
+
+        // Show Session Expired Modal
         setSessionExpired(true);
       }
     });
