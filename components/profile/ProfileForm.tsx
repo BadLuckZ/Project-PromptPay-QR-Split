@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { LogOut } from "lucide-react";
 
 import { createClient } from "@/supabase/client";
+import { markUserLogout } from "@/lib/auth";
 import { Topbar } from "@/components/Topbar";
 import { SessionExpiredDialog } from "@/components/SessionExpiredDialog";
 import { Button } from "@/components/ui/button";
@@ -61,7 +62,9 @@ export function ProfileForm({ profile, email }: ProfileFormProps) {
     const result = await res.json();
 
     if (!res.ok) {
-      setSubmitError(result.error ?? "บันทึกข้อมูลไม่สำเร็จ กรุณาลองใหม่อีกครั้ง");
+      setSubmitError(
+        result.error ?? "บันทึกข้อมูลไม่สำเร็จ กรุณาลองใหม่อีกครั้ง",
+      );
       return;
     }
 
@@ -70,6 +73,7 @@ export function ProfileForm({ profile, email }: ProfileFormProps) {
 
   async function handleLogout() {
     setIsLoggingOut(true);
+    markUserLogout();
     const supabase = createClient();
     await supabase.auth.signOut();
     router.push("/login");
