@@ -1,6 +1,7 @@
 import { headers, cookies } from "next/headers";
+import { ENV } from "@/lib/env";
 
-const ALLOWED_HOSTS = (process.env.ALLOWED_HOSTS ?? "")
+const ALLOWED_HOSTS = (ENV.ALLOWED_HOSTS ?? "")
   .split(",")
   .map((h) => h.trim())
   .filter(Boolean);
@@ -11,7 +12,7 @@ export async function fetch(path: string, init?: RequestInit) {
   const host = headersList.get("host");
   const protocol =
     headersList.get("x-forwarded-proto") ??
-    (process.env.NODE_ENV === "development" ? "http" : "https");
+    (ENV.NODE_ENV === "development" ? "http" : "https");
 
   if (ALLOWED_HOSTS.length > 0 && (!host || !ALLOWED_HOSTS.includes(host))) {
     console.error("[fetch] rejected request with disallowed host header", host);
