@@ -3,12 +3,12 @@
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import Script from "next/script";
 
 import { createClient } from "@/supabase/client";
 import { ENV } from "@/lib/env";
 
 const GOOGLE_CLIENT_ID = ENV.GOOGLE_CLIENT_ID;
+const GSI_SCRIPT_SRC = "https://accounts.google.com/gsi/client";
 
 async function hashNonce(nonce: string) {
   const encoded = new TextEncoder().encode(nonce);
@@ -32,6 +32,30 @@ export default function LoginPage() {
     }
     window.addEventListener("pageshow", handlePageShow);
     return () => window.removeEventListener("pageshow", handlePageShow);
+  }, []);
+
+  useEffect(() => {
+    if (window.google) {
+      initGoogleButton();
+      return;
+    }
+
+    const existing = document.querySelector<HTMLScriptElement>(
+      `script[src="${GSI_SCRIPT_SRC}"]`,
+    );
+
+    if (existing) {
+      existing.addEventListener("load", initGoogleButton);
+      return () => existing.removeEventListener("load", initGoogleButton);
+    }
+
+    const script = document.createElement("script");
+    script.src = GSI_SCRIPT_SRC;
+    script.async = true;
+    script.addEventListener("load", initGoogleButton);
+    document.body.appendChild(script);
+
+    return () => script.removeEventListener("load", initGoogleButton);
   }, []);
 
   async function handleCredentialResponse(credential: string, nonce: string) {
@@ -107,6 +131,7 @@ export default function LoginPage() {
           เข้าสู่ระบบเพื่อเริ่มใช้งาน
         </p>
 
+        {/* Google Button */}
         <div
           ref={buttonRef}
           className="mt-6 flex w-full max-w-sm justify-center"
@@ -119,19 +144,13 @@ export default function LoginPage() {
         )}
         {error && <p className="mt-3 text-xs text-destructive">{error}</p>}
 
-        <p className="mt-4 text-center text-xs text-muted-foreground">
+        <p className="mt-10 text-center text-xs text-muted-foreground">
           การเข้าสู่ระบบถือว่าคุณยอมรับ{" "}
           <Link href="/policy" className="text-primary underline">
             นโยบายความเป็นส่วนตัว
           </Link>
         </p>
       </div>
-
-      <Script
-        src="https://accounts.google.com/gsi/client"
-        strategy="afterInteractive"
-        onLoad={initGoogleButton}
-      />
     </div>
   );
 }
