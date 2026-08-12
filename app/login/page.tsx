@@ -109,7 +109,7 @@ export default function LoginPage() {
 
         <div
           ref={buttonRef}
-          className="mt-6 flex w-full max-w-sm justify-center [&>div]:w-full!"
+          className="mt-6 flex w-full max-w-sm justify-center"
         />
 
         {isLoading && (
