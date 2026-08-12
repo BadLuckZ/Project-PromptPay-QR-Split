@@ -3,7 +3,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import Script from "next/script";
 
 import { createClient } from "@/supabase/client";
 import { ENV } from "@/lib/env";
@@ -152,12 +151,6 @@ export default function LoginPage() {
           </Link>
         </p>
       </div>
-
-      <Script
-        src="https://accounts.google.com/gsi/client"
-        strategy="afterInteractive"
-        onLoad={initGoogleButton}
-      />
     </div>
   );
 }
