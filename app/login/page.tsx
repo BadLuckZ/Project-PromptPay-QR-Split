@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 
 import { createClient } from "@/supabase/client";
 
@@ -64,7 +65,12 @@ export default function LoginPage() {
           {isLoading ? "กำลังเข้าสู่ระบบ..." : "เข้าสู่ระบบด้วย Google"}
         </button>
 
-        {/* TODO: Consent Message */}
+        <p className="mt-4 text-center text-xs text-muted-foreground">
+          การเข้าสู่ระบบถือว่าคุณยอมรับ{" "}
+          <Link href="/policy" className="text-primary underline">
+            นโยบายความเป็นส่วนตัว
+          </Link>
+        </p>
       </div>
     </div>
   );
