@@ -1,13 +1,29 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
+import Script from "next/script";
 
 import { createClient } from "@/supabase/client";
+import { ENV } from "@/lib/env";
+
+const GOOGLE_CLIENT_ID = ENV.GOOGLE_CLIENT_ID;
+
+async function hashNonce(nonce: string) {
+  const encoded = new TextEncoder().encode(nonce);
+  const hashBuffer = await crypto.subtle.digest("SHA-256", encoded);
+  return Array.from(new Uint8Array(hashBuffer))
+    .map((b) => b.toString(16).padStart(2, "0"))
+    .join("");
+}
 
 export default function LoginPage() {
+  const router = useRouter();
   const supabase = createClient();
+  const buttonRef = useRef<HTMLDivElement>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   // Prevent coming back from signing in with google
   useEffect(() => {
@@ -18,13 +34,53 @@ export default function LoginPage() {
     return () => window.removeEventListener("pageshow", handlePageShow);
   }, []);
 
-  async function signInWithGoogle() {
+  async function handleCredentialResponse(credential: string, nonce: string) {
     setIsLoading(true);
-    await supabase.auth.signInWithOAuth({
+    setError(null);
+
+    const { data, error: signInErr } = await supabase.auth.signInWithIdToken({
       provider: "google",
-      options: {
-        redirectTo: `${window.location.origin}/auth/callback`,
-      },
+      token: credential,
+      nonce,
+    });
+
+    if (signInErr || !data.user) {
+      setError("เข้าสู่ระบบไม่สำเร็จ กรุณาลองใหม่อีกครั้ง");
+      setIsLoading(false);
+      return;
+    }
+
+    const { data: profile } = await supabase
+      .from("users")
+      .select("id")
+      .eq("id", data.user.id)
+      .single();
+
+    router.push(profile ? "/bills" : "/profile/setup");
+  }
+
+  async function initGoogleButton() {
+    if (!window.google || !buttonRef.current) return;
+
+    const nonce = crypto.randomUUID();
+    const hashedNonce = await hashNonce(nonce);
+
+    window.google.accounts.id.initialize({
+      client_id: GOOGLE_CLIENT_ID,
+      nonce: hashedNonce,
+      use_fedcm_for_prompt: true,
+      callback: (response) =>
+        handleCredentialResponse(response.credential, nonce),
+    });
+
+    window.google.accounts.id.renderButton(buttonRef.current, {
+      type: "standard",
+      theme: "outline",
+      size: "large",
+      shape: "pill",
+      text: "signin_with",
+      locale: "th",
+      width: "320",
     });
   }
 
@@ -51,19 +107,17 @@ export default function LoginPage() {
           เข้าสู่ระบบเพื่อเริ่มใช้งาน
         </p>
 
-        <button
-          type="button"
-          onClick={signInWithGoogle}
-          disabled={isLoading}
-          className="mt-6 flex w-full px-2 max-w-sm items-center justify-center gap-3 rounded-xl border border-border bg-card py-3.5 text-sm font-medium text-foreground shadow-xs transition-colors hover:bg-muted disabled:cursor-not-allowed disabled:opacity-60"
-        >
-          {isLoading ? (
-            <span className="size-5 animate-spin rounded-full border-2 border-muted-foreground/30 border-t-foreground" />
-          ) : (
-            <img src="/google-logo.svg" alt="" width={20} height={20} />
-          )}
-          {isLoading ? "กำลังเข้าสู่ระบบ..." : "เข้าสู่ระบบด้วย Google"}
-        </button>
+        <div
+          ref={buttonRef}
+          className="mt-6 flex w-full max-w-sm justify-center"
+        />
+
+        {isLoading && (
+          <p className="mt-3 text-xs text-muted-foreground">
+            กำลังเข้าสู่ระบบ...
+          </p>
+        )}
+        {error && <p className="mt-3 text-xs text-destructive">{error}</p>}
 
         <p className="mt-4 text-center text-xs text-muted-foreground">
           การเข้าสู่ระบบถือว่าคุณยอมรับ{" "}
@@ -72,6 +126,12 @@ export default function LoginPage() {
           </Link>
         </p>
       </div>
+
+      <Script
+        src="https://accounts.google.com/gsi/client"
+        strategy="afterInteractive"
+        onLoad={initGoogleButton}
+      />
     </div>
   );
 }

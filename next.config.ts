@@ -1,19 +1,20 @@
 import type { NextConfig } from "next";
+import { ENV } from "@/lib/env";
 
-const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL ?? "";
-const isLocalDev = process.env.NODE_ENV === "development";
-const isPreview = process.env.VERCEL_ENV === "preview";
+const SUPABASE_URL = ENV.SUPABASE_URL ?? "";
+const isLocalDev = ENV.NODE_ENV === "development";
+const isPreview = ENV.VERCEL_ENV === "preview";
 const allowVercelToolbar = isLocalDev || isPreview;
 
 // Content Security Policy: บอก Browser ว่าเอา Resource จากไหนได้
 const CSP = [
   "default-src 'self'",
-  `script-src 'self' 'unsafe-inline'${isLocalDev ? " 'unsafe-eval'" : ""}${allowVercelToolbar ? " https://vercel.live" : ""}`,
+  `script-src 'self' 'unsafe-inline' https://accounts.google.com${isLocalDev ? " 'unsafe-eval'" : ""}${allowVercelToolbar ? " https://vercel.live" : ""}`,
   "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
   `font-src 'self' https://fonts.gstatic.com${allowVercelToolbar ? " https://vercel.live" : ""}`,
-  "img-src 'self' data: blob:",
-  `connect-src 'self' data: ${SUPABASE_URL}${allowVercelToolbar ? " https://vercel.live wss://vercel.live wss://*.pusher.com" : ""}`,
-  `frame-src 'self'${allowVercelToolbar ? " https://vercel.live" : ""}`,
+  "img-src 'self' data: blob: https://*.googleusercontent.com",
+  `connect-src 'self' data: ${SUPABASE_URL} https://accounts.google.com${allowVercelToolbar ? " https://vercel.live wss://vercel.live wss://*.pusher.com" : ""}`,
+  `frame-src 'self' https://accounts.google.com${allowVercelToolbar ? " https://vercel.live" : ""}`,
   "object-src 'none'",
   "base-uri 'self'",
   "form-action 'self'",
