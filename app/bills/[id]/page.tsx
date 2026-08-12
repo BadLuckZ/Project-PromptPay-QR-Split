@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { Topbar } from "@/components/Topbar";
 import { BillDashboard } from "@/components/bills";
 import { fetch } from "@/lib/fetch";
+import { ENV } from "@/lib/env";
 import { Bill, Member, User } from "@/types";
 
 interface BillDetailPageProps {
@@ -16,7 +17,7 @@ export default async function BillDetailPage({ params }: BillDetailPageProps) {
   const host = headersList.get("host");
   const protocol =
     headersList.get("x-forwarded-proto") ??
-    (process.env.NODE_ENV === "development" ? "http" : "https");
+    (ENV.NODE_ENV === "development" ? "http" : "https");
   const origin = `${protocol}://${host}`;
 
   const [res, profileRes] = await Promise.all([

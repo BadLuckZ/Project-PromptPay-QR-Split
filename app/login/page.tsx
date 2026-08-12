@@ -6,8 +6,9 @@ import Link from "next/link";
 import Script from "next/script";
 
 import { createClient } from "@/supabase/client";
+import { ENV } from "@/lib/env";
 
-const GOOGLE_CLIENT_ID = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!;
+const GOOGLE_CLIENT_ID = ENV.GOOGLE_CLIENT_ID;
 
 async function hashNonce(nonce: string) {
   const encoded = new TextEncoder().encode(nonce);

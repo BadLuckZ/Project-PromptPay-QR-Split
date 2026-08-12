@@ -1,8 +1,9 @@
 import type { NextConfig } from "next";
+import { ENV } from "@/lib/env";
 
-const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL ?? "";
-const isLocalDev = process.env.NODE_ENV === "development";
-const isPreview = process.env.VERCEL_ENV === "preview";
+const SUPABASE_URL = ENV.SUPABASE_URL ?? "";
+const isLocalDev = ENV.NODE_ENV === "development";
+const isPreview = ENV.VERCEL_ENV === "preview";
 const allowVercelToolbar = isLocalDev || isPreview;
 
 // Content Security Policy: บอก Browser ว่าเอา Resource จากไหนได้
