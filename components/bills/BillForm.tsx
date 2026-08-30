@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useForm, useFieldArray } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { Plus } from "lucide-react";
+import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -108,27 +109,32 @@ export function BillForm({ ownerName }: BillFormProps) {
       amount: tab === "equal" ? perPerson : Number(p.amount) || 0,
     }));
 
-    const res = await fetch("/api/v1/bills", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ bill_name: values.bill_name, members }),
-    });
+    try {
+      const res = await fetch("/api/v1/bills", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ bill_name: values.bill_name, members }),
+      });
 
-    setSubmitting(false);
+      if (res.status === 401) {
+        setSessionExpired(true);
+        return;
+      }
 
-    if (res.status === 401) {
-      setSessionExpired(true);
-      return;
+      const data = await res.json();
+
+      if (!res.ok) {
+        setSubmitError(data.error ?? "เกิดข้อผิดพลาด กรุณาลองใหม่");
+        return;
+      }
+
+      toast.success("สร้างบิลสำเร็จ");
+      router.push("/bills");
+    } catch {
+      setSubmitError("เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง");
+    } finally {
+      setSubmitting(false);
     }
-
-    const data = await res.json();
-
-    if (!res.ok) {
-      setSubmitError(data.error ?? "เกิดข้อผิดพลาด กรุณาลองใหม่");
-      return;
-    }
-
-    router.push("/bills");
   }
 
   return (
