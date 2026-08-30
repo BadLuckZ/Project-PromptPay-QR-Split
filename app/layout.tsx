@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
-import { Toaster } from "sonner";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 import { SessionWatcher } from "@/components/SessionWatcher";
+import { Toaster } from "@/components/ui/sonner";
 
 export const metadata: Metadata = {
   title: "PromptPay QR Split",
