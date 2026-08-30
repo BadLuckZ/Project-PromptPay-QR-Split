@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 import { SessionWatcher } from "@/components/SessionWatcher";
+import { Toaster } from "@/components/ui/sonner";
 
 export const metadata: Metadata = {
   title: "PromptPay QR Split",
@@ -25,6 +26,7 @@ export default function RootLayout({
       <body className="min-h-full flex flex-col">
         {children}
         <SessionWatcher />
+        <Toaster />
       </body>
     </html>
   );

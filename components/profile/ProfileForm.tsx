@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 import { LogOut } from "lucide-react";
 
 import { createClient } from "@/supabase/client";
@@ -48,27 +49,32 @@ export function ProfileForm({ profile, email }: ProfileFormProps) {
   async function onSubmit(data: FormValues) {
     setSubmitError(null);
 
-    const res = await fetch("/api/v1/users/me", {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(data),
-    });
+    try {
+      const res = await fetch("/api/v1/users/me", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
 
-    if (res.status === 401) {
-      setSessionExpired(true);
-      return;
+      if (res.status === 401) {
+        setSessionExpired(true);
+        return;
+      }
+
+      const result = await res.json();
+
+      if (!res.ok) {
+        setSubmitError(
+          result.error ?? "บันทึกข้อมูลไม่สำเร็จ กรุณาลองใหม่อีกครั้ง",
+        );
+        return;
+      }
+
+      toast.success("บันทึกโปรไฟล์สำเร็จ");
+      router.push("/bills");
+    } catch {
+      setSubmitError("เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง");
     }
-
-    const result = await res.json();
-
-    if (!res.ok) {
-      setSubmitError(
-        result.error ?? "บันทึกข้อมูลไม่สำเร็จ กรุณาลองใหม่อีกครั้ง",
-      );
-      return;
-    }
-
-    router.push("/bills");
   }
 
   async function handleLogout() {
