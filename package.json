@@ -7,7 +7,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "migration:new": "supabase migration new"
+    "typecheck": "tsc --noEmit",
+    "migration:new": "supabase migration new",
+    "prepare": "husky"
   },
   "dependencies": {
     "@base-ui/react": "^1.6.0",
@@ -35,6 +37,7 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "16.2.9",
+    "husky": "^9.1.7",
     "supabase": "^2.107.0",
     "tailwindcss": "^4",
     "typescript": "^5"

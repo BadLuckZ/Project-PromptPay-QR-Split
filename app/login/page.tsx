@@ -25,39 +25,6 @@ export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Prevent coming back from signing in with google
-  useEffect(() => {
-    function handlePageShow(event: PageTransitionEvent) {
-      if (event.persisted) setIsLoading(false);
-    }
-    window.addEventListener("pageshow", handlePageShow);
-    return () => window.removeEventListener("pageshow", handlePageShow);
-  }, []);
-
-  useEffect(() => {
-    if (window.google) {
-      initGoogleButton();
-      return;
-    }
-
-    const existing = document.querySelector<HTMLScriptElement>(
-      `script[src="${GSI_SCRIPT_SRC}"]`,
-    );
-
-    if (existing) {
-      existing.addEventListener("load", initGoogleButton);
-      return () => existing.removeEventListener("load", initGoogleButton);
-    }
-
-    const script = document.createElement("script");
-    script.src = GSI_SCRIPT_SRC;
-    script.async = true;
-    script.addEventListener("load", initGoogleButton);
-    document.body.appendChild(script);
-
-    return () => script.removeEventListener("load", initGoogleButton);
-  }, []);
-
   async function handleCredentialResponse(credential: string, nonce: string) {
     setIsLoading(true);
     setError(null);
@@ -107,6 +74,39 @@ export default function LoginPage() {
       width: "320",
     });
   }
+
+  // Prevent coming back from signing in with google
+  useEffect(() => {
+    function handlePageShow(event: PageTransitionEvent) {
+      if (event.persisted) setIsLoading(false);
+    }
+    window.addEventListener("pageshow", handlePageShow);
+    return () => window.removeEventListener("pageshow", handlePageShow);
+  }, []);
+
+  useEffect(() => {
+    if (window.google) {
+      initGoogleButton();
+      return;
+    }
+
+    const existing = document.querySelector<HTMLScriptElement>(
+      `script[src="${GSI_SCRIPT_SRC}"]`,
+    );
+
+    if (existing) {
+      existing.addEventListener("load", initGoogleButton);
+      return () => existing.removeEventListener("load", initGoogleButton);
+    }
+
+    const script = document.createElement("script");
+    script.src = GSI_SCRIPT_SRC;
+    script.async = true;
+    script.addEventListener("load", initGoogleButton);
+    document.body.appendChild(script);
+
+    return () => script.removeEventListener("load", initGoogleButton);
+  }, []);
 
   return (
     <div className="flex min-h-dvh flex-col bg-primary-dark">

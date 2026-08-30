@@ -39,54 +39,62 @@ export function BillDashboardActions({
     setSubmitting(true);
     setError(null);
 
-    const res = await fetch(`/api/v1/bills/${billId}`, {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ closed: !closed }),
-    });
+    try {
+      const res = await fetch(`/api/v1/bills/${billId}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ closed: !closed }),
+      });
 
-    setSubmitting(false);
+      if (res.status === 401) {
+        setSessionExpired(true);
+        return;
+      }
 
-    if (res.status === 401) {
-      setSessionExpired(true);
-      return;
+      const data = await res.json();
+
+      if (!res.ok) {
+        setError(data.error ?? "อัปเดตสถานะบิลไม่สำเร็จ กรุณาลองใหม่อีกครั้ง");
+        return;
+      }
+
+      onClosedChange(!closed);
+      setShowCloseConfirm(false);
+      toast.success(closed ? "เปิดบิลสำเร็จ" : "ปิดบิลสำเร็จ");
+    } catch {
+      setError("เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง");
+    } finally {
+      setSubmitting(false);
     }
-
-    const data = await res.json();
-
-    if (!res.ok) {
-      setError(data.error ?? "อัปเดตสถานะบิลไม่สำเร็จ กรุณาลองใหม่อีกครั้ง");
-      return;
-    }
-
-    onClosedChange(!closed);
-    setShowCloseConfirm(false);
-    toast.success(closed ? "เปิดบิลสำเร็จ" : "ปิดบิลสำเร็จ");
   }
 
   async function confirmDelete() {
     setSubmitting(true);
     setError(null);
 
-    const res = await fetch(`/api/v1/bills/${billId}`, { method: "DELETE" });
+    try {
+      const res = await fetch(`/api/v1/bills/${billId}`, { method: "DELETE" });
 
-    setSubmitting(false);
+      if (res.status === 401) {
+        setSessionExpired(true);
+        return;
+      }
 
-    if (res.status === 401) {
-      setSessionExpired(true);
-      return;
+      const data = await res.json();
+
+      if (!res.ok) {
+        setError(data.error ?? "ลบบิลไม่สำเร็จ กรุณาลองใหม่อีกครั้ง");
+        return;
+      }
+
+      setShowDeleteConfirm(false);
+      toast.success("ลบบิลสำเร็จ");
+      router.push("/bills");
+    } catch {
+      setError("เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง");
+    } finally {
+      setSubmitting(false);
     }
-
-    const data = await res.json();
-
-    if (!res.ok) {
-      setError(data.error ?? "ลบบิลไม่สำเร็จ กรุณาลองใหม่อีกครั้ง");
-      return;
-    }
-
-    setShowDeleteConfirm(false);
-    toast.success("ลบบิลสำเร็จ");
-    router.push("/bills");
   }
 
   return (
