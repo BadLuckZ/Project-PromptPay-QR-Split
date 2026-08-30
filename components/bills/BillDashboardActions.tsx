@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 import { Lock, CheckCircle2, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { SessionExpiredDialog } from "@/components/SessionExpiredDialog";
@@ -60,6 +61,7 @@ export function BillDashboardActions({
 
     onClosedChange(!closed);
     setShowCloseConfirm(false);
+    toast.success(closed ? "เปิดบิลสำเร็จ" : "ปิดบิลสำเร็จ");
   }
 
   async function confirmDelete() {
@@ -83,6 +85,7 @@ export function BillDashboardActions({
     }
 
     setShowDeleteConfirm(false);
+    toast.success("ลบบิลสำเร็จ");
     router.push("/bills");
   }
 

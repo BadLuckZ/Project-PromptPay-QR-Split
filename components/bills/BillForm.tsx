@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useForm, useFieldArray } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { Plus } from "lucide-react";
+import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -128,6 +129,7 @@ export function BillForm({ ownerName }: BillFormProps) {
       return;
     }
 
+    toast.success("สร้างบิลสำเร็จ");
     router.push("/bills");
   }
 

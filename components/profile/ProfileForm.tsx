@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 import { LogOut } from "lucide-react";
 
 import { createClient } from "@/supabase/client";
@@ -68,6 +69,7 @@ export function ProfileForm({ profile, email }: ProfileFormProps) {
       return;
     }
 
+    toast.success("บันทึกโปรไฟล์สำเร็จ");
     router.push("/bills");
   }
 
