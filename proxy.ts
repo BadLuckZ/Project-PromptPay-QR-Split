@@ -1,9 +1,7 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 import { ENV } from "@/lib/env";
-
-// Session stored for 7 days
-const SOFT_SESSION_TIMEOUT_MS = 7 * 24 * 60 * 60 * 1000;
+import { SOFT_SESSION_TIMEOUT_MS } from "@/lib/auth";
 
 export async function proxy(request: NextRequest) {
   let supabaseResponse = NextResponse.next({ request });
@@ -27,6 +25,7 @@ export async function proxy(request: NextRequest) {
             httpOnly: true,
             secure: ENV.NODE_ENV !== "development",
             sameSite: "lax",
+            maxAge: SOFT_SESSION_TIMEOUT_MS / 1000,
           }),
         );
       },

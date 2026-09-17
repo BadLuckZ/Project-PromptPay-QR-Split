@@ -1,6 +1,7 @@
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 import { ENV } from "@/lib/env";
+import { SOFT_SESSION_TIMEOUT_MS } from "@/lib/auth";
 
 export async function createClient() {
   const cookieStore = await cookies();
@@ -19,6 +20,7 @@ export async function createClient() {
               httpOnly: true,
               secure: ENV.NODE_ENV !== "development",
               sameSite: "lax",
+              maxAge: SOFT_SESSION_TIMEOUT_MS / 1000,
             }),
           );
         } catch {}
