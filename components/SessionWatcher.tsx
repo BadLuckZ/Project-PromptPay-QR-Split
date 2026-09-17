@@ -3,9 +3,8 @@
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 
-import { createClient } from "@/supabase/client";
 import { SessionExpiredDialog } from "@/components/SessionExpiredDialog";
-import { consumeUserLogout } from "@/lib/auth";
+import { subscribeToLogoutBroadcast } from "@/lib/auth";
 
 // Check user session every 30 minutes
 const POLL_INTERVAL_MS = 30 * 60 * 1000;
@@ -15,20 +14,7 @@ export function SessionWatcher() {
   const [sessionExpired, setSessionExpired] = useState(false);
 
   useEffect(() => {
-    const supabase = createClient();
-
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((event) => {
-      if (event === "SIGNED_OUT") {
-        if (consumeUserLogout()) return;
-
-        // Show Session Expired Modal
-        setSessionExpired(true);
-      }
-    });
-
-    return () => subscription.unsubscribe();
+    return subscribeToLogoutBroadcast(() => setSessionExpired(true));
   }, []);
 
   useEffect(() => {

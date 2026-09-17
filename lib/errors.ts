@@ -1,5 +1,6 @@
 export const ERROR_MESSAGES = {
   UNAUTHORIZED: "กรุณาเข้าสู่ระบบ",
+  GOOGLE_SIGN_IN_FAILED: "เข้าสู่ระบบไม่สำเร็จ กรุณาลองใหม่อีกครั้ง",
   PROFILE_NOT_FOUND: "ไม่พบข้อมูลผู้ใช้ กรุณาตั้งค่าโปรไฟล์",
   INVALID_BODY: "รูปแบบข้อมูลไม่ถูกต้อง",
   BILL_NAME_REQUIRED: "กรุณากรอกชื่อบิล",
@@ -11,7 +12,8 @@ export const ERROR_MESSAGES = {
   SAVE_PROFILE_FAILED: "บันทึกข้อมูลไม่สำเร็จ",
   DISPLAY_NAME_REQUIRED: "กรุณากรอกชื่อที่แสดง",
   DISPLAY_NAME_TOO_LONG: "ชื่อที่แสดงต้องไม่เกิน 100 ตัวอักษร",
-  PROMPTPAY_NUMBER_INVALID: "เบอร์โทรต้องเป็นตัวเลข 10 หลัก ที่ขึ้นต้นด้วยเลข 0",
+  PROMPTPAY_NUMBER_INVALID:
+    "เบอร์โทรต้องเป็นตัวเลข 10 หลัก ที่ขึ้นต้นด้วยเลข 0",
   LOAD_BILLS_FAILED: "ไม่สามารถโหลดรายการบิลได้",
   BILL_NOT_FOUND: "ไม่พบบิลนี้",
   LOAD_BILL_FAILED: "ไม่สามารถโหลดข้อมูลบิลได้",

@@ -6,8 +6,7 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { LogOut } from "lucide-react";
 
-import { createClient } from "@/supabase/client";
-import { markUserLogout } from "@/lib/auth";
+import { broadcastLogout } from "@/lib/auth";
 import { Topbar } from "@/components/Topbar";
 import { SessionExpiredDialog } from "@/components/SessionExpiredDialog";
 import { Button } from "@/components/ui/button";
@@ -79,9 +78,8 @@ export function ProfileForm({ profile, email }: ProfileFormProps) {
 
   async function handleLogout() {
     setIsLoggingOut(true);
-    markUserLogout();
-    const supabase = createClient();
-    await supabase.auth.signOut();
+    await fetch("/api/v1/auth/logout", { method: "POST" });
+    broadcastLogout();
     router.push("/login");
   }
 
