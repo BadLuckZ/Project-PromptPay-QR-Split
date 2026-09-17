@@ -4,7 +4,6 @@ import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 
-import { createClient } from "@/supabase/client";
 import { ENV } from "@/lib/env";
 
 const GOOGLE_CLIENT_ID = ENV.GOOGLE_CLIENT_ID;
@@ -20,7 +19,6 @@ async function hashNonce(nonce: string) {
 
 export default function LoginPage() {
   const router = useRouter();
-  const supabase = createClient();
   const buttonRef = useRef<HTMLDivElement>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -29,25 +27,26 @@ export default function LoginPage() {
     setIsLoading(true);
     setError(null);
 
-    const { data, error: signInErr } = await supabase.auth.signInWithIdToken({
-      provider: "google",
-      token: credential,
-      nonce,
-    });
+    try {
+      const res = await fetch("/api/v1/auth/google", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ credential, nonce }),
+      });
 
-    if (signInErr || !data.user) {
+      const data = await res.json();
+
+      if (!res.ok) {
+        setError(data.error ?? "เข้าสู่ระบบไม่สำเร็จ กรุณาลองใหม่อีกครั้ง");
+        setIsLoading(false);
+        return;
+      }
+
+      router.push(data.redirectTo);
+    } catch {
       setError("เข้าสู่ระบบไม่สำเร็จ กรุณาลองใหม่อีกครั้ง");
       setIsLoading(false);
-      return;
     }
-
-    const { data: profile } = await supabase
-      .from("users")
-      .select("id")
-      .eq("id", data.user.id)
-      .single();
-
-    router.push(profile ? "/bills" : "/profile/setup");
   }
 
   async function initGoogleButton() {

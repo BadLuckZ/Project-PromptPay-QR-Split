@@ -1,15 +1,19 @@
 // Session stored for 7 days
 export const SOFT_SESSION_TIMEOUT_MS = 7 * 24 * 60 * 60 * 1000;
 
-// Tracks a logout the user triggered on purpose
-let userLoggedOut = false;
+// Channel to send "SIGNED_OUT" signal
+const LOGOUT_CHANNEL_NAME = "qr-split-logout";
 
-export function markUserLogout() {
-  userLoggedOut = true;
+export function broadcastLogout() {
+  if (typeof BroadcastChannel === "undefined") return;
+  const channel = new BroadcastChannel(LOGOUT_CHANNEL_NAME);
+  channel.postMessage("SIGNED_OUT");
+  channel.close();
 }
 
-export function consumeUserLogout() {
-  const value = userLoggedOut;
-  userLoggedOut = false;
-  return value;
+export function subscribeToLogoutBroadcast(onSignedOut: () => void) {
+  if (typeof BroadcastChannel === "undefined") return () => {};
+  const channel = new BroadcastChannel(LOGOUT_CHANNEL_NAME);
+  channel.onmessage = () => onSignedOut();
+  return () => channel.close();
 }
