@@ -38,13 +38,15 @@ export function BillListCard({ bill, accentIndex = 0 }: BillListCardProps) {
     <Link
       href={`/bills/${bill.id}`}
       className={cn(
-        "flex items-center justify-between gap-4 rounded-lg border border-l-4 border-border bg-card p-4",
+        "flex flex-wrap items-center justify-between gap-x-4 gap-y-2 rounded-lg border border-l-4 border-border bg-card p-4",
         ACCENT_BORDERS[accentIndex % ACCENT_BORDERS.length],
       )}
     >
-      <div className="flex flex-col gap-1.5">
-        <p className="text-sm font-medium">{bill.bill_name}</p>
-        <div className="flex items-center gap-2 text-xs text-muted-foreground">
+      <div className="flex flex-col gap-1.5 min-w-32 flex-1">
+        <p className="text-sm font-medium line-clamp-2 wrap-break-word">
+          {bill.bill_name}
+        </p>
+        <div className="flex items-center gap-2 text-xs text-muted-foreground whitespace-nowrap">
           <span className="inline-flex items-center gap-1">
             <Users size={12} />
             {bill.memberCount} คน
@@ -53,10 +55,10 @@ export function BillListCard({ bill, accentIndex = 0 }: BillListCardProps) {
         </div>
       </div>
 
-      <div className="flex items-center gap-2 shrink-0">
+      <div className="flex items-center gap-2 shrink-0 ml-auto">
         <span
           className={cn(
-            "text-xs rounded-full px-2.5 py-1",
+            "text-xs rounded-full px-2.5 py-1 whitespace-nowrap",
             STATUS_STYLES[status],
           )}
         >
