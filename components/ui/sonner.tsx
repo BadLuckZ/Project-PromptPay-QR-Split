@@ -9,8 +9,9 @@ function Toaster(props: React.ComponentProps<typeof SonnerToaster>) {
       position="bottom-center"
       theme="light"
       richColors
+      style={{ fontFamily: "var(--font-anuphan)" }}
       toastOptions={{
-        style: { maxWidth: "28rem" },
+        style: { maxWidth: "28rem", fontFamily: "var(--font-anuphan)" },
         classNames: {
           toast: "rounded-xl! border! border-border! shadow-lg!",
         },

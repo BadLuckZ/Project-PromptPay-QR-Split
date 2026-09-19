@@ -167,16 +167,18 @@ export function BillDashboard({
       {toggleError && <p className="text-xs text-destructive">{toggleError}</p>}
 
       <div className="flex flex-col divide-y divide-border rounded-lg border border-border bg-card">
-        <div className="flex items-center gap-2.5 p-3">
-          <Avatar>
+        <div className="flex items-center gap-2 p-3">
+          <Avatar className="shrink-0">
             <AvatarFallback className="bg-success text-success-foreground">
               {getInitials(bill.owner_name)}
             </AvatarFallback>
           </Avatar>
-          <p className="flex-1 text-sm font-medium">{bill.owner_name} (คุณ)</p>
+          <p className="flex-1 min-w-0 text-sm font-medium line-clamp-2 wrap-break-word">
+            {bill.owner_name} (คุณ)
+          </p>
         </div>
 
-        {sortedMembers.map((member, i) => (
+        {sortedMembers.map((member) => (
           <BillDashboardCard
             key={member.id}
             member={member}

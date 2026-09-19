@@ -41,14 +41,14 @@ export function BillList({ bills }: BillList) {
           <Plus size={16} /> สร้าง Bill ใหม่
         </Button>
 
-        <div className="flex gap-2">
+        <div className="flex flex-wrap gap-2">
           {FILTERS.map((f) => (
             <button
               key={f.value}
               type="button"
               onClick={() => setFilter(f.value)}
               className={cn(
-                "text-xs px-3 py-2 rounded-full border cursor-pointer",
+                "text-xs px-3 py-2 rounded-full border cursor-pointer whitespace-nowrap",
                 filter === f.value
                   ? "bg-primary text-primary-foreground border-primary"
                   : "bg-card text-muted-foreground border-border",
