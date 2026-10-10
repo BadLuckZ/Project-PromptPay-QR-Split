@@ -14,6 +14,7 @@ export interface Bill {
   memberCount: number;
   paidCount: number;
   totalAmount: number;
+  pendingAmount: number;
   created_at: string;
   deleted_at: string | null;
   closed_at: string | null;

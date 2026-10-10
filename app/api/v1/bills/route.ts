@@ -63,6 +63,9 @@ export async function GET() {
       memberCount: billMembers.length,
       paidCount: billMembers.filter((m) => m.is_paid).length,
       totalAmount: billMembers.reduce((sum, m) => sum + Number(m.amount), 0),
+      pendingAmount: billMembers
+        .filter((m) => !m.is_paid)
+        .reduce((sum, m) => sum + Number(m.amount), 0),
     };
   });
 
