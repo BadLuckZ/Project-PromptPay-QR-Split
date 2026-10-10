@@ -44,11 +44,11 @@ export function PayQRDisplay({ member, qrCodeDataUrl }: QRDisplayProps) {
         <p className="mt-4 text-xs text-primary-foreground/70">
           ยอดที่ต้องชำระ
         </p>
-        <p className="text-4xl font-bold">฿{member.amount.toLocaleString()}</p>
+        <p className="text-4xl font-bold tabular-nums">฿{member.amount.toLocaleString()}</p>
       </div>
 
       <div className="relative -mt-8 flex flex-1 flex-col gap-4 rounded-t-3xl bg-background px-4 pt-8 pb-6">
-        <div className="flex flex-col items-center gap-3 rounded-lg border border-border bg-card p-6">
+        <div className="flex flex-col items-center gap-3 rounded-2xl bg-card p-6 shadow-card">
           <img
             src={qrCodeDataUrl}
             alt={`QR Promptpay สำหรับ ${member.owner_name}`}
@@ -63,7 +63,7 @@ export function PayQRDisplay({ member, qrCodeDataUrl }: QRDisplayProps) {
 
         <div className="flex flex-col gap-1.5">
           <p className="text-xs text-muted-foreground">โอนให้</p>
-          <div className="flex items-center gap-3 rounded-lg border border-border bg-card p-3.5">
+          <div className="flex items-center gap-3 rounded-xl bg-card p-3.5 shadow-card">
             <div className="flex size-10 shrink-0 items-center justify-center rounded-full bg-primary-tint/40 text-sm font-medium text-primary-dark">
               {getInitials(member.owner_name)}
             </div>
