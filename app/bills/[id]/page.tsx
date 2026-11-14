@@ -1,10 +1,9 @@
 import { headers } from "next/headers";
 import { notFound } from "next/navigation";
-import { Topbar } from "@/components/Topbar";
 import { BillDashboard } from "@/components/bills";
 import { fetch } from "@/lib/fetch";
 import { ENV } from "@/lib/env";
-import { Bill, Member, User } from "@/types";
+import { Bill, Member } from "@/types";
 
 interface BillDetailPageProps {
   params: Promise<{ id: string }>;
@@ -20,10 +19,7 @@ export default async function BillDetailPage({ params }: BillDetailPageProps) {
     (ENV.NODE_ENV === "development" ? "http" : "https");
   const origin = `${protocol}://${host}`;
 
-  const [res, profileRes] = await Promise.all([
-    fetch(`/api/v1/bills/${id}`, { cache: "no-store" }),
-    fetch("/api/v1/users/me", { cache: "no-store" }),
-  ]);
+  const res = await fetch(`/api/v1/bills/${id}`, { cache: "no-store" });
 
   if (!res.ok) {
     notFound();
@@ -34,17 +30,5 @@ export default async function BillDetailPage({ params }: BillDetailPageProps) {
     members: Member[];
   };
 
-  const profile: User | null = profileRes.ok ? await profileRes.json() : null;
-
-  return (
-    <div className="flex flex-col flex-1">
-      <Topbar
-        title={bill.bill_name}
-        subtitle={bill.closed_at ? "ปิดแล้ว" : "เปิดอยู่"}
-        backHref="/bills"
-        profileName={profile?.display_name}
-      />
-      <BillDashboard bill={bill} members={members} origin={origin} />
-    </div>
-  );
+  return <BillDashboard bill={bill} members={members} origin={origin} />;
 }
