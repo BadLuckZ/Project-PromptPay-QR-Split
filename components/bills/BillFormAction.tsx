@@ -37,19 +37,18 @@ export function BillFormAction({
 
   return (
     <>
-      <div className="p-4 pt-0">
-        <Button
-          className="w-full"
-          disabled={!canSubmit}
-          onClick={() => setShowConfirm(true)}
-        >
-          สร้าง Bill
-        </Button>
-      </div>
+      <Button
+        size="lg"
+        className="w-full"
+        disabled={!canSubmit}
+        onClick={() => setShowConfirm(true)}
+      >
+        สร้าง Bill
+      </Button>
 
       <AlertDialog open={showConfirm} onOpenChange={setShowConfirm}>
         <AlertDialogContent className="flex flex-col items-center text-center">
-          <div className="flex size-14 items-center justify-center rounded-full bg-primary-tint/40 text-primary-dark">
+          <div className="flex size-14 items-center justify-center rounded-full bg-primary-soft text-primary">
             <Receipt size={26} />
           </div>
 
@@ -60,20 +59,20 @@ export function BillFormAction({
               {totalNumber.toLocaleString()}
             </AlertDialogDescription>
           </AlertDialogHeader>
-          {submitError && (
-            <p className="text-sm text-destructive">{submitError}</p>
-          )}
+          {submitError && <p className="text-sm text-danger">{submitError}</p>}
           <AlertDialogFooter className="w-full">
             <AlertDialogCancel
               disabled={submitting}
-              className="h-11 w-full rounded-xl"
+              size="lg"
+              className="w-full"
             >
               ยกเลิก
             </AlertDialogCancel>
             <AlertDialogAction
               onClick={onConfirm}
               disabled={submitting}
-              className="h-11 w-full rounded-xl"
+              size="lg"
+              className="w-full"
             >
               {submitting ? "กำลังสร้าง..." : "สร้าง Bill"}
             </AlertDialogAction>

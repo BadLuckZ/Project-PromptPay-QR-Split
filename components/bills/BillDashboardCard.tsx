@@ -22,7 +22,7 @@ export function BillDashboardCard({
   onTogglePaid,
 }: BillDashboardCardProps) {
   return (
-    <li className="flex min-h-12 items-center gap-3 border-b border-dotted border-border-strong py-2 last:border-b-0">
+    <li className="flex min-h-12 items-center gap-3 border-b-2 border-dotted border-border-strong py-2 last:border-b-0">
       <span
         className={cn(
           "flex size-9 shrink-0 items-center justify-center rounded-full text-sm font-medium",

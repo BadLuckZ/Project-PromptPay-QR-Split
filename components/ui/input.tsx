@@ -11,7 +11,7 @@ const inputVariants = cva(
       variant: {
         default: "rounded-md border-2 border-input bg-surface px-3 text-base",
         underline:
-          "rounded-none border-0 border-b-2 border-foreground bg-transparent px-0 text-lg",
+          "[appearance:textfield] rounded-none border-0 border-b-2 border-foreground bg-transparent px-0 text-lg focus-visible:border-ring focus-visible:bg-surface-muted focus-visible:outline-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none",
       },
       font: {
         sans: "font-sans",

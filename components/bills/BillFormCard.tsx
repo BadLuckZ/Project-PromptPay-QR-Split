@@ -1,61 +1,55 @@
 "use client";
 
 import { ReactNode } from "react";
-import { Trash2 } from "lucide-react";
+import { X } from "lucide-react";
 import { cn, getInitials } from "@/lib/utils";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
 
 interface BillFormCardProps {
   name: string;
   isOwner?: boolean;
-  meta?: string;
   trailing?: ReactNode;
   onRemove?: () => void;
   disabled?: boolean;
-  className?: string;
 }
 
 export function BillFormCard({
   name,
   isOwner = false,
-  meta,
   trailing,
   onRemove,
   disabled = false,
-  className,
 }: BillFormCardProps) {
   return (
-    <div className={cn("flex items-center gap-2.5", className)}>
-      <Avatar>
-        <AvatarFallback
-          className={
-            isOwner
-              ? "bg-primary-soft text-success-foreground"
-              : "bg-warning-soft text-warning-foreground"
-          }
-        >
-          {getInitials(name)}
-        </AvatarFallback>
-      </Avatar>
-      <div className="flex-1">
-        <p className={cn("text-sm", isOwner && "font-medium")}>
-          {name}
-          {isOwner && " (ตัวเอง)"}
-        </p>
-        {meta && <p className="text-xs text-muted-foreground">{meta}</p>}
-      </div>
-      {trailing}
+    <li className="flex min-h-12 items-center gap-3 py-1">
+      <span
+        className={cn(
+          "flex size-8 shrink-0 items-center justify-center rounded-full text-sm font-medium",
+          isOwner
+            ? "bg-primary-soft text-primary"
+            : "bg-surface-muted text-foreground-muted",
+        )}
+      >
+        {getInitials(name)}
+      </span>
+      <p className="min-w-0 flex-1 wrap-break-word">
+        {name}
+        {isOwner && <span className="text-foreground-muted"> (ตัวเอง)</span>}
+      </p>
       {onRemove && (
-        <button
+        <Button
           type="button"
+          variant="ghost"
+          size="icon"
           onClick={onRemove}
           disabled={disabled}
-          className="text-destructive p-1 cursor-pointer disabled:pointer-events-none disabled:opacity-50"
-          aria-label="ลบผู้เข้าร่วม"
+          aria-label={`ลบผู้เข้าร่วม ${name}`}
+          className="text-foreground-muted"
         >
-          <Trash2 size={14} />
-        </button>
+          <X />
+        </Button>
       )}
-    </div>
+      {trailing}
+    </li>
   );
 }

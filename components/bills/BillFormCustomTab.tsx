@@ -7,9 +7,6 @@ import { FormValues } from "./BillForm";
 
 interface BillFormCustomTabProps {
   ownerName: string;
-  total: string;
-  customTotal: number;
-  diff: number;
   fields: FieldArrayWithId<FormValues, "participants", "id">[];
   register: UseFormRegister<FormValues>;
   onRemove: (index: number) => void;
@@ -18,62 +15,60 @@ interface BillFormCustomTabProps {
 
 export function BillFormCustomTab({
   ownerName,
-  total,
-  customTotal,
-  diff,
   fields,
   register,
   onRemove,
   disabled = false,
 }: BillFormCustomTabProps) {
   return (
-    <div className="flex flex-col gap-3">
+    <ul className="flex flex-col">
       <BillFormCard
         name={ownerName}
         isOwner
-        className="py-1"
         trailing={
-          <Input
-            type="number"
-            {...register("owner_amount")}
-            placeholder="฿0"
+          <AmountInput
+            label={`ยอดของ ${ownerName}`}
             disabled={disabled}
-            className="w-24 text-right"
+            {...register("owner_amount")}
           />
         }
       />
-
       {fields.map((f, i) => (
         <BillFormCard
           key={f.id}
           name={f.name}
-          className="py-1"
           onRemove={() => onRemove(i)}
           disabled={disabled}
           trailing={
-            <Input
-              type="number"
-              {...register(`participants.${i}.amount`)}
-              placeholder="฿0"
+            <AmountInput
+              label={`ยอดของ ${f.name}`}
               disabled={disabled}
-              className="w-24 text-right"
+              {...register(`participants.${i}.amount`)}
             />
           }
         />
       ))}
+    </ul>
+  );
+}
 
-      <div className="flex justify-between border-t border-border pt-2 text-sm">
-        <span className="text-muted-foreground">รวมที่กรอก</span>
-        <span className="font-medium">฿{customTotal.toLocaleString()}</span>
-      </div>
-
-      {diff !== 0 && total && (
-        <p className="text-sm text-warning-foreground bg-warning-soft border border-warning-border rounded-md px-3 py-2">
-          {diff > 0
-            ? `ยอดขาดอีก ฿${diff.toLocaleString()}`
-            : `ยอดเกินมา ฿${Math.abs(diff).toLocaleString()}`}
-        </p>
-      )}
-    </div>
+function AmountInput({
+  label,
+  ...props
+}: React.ComponentProps<typeof Input> & { label: string }) {
+  return (
+    <span className="flex items-center gap-1">
+      <span aria-hidden="true" className="font-mono text-foreground-muted">
+        ฿
+      </span>
+      <Input
+        type="number"
+        variant="underline"
+        font="mono"
+        aria-label={label}
+        className="w-20 text-right text-base"
+        {...props}
+      />
+    </span>
   );
 }

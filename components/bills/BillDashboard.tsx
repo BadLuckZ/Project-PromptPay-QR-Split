@@ -204,7 +204,7 @@ export function BillDashboard({
           )}
 
           <ul className="flex flex-col">
-            <li className="flex min-h-12 items-center gap-3 border-b border-dotted border-border-strong py-2">
+            <li className="flex min-h-12 items-center gap-3 border-b-2 border-dotted border-border-strong py-2">
               <span className="flex size-9 shrink-0 items-center justify-center rounded-full bg-primary-soft text-sm font-medium text-primary">
                 {getInitials(bill.owner_name)}
               </span>
