@@ -1,60 +1,46 @@
-import TopbarLoading from "@/components/TopbarLoading";
+import { ReceiptCard, ReceiptDivider } from "@/components/receipt";
 
 export default function BillDetailLoading() {
   return (
-    <div className="flex flex-col flex-1 animate-pulse">
-      {/* Topbar Loading */}
-      <TopbarLoading haveBackButton />
-
-      <div className="flex flex-col gap-4 p-4">
-        {/* Stats Loading */}
-        <div className="grid grid-cols-2 gap-3">
-          <div className="rounded-lg bg-muted p-3.5 flex flex-col gap-2.5">
-            <div className="h-2.5 w-10 rounded-full bg-muted-foreground/20" />
-            <div className="h-5 w-16 rounded-full bg-muted-foreground/25" />
-            <div className="h-1 rounded-full bg-muted-foreground/15" />
-          </div>
-          <div className="rounded-lg bg-muted p-3.5 flex flex-col gap-2.5">
-            <div className="h-2.5 w-10 rounded-full bg-muted-foreground/20" />
-            <div className="h-5 w-16 rounded-full bg-muted-foreground/25" />
-            <div className="h-1 rounded-full bg-muted-foreground/15" />
-          </div>
-        </div>
-
-        {/* Copy Button Loading */}
-        <div className="h-10 w-full rounded-md bg-muted-foreground/10" />
-
-        {/* Participant Count Loading */}
-        <div className="h-2.5 w-24 rounded-full bg-muted-foreground/20" />
-
-        {/* Member List Loading */}
-        <div className="flex flex-col divide-y divide-border/50 rounded-lg bg-muted">
-          <div className="flex items-center gap-2.5 p-3">
-            <div className="size-8 shrink-0 rounded-full bg-muted-foreground/20" />
-            <div className="h-2.5 w-28 rounded-full bg-muted-foreground/20" />
-          </div>
-
-          {[70, 55, 65].map((w, i) => (
-            <div key={i} className="flex items-center gap-2.5 p-3">
-              <div className="size-8 shrink-0 rounded-full bg-muted-foreground/20" />
-              <div className="flex-1 flex flex-col gap-2">
-                <div
-                  className="h-2.5 rounded-full bg-muted-foreground/20"
-                  style={{ width: `${w}%` }}
-                />
-                <div className="h-2.5 w-2/5 rounded-full bg-muted-foreground/15" />
-              </div>
-              <div className="h-6 w-16 shrink-0 rounded-full bg-muted-foreground/10" />
-            </div>
-          ))}
-        </div>
-
-        {/* Actions Loading */}
-        <div className="mt-2 flex flex-col items-center gap-3">
-          <div className="h-10 w-full rounded-md bg-muted-foreground/10" />
-          <div className="h-2.5 w-16 rounded-full bg-muted-foreground/15" />
-        </div>
+    <main
+      aria-busy="true"
+      aria-label="กำลังโหลด"
+      className="flex flex-1 animate-pulse flex-col gap-3 px-4 py-6"
+    >
+      <div className="flex h-11 items-center justify-between">
+        <div className="size-6 rounded-full bg-surface-muted-hover" />
+        <div className="h-7 w-16 rounded-full bg-surface-muted-hover" />
       </div>
-    </div>
+
+      <ReceiptCard>
+        <div className="mx-auto h-3 w-40 rounded-full bg-surface-muted" />
+        <div className="flex flex-col gap-2">
+          <div className="h-6 w-44 rounded-full bg-surface-muted" />
+          <div className="h-3 w-32 rounded-full bg-surface-muted" />
+        </div>
+        <ReceiptDivider />
+        <div className="flex justify-between">
+          <div className="h-10 w-20 rounded-md bg-surface-muted" />
+          <div className="h-10 w-20 rounded-md bg-surface-muted" />
+        </div>
+        <div className="h-1.5 rounded-full bg-surface-muted" />
+        <ReceiptDivider />
+        {[70, 55, 65, 50].map((w) => (
+          <div key={w} className="flex items-center gap-3">
+            <div className="size-9 shrink-0 rounded-full bg-surface-muted" />
+            <div className="flex flex-1 flex-col gap-2">
+              <div
+                className="h-3 rounded-full bg-surface-muted"
+                style={{ width: `${w}%` }}
+              />
+              <div className="h-3 w-12 rounded-full bg-surface-muted" />
+            </div>
+            <div className="h-9 w-20 shrink-0 rounded-full bg-surface-muted" />
+          </div>
+        ))}
+      </ReceiptCard>
+
+      <div className="h-12 w-full rounded-md bg-surface-muted-hover" />
+    </main>
   );
 }

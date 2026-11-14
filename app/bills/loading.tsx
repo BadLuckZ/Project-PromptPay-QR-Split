@@ -1,43 +1,50 @@
-import TopbarLoading from "@/components/TopbarLoading";
+import { ReceiptCard } from "@/components/receipt";
 
 export default function BillsLoading() {
   return (
-    <div className="flex flex-col flex-1 animate-pulse">
-      {/* Topbar Loading */}
-      <TopbarLoading haveSubtitle haveProfile haveSummary />
-
-      <div className="px-4 pt-1 pb-4 flex flex-col gap-3.5">
-        {/* Button Loading */}
-        <div className="h-9 w-full rounded-md bg-muted-foreground/20" />
-
-        {/* Tabs Loading */}
-        <div className="h-11 w-full rounded-lg bg-muted" />
+    <main
+      aria-busy="true"
+      aria-label="กำลังโหลด"
+      className="flex flex-1 animate-pulse flex-col gap-4 px-4 py-6"
+    >
+      <div className="flex items-center justify-between gap-4">
+        <div className="flex flex-col gap-2">
+          <div className="h-6 w-32 rounded-full bg-surface-muted-hover" />
+          <div className="h-3 w-16 rounded-full bg-surface-muted-hover" />
+        </div>
+        <div className="size-11 rounded-full bg-surface-muted-hover" />
       </div>
 
-      {/* Bill Card Loading */}
-      <div className="flex-1 px-4 pb-4 flex flex-col gap-3">
-        {[60, 45, 50, 65].map((w, i) => (
-          <div
-            key={i}
-            className="flex flex-col gap-3 rounded-xl bg-card p-4 shadow-card"
-          >
-            <div className="flex items-start justify-between gap-3">
-              <div className="flex flex-1 flex-col gap-2">
-                <div
-                  className="h-3.5 rounded-full bg-muted-foreground/25"
-                  style={{ width: `${w}%` }}
-                />
-                <div className="h-2.5 w-1/4 rounded-full bg-muted-foreground/20" />
-              </div>
-              <div className="h-5 w-16 shrink-0 rounded-full bg-muted-foreground/20" />
+      <ReceiptCard>
+        <div className="flex flex-col gap-2">
+          <div className="h-3 w-28 rounded-full bg-surface-muted" />
+          <div className="h-8 w-40 rounded-full bg-surface-muted" />
+          <div className="h-3 w-36 rounded-full bg-surface-muted" />
+        </div>
+      </ReceiptCard>
+
+      <div className="h-12 w-full rounded-md bg-surface-muted-hover" />
+      <div className="h-12 w-full rounded-md bg-surface-muted-hover" />
+
+      {[60, 45, 50].map((w) => (
+        <div key={w} className="flex flex-col gap-3 rounded-sm bg-surface p-4">
+          <div className="flex items-start justify-between gap-3">
+            <div className="flex flex-1 flex-col gap-2">
+              <div
+                className="h-4 rounded-full bg-surface-muted"
+                style={{ width: `${w}%` }}
+              />
+              <div className="h-3 w-12 rounded-full bg-surface-muted" />
             </div>
-            <div className="flex items-center gap-3">
-              <div className="h-1.5 flex-1 rounded-full bg-muted" />
-              <div className="h-6 w-20 shrink-0 rounded-full bg-muted-foreground/10" />
-            </div>
+            <div className="h-5 w-16 rounded-full bg-surface-muted" />
           </div>
-        ))}
-      </div>
-    </div>
+          <div className="border-t-2 border-dashed border-surface-muted-hover" />
+          <div className="flex items-center gap-3">
+            <div className="h-1.5 flex-1 rounded-full bg-surface-muted" />
+            <div className="h-6 w-20 rounded-full bg-surface-muted" />
+          </div>
+        </div>
+      ))}
+    </main>
   );
 }

@@ -6,7 +6,7 @@ import { SessionWatcher } from "@/components/SessionWatcher";
 import { Toaster } from "@/components/ui/sonner";
 
 const anuphan = Anuphan({
-  weight: ["100", "200", "300", "400", "500", "600", "700"],
+  weight: ["400", "500", "600"],
   style: ["normal"],
   variable: "--font-anuphan",
 });
@@ -24,11 +24,12 @@ export default function RootLayout({
   return (
     <html
       lang="th"
+      data-theme="light"
+      style={{ colorScheme: "light" }}
       className={cn(
         "h-full antialiased",
         anuphan.variable,
-        "font-anuphan",
-        "mx-auto max-w-md bg-black/90",
+        "mx-auto max-w-md bg-foreground",
       )}
     >
       <body className="min-h-full flex flex-col">

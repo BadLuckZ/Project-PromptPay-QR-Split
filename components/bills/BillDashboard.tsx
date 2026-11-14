@@ -1,13 +1,18 @@
 "use client";
 
 import { useState } from "react";
-import { TrendingUp, Clock, Copy, Check, Lock } from "lucide-react";
+import { Copy, Check, Lock } from "lucide-react";
+import { BackLink } from "@/components/BackLink";
 import { Button } from "@/components/ui/button";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { BillDashboardCard } from "@/components/bills/BillDashboardCard";
 import { BillDashboardActions } from "@/components/bills/BillDashboardActions";
 import { SessionExpiredDialog } from "@/components/SessionExpiredDialog";
-import { getInitials } from "@/lib/utils";
+import {
+  ReceiptBrand,
+  ReceiptCard,
+  ReceiptDivider,
+} from "@/components/receipt";
+import { cn } from "@/lib/utils";
 import { Member } from "@/types";
 
 interface BillDashboardBill {
@@ -108,87 +113,107 @@ export function BillDashboard({
   }
 
   return (
-    <div className="flex flex-col flex-1 gap-4 p-4">
-      {closed && (
-        <div className="flex items-center gap-1.5 rounded-lg bg-muted px-3 py-2 text-xs text-muted-foreground">
-          <Lock size={12} />
-          บิลนี้ถูกปิดไปแล้ว
-        </div>
-      )}
+    <main className="flex flex-1 flex-col gap-3 px-4 py-6">
+      <header className="flex items-center justify-between gap-4">
+        <BackLink href="/bills" />
+        <span
+          className={cn(
+            "inline-flex items-center gap-1 rounded-full px-3 py-1 text-sm font-medium",
+            closed
+              ? "bg-surface-muted-hover text-foreground-muted"
+              : "bg-primary-soft text-primary",
+          )}
+        >
+          {closed && <Lock className="size-3.5" aria-hidden="true" />}
+          {closed ? "ปิดแล้ว" : "เปิดอยู่"}
+        </span>
+      </header>
 
-      <div className="grid grid-cols-2 gap-3">
-        <div className="rounded-xl bg-success p-3.5">
-          <div className="flex items-center justify-between text-success-foreground">
-            <p className="text-xs">รับแล้ว</p>
-            <TrendingUp size={14} />
-          </div>
-          <p className="mt-1 text-2xl font-semibold tabular-nums text-success-foreground">
-            ฿{receivedAmount.toLocaleString()}
+      <ReceiptCard>
+        <ReceiptBrand />
+        <div className="flex flex-col">
+          <h1 className="text-xl leading-tight font-semibold wrap-break-word">
+            {bill.bill_name}
+          </h1>
+          <p className="text-sm text-foreground-muted">
+            เจ้าของบิล {bill.owner_name} (คุณ)
           </p>
-          <div className="mt-2 h-1 rounded-full bg-success-foreground/15">
+        </div>
+        <ReceiptDivider />
+
+        <div className="flex flex-col gap-3">
+          <div className="flex justify-between gap-3">
+            <div className="flex flex-col text-primary">
+              <p className="text-sm">รับแล้ว</p>
+              <p className="font-mono text-xl font-medium tabular-nums">
+                ฿{receivedAmount.toLocaleString("th-TH")}
+              </p>
+            </div>
+            <div className="flex flex-col items-end text-warning-soft-foreground">
+              <p className="text-sm">ค้างอยู่</p>
+              <p className="font-mono text-xl font-medium tabular-nums">
+                ฿{pendingAmount.toLocaleString("th-TH")}
+              </p>
+            </div>
+          </div>
+          <div
+            role="progressbar"
+            aria-label="สัดส่วนยอดที่รับแล้ว"
+            aria-valuemin={0}
+            aria-valuemax={100}
+            aria-valuenow={Math.round(receivedPct)}
+            className="h-1.5 overflow-hidden rounded-full bg-warning-soft"
+          >
             <div
-              className="h-1 rounded-full bg-success-foreground/60"
+              className="h-full rounded-full bg-primary"
               style={{ width: `${receivedPct}%` }}
             />
           </div>
         </div>
+        <ReceiptDivider />
 
-        <div className="rounded-xl bg-warning p-3.5">
-          <div className="flex items-center justify-between text-warning-foreground">
-            <p className="text-xs">ค้างอยู่</p>
-            <Clock size={14} />
+        <div className="flex flex-col">
+          <div className="flex items-center justify-between gap-3">
+            <p className="text-sm font-medium">
+              ผู้เข้าร่วม {members.length} คน
+            </p>
+            <Button
+              variant="soft"
+              size="sm"
+              onClick={copyAllLinks}
+              disabled={closed}
+            >
+              {copiedKey === "all" ? <Check /> : <Copy />}
+              Copy ทุก Link
+            </Button>
           </div>
-          <p className="mt-1 text-2xl font-semibold tabular-nums text-warning-foreground">
-            ฿{pendingAmount.toLocaleString()}
-          </p>
-          <div className="mt-2 h-1 rounded-full bg-warning-foreground/15">
-            <div
-              className="h-1 rounded-full bg-warning-foreground/60"
-              style={{ width: `${100 - receivedPct}%` }}
-            />
-          </div>
+
+          {toggleError && (
+            <p role="alert" className="pt-2 text-sm text-danger">
+              {toggleError}
+            </p>
+          )}
+
+          <ul className="flex flex-col">
+            <li className="flex min-h-12 items-center gap-3 border-b-2 border-dotted border-border-strong py-2">
+              <p className="min-w-0 flex-1 line-clamp-2 font-medium wrap-break-word">
+                {bill.owner_name} (คุณ)
+              </p>
+            </li>
+
+            {sortedMembers.map((member) => (
+              <BillDashboardCard
+                key={member.id}
+                member={member}
+                copied={copiedKey === member.id}
+                disabled={closed || updatingId === member.id}
+                onCopyLink={() => copy(payLink(member.id), member.id)}
+                onTogglePaid={() => togglePaid(member.id)}
+              />
+            ))}
+          </ul>
         </div>
-      </div>
-
-      <Button
-        variant="outline"
-        className="w-full"
-        onClick={copyAllLinks}
-        disabled={closed}
-      >
-        {copiedKey === "all" ? <Check size={16} /> : <Copy size={16} />}
-        Copy ทุก Link
-      </Button>
-
-      <p className="text-sm text-muted-foreground">
-        ผู้เข้าร่วม {members.length} คน
-      </p>
-
-      {toggleError && <p className="text-xs text-destructive">{toggleError}</p>}
-
-      <div className="flex flex-col divide-y divide-border rounded-xl bg-card shadow-card">
-        <div className="flex items-center gap-2 p-3">
-          <Avatar className="shrink-0">
-            <AvatarFallback className="bg-success text-success-foreground">
-              {getInitials(bill.owner_name)}
-            </AvatarFallback>
-          </Avatar>
-          <p className="flex-1 min-w-0 text-sm font-medium line-clamp-2 wrap-break-word">
-            {bill.owner_name} (คุณ)
-          </p>
-        </div>
-
-        {sortedMembers.map((member) => (
-          <BillDashboardCard
-            key={member.id}
-            member={member}
-            copied={copiedKey === member.id}
-            disabled={closed || updatingId === member.id}
-            onCopyLink={() => copy(payLink(member.id), member.id)}
-            onTogglePaid={() => togglePaid(member.id)}
-          />
-        ))}
-      </div>
+      </ReceiptCard>
 
       <BillDashboardActions
         billId={bill.id}
@@ -197,6 +222,6 @@ export function BillDashboard({
       />
 
       <SessionExpiredDialog open={sessionExpired} />
-    </div>
+    </main>
   );
 }

@@ -3,7 +3,9 @@
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { QrCode } from "lucide-react";
 
+import { ReceiptCard, ReceiptDivider } from "@/components/receipt";
 import { ENV } from "@/lib/env";
 
 const GOOGLE_CLIENT_ID = ENV.GOOGLE_CLIENT_ID;
@@ -70,7 +72,7 @@ export default function LoginPage() {
       shape: "pill",
       text: "signin_with",
       locale: "th",
-      width: "320",
+      width: String(Math.min(320, buttonRef.current.clientWidth)),
     });
   }
 
@@ -108,48 +110,67 @@ export default function LoginPage() {
   }, []);
 
   return (
-    <div className="flex min-h-dvh flex-col bg-primary-dark">
-      <div className="relative flex flex-8 flex-col items-center justify-center overflow-hidden bg-linear-to-b from-primary-dark to-primary px-6 pt-16 pb-24 text-primary-foreground">
-        {/* Decorators */}
-        <div className="pointer-events-none absolute -top-10 -left-14 size-40 rounded-full border border-white/5" />
-        <div className="pointer-events-none absolute top-24 -right-16 size-48 rounded-full bg-white/5" />
-        <div className="pointer-events-none absolute -bottom-16 -left-10 size-40 rounded-full bg-white/5" />
+    <main className="flex min-h-dvh flex-col px-4 py-8">
+      <div className="flex flex-1 flex-col items-center justify-center gap-8">
+        <div aria-hidden="true" className="w-56 -rotate-3">
+          <ReceiptCard>
+            <p className="text-center font-mono text-xs tracking-widest text-foreground-muted">
+              PROMPTPAY QR SPLIT
+            </p>
+            <p className="font-semibold">หมูกระทะ</p>
+            <ReceiptDivider />
+            <div className="flex items-baseline justify-between">
+              <span className="text-xs text-foreground-muted">
+                ยอดที่ต้องจ่าย
+              </span>
+              <span className="font-mono text-xl font-medium">฿245</span>
+            </div>
+            <ReceiptDivider />
+            <QrCode className="size-14 self-center" />
+          </ReceiptCard>
+        </div>
 
-        <h1 className="mt-6 text-3xl font-medium text-center">
-          PromptPay QR Split
-        </h1>
-        <p className="mt-4 text-center text-sm text-primary-foreground/80">
-          แบ่งบิลง่ายๆ กับเพื่อน
-          <br />
-          จ่ายผ่าน QR PromptPay
-        </p>
+        <div className="flex flex-col items-center gap-2 text-center">
+          <h1 className="text-xl leading-tight font-semibold">
+            PromptPay QR Split
+          </h1>
+          <p className="text-foreground-muted">
+            แบ่งบิลง่ายๆ
+            <br />
+            จ่ายผ่าน QR PromptPay
+          </p>
+        </div>
       </div>
 
-      <div className="relative -mt-32 flex flex-1 flex-col items-center rounded-t-3xl bg-card px-6 pt-10 pb-10">
-        <p className="text-sm text-muted-foreground">
+      <div className="flex flex-col items-center gap-4">
+        <p className="text-sm text-foreground-muted">
           เข้าสู่ระบบเพื่อเริ่มใช้งาน
         </p>
 
-        {/* Google Button */}
         <div
           ref={buttonRef}
-          className="mt-6 flex w-full max-w-sm justify-center"
+          className="flex min-h-11 w-full max-w-sm justify-center"
         />
 
         {isLoading && (
-          <p className="mt-3 text-xs text-muted-foreground">
-            กำลังเข้าสู่ระบบ...
+          <p className="text-sm text-foreground-muted">กำลังเข้าสู่ระบบ...</p>
+        )}
+        {error && (
+          <p role="alert" className="text-sm text-danger">
+            {error}
           </p>
         )}
-        {error && <p className="mt-3 text-xs text-destructive">{error}</p>}
 
-        <p className="mt-10 text-center text-xs text-muted-foreground">
+        <p className="text-center text-xs text-foreground-muted">
           การเข้าสู่ระบบถือว่าคุณยอมรับ{" "}
-          <Link href="/policy" className="text-primary underline">
+          <Link
+            href="/policy"
+            className="text-primary underline hover:text-primary-hover"
+          >
             นโยบายความเป็นส่วนตัว
           </Link>
         </p>
       </div>
-    </div>
+    </main>
   );
 }

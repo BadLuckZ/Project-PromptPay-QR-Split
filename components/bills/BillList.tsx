@@ -31,39 +31,42 @@ export function BillList({ bills }: BillList) {
   });
 
   return (
-    <div className="flex flex-col flex-1 min-h-0">
-      <div className="px-4 pt-1 pb-4 flex flex-col gap-3.5 shrink-0">
-        <Button
-          className="w-full"
-          nativeButton={false}
-          render={<Link href="/bills/create" />}
-        >
-          <Plus size={16} /> สร้าง Bill ใหม่
-        </Button>
+    <div className="flex flex-col gap-4">
+      <Button
+        size="lg"
+        className="w-full"
+        nativeButton={false}
+        render={<Link href="/bills/create" />}
+      >
+        <Plus className="size-5" /> สร้าง Bill ใหม่
+      </Button>
 
-        <div className="flex gap-1 rounded-lg bg-muted p-1">
-          {FILTERS.map((f) => (
-            <button
-              key={f.value}
-              type="button"
-              onClick={() => setFilter(f.value)}
-              aria-pressed={filter === f.value}
-              className={cn(
-                "flex-1 min-h-9 rounded-md px-3 text-sm cursor-pointer whitespace-nowrap transition-colors",
-                filter === f.value
-                  ? "bg-card text-foreground shadow-sm"
-                  : "text-muted-foreground",
-              )}
-            >
-              {f.label}
-            </button>
-          ))}
-        </div>
+      <div
+        role="group"
+        aria-label="กรองบิล"
+        className="flex gap-1 rounded-md bg-surface-muted-hover p-1"
+      >
+        {FILTERS.map((f) => (
+          <button
+            key={f.value}
+            type="button"
+            onClick={() => setFilter(f.value)}
+            aria-pressed={filter === f.value}
+            className={cn(
+              "min-h-(--target-min) flex-1 cursor-pointer rounded-md px-3 text-sm whitespace-nowrap transition-colors",
+              filter === f.value
+                ? "bg-surface font-medium text-foreground"
+                : "text-foreground-muted hover:text-foreground",
+            )}
+          >
+            {f.label}
+          </button>
+        ))}
       </div>
 
-      <div className="flex-1 overflow-y-auto px-4 pb-4 flex flex-col gap-3">
+      <div className="flex flex-col gap-3">
         {filtered.length === 0 ? (
-          <p className="text-center text-sm text-muted-foreground pt-12">
+          <p className="pt-12 text-center text-sm text-foreground-muted">
             ไม่มี Bill ในหมวดนี้
           </p>
         ) : (

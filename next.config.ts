@@ -10,8 +10,8 @@ const allowVercelToolbar = isLocalDev || isPreview;
 const CSP = [
   "default-src 'self'",
   `script-src 'self' 'unsafe-inline' https://accounts.google.com${isLocalDev ? " 'unsafe-eval'" : ""}${allowVercelToolbar ? " https://vercel.live" : ""}`,
-  "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
-  `font-src 'self' https://fonts.gstatic.com${allowVercelToolbar ? " https://vercel.live" : ""}`,
+  "style-src 'self' 'unsafe-inline' https://accounts.google.com/gsi/style",
+  `font-src 'self'${allowVercelToolbar ? " https://vercel.live" : ""}`,
   "img-src 'self' data: blob: https://*.googleusercontent.com",
   `connect-src 'self' data: ${SUPABASE_URL} https://accounts.google.com${allowVercelToolbar ? " https://vercel.live wss://vercel.live wss://*.pusher.com" : ""}`,
   `frame-src 'self' https://accounts.google.com${allowVercelToolbar ? " https://vercel.live" : ""}`,

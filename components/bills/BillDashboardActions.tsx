@@ -98,37 +98,39 @@ export function BillDashboardActions({
   }
 
   return (
-    <div className="mt-2 flex flex-col gap-2">
+    <div className="flex flex-col gap-1">
       <Button
-        variant="outline"
+        variant="soft"
+        size="lg"
         className="w-full"
         onClick={() => {
           setError(null);
           setShowCloseConfirm(true);
         }}
       >
-        {closed ? <Lock size={16} /> : <CheckCircle2 size={16} />}
+        {closed ? <Lock /> : <CheckCircle2 />}
         {closed ? "เปิดบิลอีกครั้ง" : "ปิดบิล"}
       </Button>
 
-      <button
-        type="button"
+      <Button
+        variant="destructive-ghost"
+        className="w-full"
         onClick={() => {
           setError(null);
           setShowDeleteConfirm(true);
         }}
-        className="cursor-pointer py-1 text-center text-xs text-destructive/70 hover:text-destructive"
       >
+        <Trash2 />
         ลบบิลนี้
-      </button>
+      </Button>
 
       <AlertDialog open={showCloseConfirm} onOpenChange={setShowCloseConfirm}>
         <AlertDialogContent className="flex flex-col items-center text-center">
           <div
             className={`flex size-14 items-center justify-center rounded-full ${
               closed
-                ? "bg-success text-success-foreground"
-                : "bg-warning text-warning-foreground"
+                ? "bg-primary-soft text-primary"
+                : "bg-warning-soft text-warning-soft-foreground"
             }`}
           >
             {closed ? <Lock size={26} /> : <CheckCircle2 size={26} />}
@@ -144,22 +146,20 @@ export function BillDashboardActions({
                 : "จะถือว่าบิลนี้ชำระครบแล้ว ไม่สามารถแก้ไขสถานะการจ่ายได้จนกว่าจะเปิดอีกครั้ง"}
             </AlertDialogDescription>
           </AlertDialogHeader>
-          {error && <p className="text-sm text-destructive">{error}</p>}
+          {error && <p className="text-sm text-danger">{error}</p>}
           <AlertDialogFooter className="w-full">
             <AlertDialogCancel
               disabled={submitting}
-              className="h-11 w-full rounded-xl"
+              size="lg"
+              className="w-full"
             >
               ยกเลิก
             </AlertDialogCancel>
             <AlertDialogAction
               onClick={confirmClose}
               disabled={submitting}
-              className={`h-11 w-full rounded-xl text-white ${
-                closed
-                  ? "bg-success-foreground hover:bg-success-foreground/90"
-                  : "bg-warning-foreground hover:bg-warning-foreground/90"
-              }`}
+              size="lg"
+              className="w-full"
             >
               {submitting ? "กำลังบันทึก..." : closed ? "เปิดบิล" : "ปิดบิล"}
             </AlertDialogAction>
@@ -169,7 +169,7 @@ export function BillDashboardActions({
 
       <AlertDialog open={showDeleteConfirm} onOpenChange={setShowDeleteConfirm}>
         <AlertDialogContent className="flex flex-col items-center text-center">
-          <div className="flex size-14 items-center justify-center rounded-full bg-danger text-danger-foreground">
+          <div className="flex size-14 items-center justify-center rounded-full bg-danger-soft text-danger-soft-foreground">
             <Trash2 size={26} />
           </div>
 
@@ -180,11 +180,12 @@ export function BillDashboardActions({
               และไม่สามารถกู้คืนได้
             </AlertDialogDescription>
           </AlertDialogHeader>
-          {error && <p className="text-sm text-destructive">{error}</p>}
+          {error && <p className="text-sm text-danger">{error}</p>}
           <AlertDialogFooter className="w-full">
             <AlertDialogCancel
               disabled={submitting}
-              className="h-11 w-full rounded-xl"
+              size="lg"
+              className="w-full"
             >
               ยกเลิก
             </AlertDialogCancel>
@@ -192,7 +193,8 @@ export function BillDashboardActions({
               variant="destructive"
               onClick={confirmDelete}
               disabled={submitting}
-              className="h-11 w-full rounded-xl bg-destructive text-destructive-foreground hover:bg-destructive/90"
+              size="lg"
+              className="w-full"
             >
               {submitting ? "กำลังลบ..." : "ลบบิล"}
             </AlertDialogAction>
