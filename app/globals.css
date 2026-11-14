@@ -18,6 +18,16 @@
 }
 
 @theme inline {
+  --color-*: initial;
+  --text-*: initial;
+  --font-weight-*: initial;
+  --leading-*: initial;
+  --radius-*: initial;
+  --shadow-*: initial;
+  --inset-shadow-*: initial;
+  --drop-shadow-*: initial;
+  --blur-*: initial;
+
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-foreground-muted: var(--foreground-muted);
@@ -84,20 +94,6 @@
   --radius-sm: var(--radius-sm);
   --radius-md: var(--radius);
   --radius-lg: var(--radius-lg);
-
-  /* Legacy colors */
-  --color-primary-dark: var(--primary-active);
-  --color-primary-tint: var(--primary-soft);
-  --color-success-foreground: var(--primary);
-  --color-warning-foreground: var(--warning-soft-foreground);
-  --color-warning-border: var(--warning);
-  --color-danger-foreground: var(--danger-soft-foreground);
-  --color-destructive-foreground: var(--primary-foreground);
-  --font-weight-bold: var(--weight-semibold);
-  --radius-xl: var(--radius-lg);
-  --shadow-card:
-    0 1px 2px color-mix(in srgb, var(--foreground) 4%, transparent),
-    0 4px 16px color-mix(in srgb, var(--foreground) 6%, transparent);
 }
 
 @layer base {

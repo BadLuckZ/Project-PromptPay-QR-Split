@@ -22,7 +22,7 @@ export default function PolicyPage() {
 
         <section className="flex flex-col gap-2">
           <h2 className="text-base font-medium">ข้อมูลที่เราเก็บ</h2>
-          <ul className="list-disc pl-5 flex flex-col gap-1 text-foreground-muted">
+          <ul className="list-disc pl-4 flex flex-col gap-1 text-foreground-muted">
             <li>ชื่อและอีเมลจากบัญชี Google ที่ใช้เข้าสู่ระบบ</li>
             <li>ชื่อที่แสดงและเบอร์พร้อมเพย์ที่คุณตั้งค่าในโปรไฟล์</li>
             <li>
