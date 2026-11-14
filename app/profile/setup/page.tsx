@@ -1,5 +1,6 @@
 import { ProfileSetupForm } from "@/components/profile/setup";
 import { createClient } from "@/supabase/server";
+import { getAvatarUrl } from "@/lib/avatar";
 import { redirect } from "next/navigation";
 
 export default async function ProfileSetupPage() {
@@ -19,5 +20,7 @@ export default async function ProfileSetupPage() {
     redirect("/bills");
   }
 
-  return <ProfileSetupForm email={user!.email!} />;
+  return (
+    <ProfileSetupForm email={user!.email!} avatarUrl={getAvatarUrl(user)} />
+  );
 }

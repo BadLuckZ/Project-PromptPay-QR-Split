@@ -14,6 +14,7 @@ import { BillFormCustomTab } from "@/components/bills/BillFormCustomTab";
 import { BillFormAction } from "@/components/bills/BillFormAction";
 import { SessionExpiredDialog } from "@/components/SessionExpiredDialog";
 import { LeaderRow, ReceiptCard } from "@/components/receipt";
+import { MAX_BILL_PEOPLE } from "@/lib/bill";
 
 const SPLIT_TABS = [
   { value: "equal", label: "หารเท่ากัน" },
@@ -72,6 +73,7 @@ export function BillForm({ ownerName }: BillFormProps) {
 
   const totalNumber = Number(total) || 0;
   const totalCount = fields.length + 1;
+  const isFull = totalCount >= MAX_BILL_PEOPLE;
   const perPerson = totalCount > 0 ? Math.floor(totalNumber / totalCount) : 0;
 
   const customTotal =
@@ -81,7 +83,7 @@ export function BillForm({ ownerName }: BillFormProps) {
 
   function addParticipant() {
     const name = newParticipantName.trim();
-    if (!name) return;
+    if (!name || isFull) return;
 
     const isDuplicate = [ownerName, ...participants.map((p) => p.name)].some(
       (existing) => existing.trim().toLowerCase() === name.toLowerCase(),
@@ -235,13 +237,16 @@ export function BillForm({ ownerName }: BillFormProps) {
                   }
                 }}
                 placeholder="ชื่อผู้เข้าร่วม"
-                disabled={submitting}
+                disabled={submitting || isFull}
                 aria-invalid={!!participantNameError}
+                aria-describedby={isFull ? "participants-full" : undefined}
               />
               <Button
                 type="button"
                 variant="soft"
-                disabled={submitting || newParticipantName.trim() === ""}
+                disabled={
+                  submitting || isFull || newParticipantName.trim() === ""
+                }
                 onClick={addParticipant}
               >
                 <Plus />
@@ -251,6 +256,14 @@ export function BillForm({ ownerName }: BillFormProps) {
             {participantNameError && (
               <p className="pt-1 text-sm text-danger">
                 {participantNameError}
+              </p>
+            )}
+            {isFull && (
+              <p
+                id="participants-full"
+                className="pt-1 text-sm text-foreground-muted"
+              >
+                ครบ {MAX_BILL_PEOPLE} คนแล้ว (รวมเจ้าของบิล)
               </p>
             )}
           </div>
@@ -274,46 +287,48 @@ export function BillForm({ ownerName }: BillFormProps) {
         </div>
       </div>
 
-      <ReceiptCard>
-        <dl>
-          {tab === "equal" ? (
-            <LeaderRow
-              label={`คนละเท่ากัน (${totalCount} คน)`}
-              valueClassName="font-mono text-xl tabular-nums"
+      <div className="sticky bottom-0 -mx-4 flex flex-col gap-3 bg-surface-muted px-4 pt-3 pb-4">
+        <ReceiptCard>
+          <dl>
+            {tab === "equal" ? (
+              <LeaderRow
+                label={`คนละเท่ากัน (${totalCount} คน)`}
+                valueClassName="font-mono text-xl tabular-nums"
+              >
+                ฿{perPerson.toLocaleString("th-TH")}
+              </LeaderRow>
+            ) : (
+              <LeaderRow
+                label="รวม"
+                valueClassName="font-mono text-xl tabular-nums"
+              >
+                ฿{customTotal.toLocaleString("th-TH")}
+              </LeaderRow>
+            )}
+          </dl>
+          {tab === "custom" && diff !== 0 && total && (
+            <p
+              role="alert"
+              className="flex items-center gap-2 rounded-md bg-warning-soft px-3 py-2 text-sm font-medium text-warning-soft-foreground"
             >
-              ฿{perPerson.toLocaleString("th-TH")}
-            </LeaderRow>
-          ) : (
-            <LeaderRow
-              label="รวม"
-              valueClassName="font-mono text-xl tabular-nums"
-            >
-              ฿{customTotal.toLocaleString("th-TH")}
-            </LeaderRow>
+              <TriangleAlert className="size-4 shrink-0" aria-hidden="true" />
+              {diff > 0
+                ? `ยอดขาดอีก ฿${diff.toLocaleString()}`
+                : `ยอดเกินมา ฿${Math.abs(diff).toLocaleString()}`}
+            </p>
           )}
-        </dl>
-        {tab === "custom" && diff !== 0 && total && (
-          <p
-            role="alert"
-            className="flex items-center gap-2 rounded-md bg-warning-soft px-3 py-2 text-sm font-medium text-warning-soft-foreground"
-          >
-            <TriangleAlert className="size-4 shrink-0" aria-hidden="true" />
-            {diff > 0
-              ? `ยอดขาดอีก ฿${diff.toLocaleString()}`
-              : `ยอดเกินมา ฿${Math.abs(diff).toLocaleString()}`}
-          </p>
-        )}
-      </ReceiptCard>
+        </ReceiptCard>
 
-      <BillFormAction
-        canSubmit={canSubmit}
-        billName={billName}
-        totalCount={totalCount}
-        totalNumber={totalNumber}
-        submitting={submitting}
-        submitError={submitError}
-        onConfirm={handleSubmit(onSubmit)}
-      />
+        <BillFormAction
+          canSubmit={canSubmit}
+          billName={billName}
+          totalCount={totalCount}
+          totalNumber={totalNumber}
+          submitting={submitting}
+          submitError={submitError}
+          onConfirm={handleSubmit(onSubmit)}
+        />
+      </div>
 
       <SessionExpiredDialog open={sessionExpired} />
     </div>

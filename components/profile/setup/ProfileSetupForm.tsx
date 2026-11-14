@@ -8,6 +8,7 @@ import { UserRound } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Avatar } from "@/components/Avatar";
 import { SessionExpiredDialog } from "@/components/SessionExpiredDialog";
 import { getInitials } from "@/lib/utils";
 
@@ -18,9 +19,10 @@ type FormValues = {
 
 interface ProfileSetupFormProps {
   email: string;
+  avatarUrl: string | null;
 }
 
-export function ProfileSetupForm({ email }: ProfileSetupFormProps) {
+export function ProfileSetupForm({ email, avatarUrl }: ProfileSetupFormProps) {
   const router = useRouter();
   const [sessionExpired, setSessionExpired] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
@@ -71,13 +73,17 @@ export function ProfileSetupForm({ email }: ProfileSetupFormProps) {
         className="flex flex-1 flex-col gap-3"
       >
         <div className="flex flex-col gap-6 rounded-sm bg-surface px-6 py-6">
-          <span className="flex size-18 items-center justify-center self-center rounded-full bg-primary-soft text-2xl font-semibold text-primary">
-            {displayName.trim() ? (
-              getInitials(displayName)
-            ) : (
-              <UserRound className="size-8" aria-hidden="true" />
-            )}
-          </span>
+          <Avatar
+            src={avatarUrl}
+            fallback={
+              displayName.trim() ? (
+                getInitials(displayName)
+              ) : (
+                <UserRound className="size-8" aria-hidden="true" />
+              )
+            }
+            className="size-18 self-center text-2xl"
+          />
 
           <div className="flex items-center gap-3">
             <span className="flex size-9 shrink-0 items-center justify-center rounded-full bg-surface-muted">

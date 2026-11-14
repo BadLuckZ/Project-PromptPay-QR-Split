@@ -1,3 +1,5 @@
+import { MAX_BILL_PEOPLE } from "@/lib/bill";
+
 export const ERROR_MESSAGES = {
   UNAUTHORIZED: "กรุณาเข้าสู่ระบบ",
   GOOGLE_SIGN_IN_FAILED: "เข้าสู่ระบบไม่สำเร็จ กรุณาลองใหม่อีกครั้ง",
@@ -5,6 +7,7 @@ export const ERROR_MESSAGES = {
   INVALID_BODY: "รูปแบบข้อมูลไม่ถูกต้อง",
   BILL_NAME_REQUIRED: "กรุณากรอกชื่อบิล",
   MEMBERS_REQUIRED: "ต้องมีผู้เข้าร่วมอย่างน้อย 1 คน",
+  MEMBERS_TOO_MANY: `บิลมีรายชื่อได้สูงสุด ${MAX_BILL_PEOPLE} คน`,
   MEMBER_NAME_REQUIRED: "มีผู้เข้าร่วมที่ยังไม่มีชื่อ",
   CREATE_BILL_FAILED: "สร้างบิลไม่สำเร็จ",
   SAVE_MEMBERS_FAILED: "บันทึกผู้เข้าร่วมไม่สำเร็จ",

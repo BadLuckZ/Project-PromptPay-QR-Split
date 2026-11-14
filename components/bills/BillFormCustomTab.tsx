@@ -57,7 +57,7 @@ function AmountInput({
   ...props
 }: React.ComponentProps<typeof Input> & { label: string }) {
   return (
-    <span className="flex items-center gap-1">
+    <span className="ms-auto flex shrink-0 items-center gap-1">
       <span aria-hidden="true" className="text-foreground-muted">
         ฿
       </span>

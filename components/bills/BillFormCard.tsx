@@ -2,7 +2,6 @@
 
 import { ReactNode } from "react";
 import { X } from "lucide-react";
-import { cn, getInitials } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 
 interface BillFormCardProps {
@@ -22,16 +21,6 @@ export function BillFormCard({
 }: BillFormCardProps) {
   return (
     <li className="flex min-h-12 items-center gap-3 py-1">
-      <span
-        className={cn(
-          "flex size-8 shrink-0 items-center justify-center rounded-full text-sm font-medium",
-          isOwner
-            ? "bg-primary-soft text-primary"
-            : "bg-surface-muted text-foreground-muted",
-        )}
-      >
-        {getInitials(name)}
-      </span>
       <p className="min-w-0 flex-1 wrap-break-word">
         {name}
         {isOwner && <span className="text-foreground-muted"> (ตัวเอง)</span>}
