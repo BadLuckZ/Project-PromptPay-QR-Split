@@ -1,1 +1,2 @@
-export * from "./PayQRDisplay";
+export * from "./PayReceipt";
+export * from "./PayStateReceipt";

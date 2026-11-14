@@ -1,7 +1,6 @@
-import { AlertCircle, CheckCircle2, Lock } from "lucide-react";
+import { AlertCircle, Lock } from "lucide-react";
 import { notFound } from "next/navigation";
-import { Topbar } from "@/components/Topbar";
-import { PayQRDisplay } from "@/components/pay";
+import { PayReceipt, PayStateReceipt } from "@/components/pay";
 import { SUPABASE } from "@/lib/supabase";
 import { createPromptPayQRDataUrl } from "@/lib/promptpay";
 import { MemberQRView } from "@/types";
@@ -36,58 +35,25 @@ export default async function PayPage({ params }: PayPageProps) {
 
   if (bill.deleted_at) {
     return (
-      <div className="flex flex-1 flex-col">
-        <Topbar title="ชำระเงิน" subtitle={bill.bill_name} />
-        <div className="flex flex-1 flex-col items-center justify-center p-4">
-          <div className="flex w-full max-w-sm flex-col items-center gap-3 rounded-2xl border border-border bg-card p-8 text-center shadow-sm">
-            <div className="flex size-14 items-center justify-center rounded-full bg-danger-soft text-danger-foreground">
-              <AlertCircle size={28} />
-            </div>
-            <p className="font-medium">บิลนี้ถูกลบแล้ว</p>
-            <p className="text-sm text-muted-foreground">
-              การชำระเงินในบิลนี้ไม่สามารถใช้งานได้อีกต่อไป
-            </p>
-          </div>
-        </div>
-      </div>
+      <PayStateReceipt
+        icon={AlertCircle}
+        tone="danger"
+        billName={bill.bill_name}
+        title="บิลนี้ถูกลบแล้ว"
+        description="การชำระเงินในบิลนี้ไม่สามารถใช้งานได้อีกต่อไป"
+      />
     );
   }
 
   if (bill.closed_at) {
     return (
-      <div className="flex flex-1 flex-col">
-        <Topbar title="ชำระเงิน" subtitle={bill.bill_name} />
-        <div className="flex flex-1 flex-col items-center justify-center p-4">
-          <div className="flex w-full max-w-sm flex-col items-center gap-3 rounded-2xl border border-border bg-card p-8 text-center shadow-sm">
-            <div className="flex size-14 items-center justify-center rounded-full bg-muted text-muted-foreground">
-              <Lock size={28} />
-            </div>
-            <p className="font-medium">บิลนี้ปิดรับชำระแล้ว</p>
-            <p className="text-sm text-muted-foreground">
-              เจ้าของบิลปิดการรับชำระเงินในบิลนี้แล้ว
-            </p>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  if (bill.is_paid) {
-    return (
-      <div className="flex flex-1 flex-col">
-        <Topbar title="ชำระเงิน" subtitle={bill.bill_name} />
-        <div className="flex flex-1 flex-col items-center justify-center p-4">
-          <div className="flex w-full max-w-sm flex-col items-center gap-3 rounded-2xl border border-border bg-card p-8 text-center shadow-sm">
-            <div className="flex size-14 items-center justify-center rounded-full bg-primary-soft text-success-foreground">
-              <CheckCircle2 size={28} />
-            </div>
-            <p className="font-medium">รายการนี้ชำระเงินแล้ว</p>
-            <p className="text-sm text-muted-foreground">
-              ไม่สามารถเปิดหน้าชำระเงินนี้ได้อีก
-            </p>
-          </div>
-        </div>
-      </div>
+      <PayStateReceipt
+        icon={Lock}
+        tone="neutral"
+        billName={bill.bill_name}
+        title="บิลนี้ปิดรับชำระแล้ว"
+        description="เจ้าของบิลปิดการรับชำระเงินในบิลนี้แล้ว"
+      />
     );
   }
 
@@ -100,10 +66,14 @@ export default async function PayPage({ params }: PayPageProps) {
     deleted_at: bill.deleted_at,
   };
 
+  if (bill.is_paid) {
+    return <PayReceipt member={member} />;
+  }
+
   const qrCodeDataUrl = await createPromptPayQRDataUrl(
     member.promptpay_number,
     member.amount,
   );
 
-  return <PayQRDisplay member={member} qrCodeDataUrl={qrCodeDataUrl} />;
+  return <PayReceipt member={member} qrCodeDataUrl={qrCodeDataUrl} />;
 }
