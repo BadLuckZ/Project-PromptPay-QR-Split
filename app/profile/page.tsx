@@ -1,5 +1,6 @@
 import { ProfileForm } from "@/components/profile";
 import { createClient } from "@/supabase/server";
+import { getAvatarUrl } from "@/lib/avatar";
 import { fetch } from "@/lib/fetch";
 import { User } from "@/types";
 
@@ -12,5 +13,11 @@ export default async function ProfilePage() {
   const res = await fetch("/api/v1/users/me", { cache: "no-store" });
   const profile: User | null = res.ok ? await res.json() : null;
 
-  return <ProfileForm profile={profile as User} email={user!.email!} />;
+  return (
+    <ProfileForm
+      profile={profile as User}
+      email={user!.email!}
+      avatarUrl={getAvatarUrl(user)}
+    />
+  );
 }

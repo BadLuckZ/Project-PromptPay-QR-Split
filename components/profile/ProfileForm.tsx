@@ -7,6 +7,7 @@ import { toast } from "sonner";
 import { Loader2, LogOut } from "lucide-react";
 
 import { broadcastLogout } from "@/lib/auth";
+import { Avatar } from "@/components/Avatar";
 import { BackLink } from "@/components/BackLink";
 import { SessionExpiredDialog } from "@/components/SessionExpiredDialog";
 import { Button } from "@/components/ui/button";
@@ -23,9 +24,10 @@ type FormValues = {
 interface ProfileFormProps {
   profile: User;
   email: string;
+  avatarUrl: string | null;
 }
 
-export function ProfileForm({ profile, email }: ProfileFormProps) {
+export function ProfileForm({ profile, email, avatarUrl }: ProfileFormProps) {
   const router = useRouter();
   const [isLoggingOut, setIsLoggingOut] = useState(false);
   const [sessionExpired, setSessionExpired] = useState(false);
@@ -94,9 +96,11 @@ export function ProfileForm({ profile, email }: ProfileFormProps) {
         className="flex flex-1 flex-col gap-3"
       >
         <div className="flex flex-col gap-6 rounded-sm bg-surface px-6 py-6">
-          <span className="flex size-18 items-center justify-center self-center rounded-full bg-primary-soft text-2xl font-semibold text-primary">
-            {getInitials(displayName)}
-          </span>
+          <Avatar
+            src={avatarUrl}
+            fallback={getInitials(displayName)}
+            className="size-18 self-center text-2xl"
+          />
 
           <div className="flex items-center gap-3">
             <span className="flex size-9 shrink-0 items-center justify-center rounded-full bg-surface-muted">

@@ -1,14 +1,19 @@
 import Link from "next/link";
+import { Avatar } from "@/components/Avatar";
 import { BillList } from "@/components/bills";
 import { HeroAmount, ReceiptCard } from "@/components/receipt";
+import { getAvatarUrl } from "@/lib/avatar";
 import { fetch } from "@/lib/fetch";
 import { getInitials } from "@/lib/utils";
+import { createClient } from "@/supabase/server";
 import { Bill, User } from "@/types";
 
 export default async function BillsPage() {
-  const [billsRes, profileRes] = await Promise.all([
+  const supabase = await createClient();
+  const [billsRes, profileRes, { data: auth }] = await Promise.all([
     fetch("/api/v1/bills", { cache: "no-store" }),
     fetch("/api/v1/users/me", { cache: "no-store" }),
+    supabase.auth.getUser(),
   ]);
   const bills: Bill[] = billsRes.ok ? await billsRes.json() : [];
   const profile: User | null = profileRes.ok ? await profileRes.json() : null;
@@ -33,9 +38,13 @@ export default async function BillsPage() {
           <Link
             href="/profile"
             aria-label="โปรไฟล์"
-            className="flex size-11 shrink-0 items-center justify-center rounded-full bg-primary-soft font-semibold text-primary transition-colors hover:bg-surface-muted-hover"
+            className="group shrink-0 rounded-full"
           >
-            {getInitials(profile.display_name)}
+            <Avatar
+              src={getAvatarUrl(auth.user)}
+              fallback={getInitials(profile.display_name)}
+              className="size-11 transition-colors group-hover:bg-surface-muted-hover"
+            />
           </Link>
         )}
       </header>
