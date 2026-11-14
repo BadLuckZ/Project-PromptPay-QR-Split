@@ -1,6 +1,8 @@
+import Link from "next/link";
 import { BillList } from "@/components/bills";
-import { Topbar } from "@/components/Topbar";
+import { HeroAmount, ReceiptCard } from "@/components/receipt";
 import { fetch } from "@/lib/fetch";
+import { getInitials } from "@/lib/utils";
 import { Bill, User } from "@/types";
 
 export default async function BillsPage() {
@@ -19,23 +21,36 @@ export default async function BillsPage() {
   );
 
   return (
-    <div className="flex flex-col flex-1">
-      <Topbar
-        title="Bill ของฉัน"
-        subtitle={`${bills.length} รายการ`}
-        profileName={profile?.display_name}
-      >
-        <p className="text-xs text-primary-foreground/90">ยอดค้างรับทั้งหมด</p>
-        <p className="text-4xl font-bold tabular-nums">
-          ฿{pendingAmount.toLocaleString()}
-        </p>
-        <p className="mt-1 text-xs text-primary-foreground/90">
-          {pendingBills.length > 0
-            ? `จาก ${pendingBills.length} บิลที่ยังค้างชำระ`
-            : "ไม่มีบิลค้างชำระ"}
-        </p>
-      </Topbar>
+    <main className="flex flex-1 flex-col gap-4 px-4 py-6">
+      <header className="flex items-center justify-between gap-4">
+        <div className="flex min-w-0 flex-col">
+          <h1 className="text-xl leading-tight font-semibold">Bill ของฉัน</h1>
+          <p className="text-sm text-foreground-muted">
+            {bills.length} รายการ
+          </p>
+        </div>
+        {profile?.display_name && (
+          <Link
+            href="/profile"
+            aria-label="โปรไฟล์"
+            className="flex size-11 shrink-0 items-center justify-center rounded-full border-2 border-foreground bg-surface font-semibold transition-colors hover:bg-surface-muted"
+          >
+            {getInitials(profile.display_name)}
+          </Link>
+        )}
+      </header>
+      <ReceiptCard>
+        <div className="flex flex-col gap-1">
+          <p className="text-sm text-foreground-muted">ยอดค้างรับทั้งหมด</p>
+          <HeroAmount value={pendingAmount} />
+          <p className="text-sm text-foreground-muted">
+            {pendingBills.length > 0
+              ? `จาก ${pendingBills.length} บิลที่ยังค้างชำระ`
+              : "ไม่มีบิลค้างชำระ"}
+          </p>
+        </div>
+      </ReceiptCard>
       <BillList bills={bills} />
-    </div>
+    </main>
   );
 }

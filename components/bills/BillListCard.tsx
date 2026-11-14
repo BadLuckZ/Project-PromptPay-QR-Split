@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { Users } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Bill } from "@/types";
 
@@ -8,9 +7,9 @@ interface BillListCardProps {
 }
 
 const STATUS_STYLES: Record<"closed" | "paid" | "pending", string> = {
-  closed: "bg-muted text-muted-foreground",
-  paid: "bg-primary-soft text-success-foreground",
-  pending: "bg-warning-soft text-warning-foreground",
+  closed: "bg-surface-muted text-foreground-muted",
+  paid: "bg-primary-soft text-primary",
+  pending: "bg-warning-soft text-warning-soft-foreground",
 };
 
 export function BillListCard({ bill }: BillListCardProps) {
@@ -30,21 +29,26 @@ export function BillListCard({ bill }: BillListCardProps) {
   return (
     <Link
       href={`/bills/${bill.id}`}
-      className="flex flex-col gap-3 rounded-xl bg-card p-4 shadow-card"
+      className="flex flex-col rounded-sm border-2 border-transparent bg-surface p-4 transition-colors hover:border-border-strong"
     >
       <div className="flex items-start justify-between gap-3">
-        <div className="flex flex-col gap-1 min-w-0 flex-1">
-          <p className="text-base font-medium line-clamp-2 wrap-break-word">
+        <div className="flex min-w-0 flex-1 flex-col">
+          <p className="line-clamp-2 text-base font-medium wrap-break-word">
             {bill.bill_name}
           </p>
-          <span className="inline-flex items-center gap-1 text-xs text-muted-foreground">
-            <Users size={12} />
+          <p className="text-sm text-foreground-muted">
             {bill.memberCount} คน
-          </span>
+          </p>
         </div>
-        <p className="shrink-0 text-lg font-semibold tabular-nums">
-          ฿{bill.totalAmount.toLocaleString()}
+        <p className="shrink-0 font-mono text-lg font-medium tabular-nums">
+          ฿{bill.totalAmount.toLocaleString("th-TH")}
         </p>
+      </div>
+
+      <div aria-hidden="true" className="relative -mx-4 my-3">
+        <span className="absolute -top-2 -left-2 size-4 rounded-full bg-surface-muted" />
+        <span className="absolute -top-2 -right-2 size-4 rounded-full bg-surface-muted" />
+        <div className="mx-3 border-t-2 border-dashed border-border-strong" />
       </div>
 
       <div className="flex items-center gap-3">
@@ -54,19 +58,19 @@ export function BillListCard({ bill }: BillListCardProps) {
           aria-valuemin={0}
           aria-valuemax={bill.memberCount}
           aria-valuenow={bill.paidCount}
-          className="h-1.5 flex-1 rounded-full bg-muted"
+          className="h-1.5 flex-1 overflow-hidden rounded-full bg-surface-muted-hover"
         >
           <div
             className={cn(
               "h-full rounded-full",
-              isClosed ? "bg-muted-foreground/40" : "bg-primary",
+              isClosed ? "bg-border-strong" : "bg-primary",
             )}
             style={{ width: `${paidPct}%` }}
           />
         </div>
         <span
           className={cn(
-            "text-xs rounded-full px-2.5 py-1 whitespace-nowrap",
+            "rounded-full px-3 py-1 text-xs font-medium whitespace-nowrap",
             STATUS_STYLES[status],
           )}
         >

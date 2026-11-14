@@ -47,6 +47,27 @@ export function ReceiptBrand({ subtitle }: { subtitle?: string }) {
   );
 }
 
+const heroAmountFormatter = new Intl.NumberFormat("th-TH", {
+  minimumFractionDigits: 2,
+  maximumFractionDigits: 2,
+});
+
+export function HeroAmount({ value }: { value: number }) {
+  const [integer, fraction] = heroAmountFormatter.format(value).split(".");
+
+  return (
+    <p className="font-medium whitespace-nowrap">
+      <span className="me-1 text-lg">฿</span>
+      <span className="font-mono text-2xl tracking-tight tabular-nums">
+        {integer}
+      </span>
+      <span className="font-mono text-lg text-foreground-muted tabular-nums">
+        .{fraction}
+      </span>
+    </p>
+  );
+}
+
 export function LeaderRow({
   label,
   children,
