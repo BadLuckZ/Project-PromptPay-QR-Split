@@ -1,9 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
-import { ChevronLeft, Copy, Check, Lock } from "lucide-react";
-import { Button, buttonVariants } from "@/components/ui/button";
+import { Copy, Check, Lock } from "lucide-react";
+import { BackLink } from "@/components/BackLink";
+import { Button } from "@/components/ui/button";
 import { BillDashboardCard } from "@/components/bills/BillDashboardCard";
 import { BillDashboardActions } from "@/components/bills/BillDashboardActions";
 import { SessionExpiredDialog } from "@/components/SessionExpiredDialog";
@@ -115,16 +115,7 @@ export function BillDashboard({
   return (
     <main className="flex flex-1 flex-col gap-3 px-4 py-6">
       <header className="flex items-center justify-between gap-4">
-        <Link
-          href="/bills"
-          aria-label="ย้อนกลับ"
-          className={cn(
-            buttonVariants({ variant: "ghost", size: "icon" }),
-            "-ms-3",
-          )}
-        >
-          <ChevronLeft className="size-6" />
-        </Link>
+        <BackLink href="/bills" />
         <span
           className={cn(
             "inline-flex items-center gap-1 rounded-full px-3 py-1 text-sm font-medium",

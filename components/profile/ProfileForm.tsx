@@ -4,15 +4,15 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import Link from "next/link";
-import { ChevronLeft, Loader2, LogOut } from "lucide-react";
+import { Loader2, LogOut } from "lucide-react";
 
 import { broadcastLogout } from "@/lib/auth";
+import { BackLink } from "@/components/BackLink";
 import { SessionExpiredDialog } from "@/components/SessionExpiredDialog";
-import { Button, buttonVariants } from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { cn, getInitials } from "@/lib/utils";
+import { getInitials } from "@/lib/utils";
 import { User } from "@/types";
 
 type FormValues = {
@@ -85,16 +85,7 @@ export function ProfileForm({ profile, email }: ProfileFormProps) {
   return (
     <main className="flex flex-1 flex-col gap-3 px-4 py-6">
       <header className="flex items-center gap-1">
-        <Link
-          href="/bills"
-          aria-label="ย้อนกลับ"
-          className={cn(
-            buttonVariants({ variant: "ghost", size: "icon" }),
-            "-ms-3",
-          )}
-        >
-          <ChevronLeft className="size-6" />
-        </Link>
+        <BackLink href="/bills" />
         <h1 className="text-xl leading-tight font-semibold">โปรไฟล์</h1>
       </header>
 

@@ -1,22 +1,10 @@
-import Link from "next/link";
-import { ChevronLeft } from "lucide-react";
-import { buttonVariants } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
+import { BackLink } from "@/components/BackLink";
 
 export default function PolicyPage() {
   return (
     <main className="flex flex-1 flex-col gap-3 px-4 py-6">
       <header className="flex items-center gap-1">
-        <Link
-          href="/login"
-          aria-label="ย้อนกลับ"
-          className={cn(
-            buttonVariants({ variant: "ghost", size: "icon" }),
-            "-ms-3",
-          )}
-        >
-          <ChevronLeft className="size-6" />
-        </Link>
+        <BackLink href="/login" />
         <h1 className="text-xl leading-tight font-semibold">
           นโยบายความเป็นส่วนตัว
         </h1>
