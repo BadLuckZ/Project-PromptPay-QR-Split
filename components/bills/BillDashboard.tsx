@@ -117,7 +117,7 @@ export function BillDashboard({
       )}
 
       <div className="grid grid-cols-2 gap-3">
-        <div className="rounded-xl bg-success p-3.5">
+        <div className="rounded-xl bg-primary-soft p-3.5">
           <div className="flex items-center justify-between text-success-foreground">
             <p className="text-xs">รับแล้ว</p>
             <TrendingUp size={14} />
@@ -133,7 +133,7 @@ export function BillDashboard({
           </div>
         </div>
 
-        <div className="rounded-xl bg-warning p-3.5">
+        <div className="rounded-xl bg-warning-soft p-3.5">
           <div className="flex items-center justify-between text-warning-foreground">
             <p className="text-xs">ค้างอยู่</p>
             <Clock size={14} />
@@ -169,7 +169,7 @@ export function BillDashboard({
       <div className="flex flex-col divide-y divide-border rounded-xl bg-card shadow-card">
         <div className="flex items-center gap-2 p-3">
           <Avatar className="shrink-0">
-            <AvatarFallback className="bg-success text-success-foreground">
+            <AvatarFallback className="bg-primary-soft text-success-foreground">
               {getInitials(bill.owner_name)}
             </AvatarFallback>
           </Avatar>

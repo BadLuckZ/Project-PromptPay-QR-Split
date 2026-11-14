@@ -9,8 +9,8 @@ interface BillListCardProps {
 
 const STATUS_STYLES: Record<"closed" | "paid" | "pending", string> = {
   closed: "bg-muted text-muted-foreground",
-  paid: "bg-success text-success-foreground",
-  pending: "bg-warning text-warning-foreground",
+  paid: "bg-primary-soft text-success-foreground",
+  pending: "bg-warning-soft text-warning-foreground",
 };
 
 export function BillListCard({ bill }: BillListCardProps) {

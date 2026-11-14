@@ -30,8 +30,8 @@ export function BillFormCard({
         <AvatarFallback
           className={
             isOwner
-              ? "bg-success text-success-foreground"
-              : "bg-warning text-warning-foreground"
+              ? "bg-primary-soft text-success-foreground"
+              : "bg-warning-soft text-warning-foreground"
           }
         >
           {getInitials(name)}

@@ -68,7 +68,7 @@ export function BillFormCustomTab({
       </div>
 
       {diff !== 0 && total && (
-        <p className="text-sm text-warning-foreground bg-warning border border-warning-border rounded-md px-3 py-2">
+        <p className="text-sm text-warning-foreground bg-warning-soft border border-warning-border rounded-md px-3 py-2">
           {diff > 0
             ? `ยอดขาดอีก ฿${diff.toLocaleString()}`
             : `ยอดเกินมา ฿${Math.abs(diff).toLocaleString()}`}

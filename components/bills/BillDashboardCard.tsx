@@ -33,8 +33,8 @@ export function BillDashboardCard({
           <AvatarFallback
             className={
               member.is_paid
-                ? "bg-success text-success-foreground"
-                : "bg-warning text-warning-foreground"
+                ? "bg-primary-soft text-success-foreground"
+                : "bg-warning-soft text-warning-foreground"
             }
           >
             {getInitials(member.member_name)}
@@ -77,8 +77,8 @@ export function BillDashboardCard({
           className={cn(
             "inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-medium cursor-pointer shrink-0 shadow-sm active:scale-95 transition-transform disabled:pointer-events-none disabled:opacity-60",
             member.is_paid
-              ? "bg-success text-success-foreground"
-              : "bg-warning border border-warning-border text-warning-foreground",
+              ? "bg-primary-soft text-success-foreground"
+              : "bg-warning-soft border border-warning-border text-warning-foreground",
           )}
         >
           {member.is_paid && <Check size={12} />}

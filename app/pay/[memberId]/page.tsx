@@ -40,7 +40,7 @@ export default async function PayPage({ params }: PayPageProps) {
         <Topbar title="ชำระเงิน" subtitle={bill.bill_name} />
         <div className="flex flex-1 flex-col items-center justify-center p-4">
           <div className="flex w-full max-w-sm flex-col items-center gap-3 rounded-2xl border border-border bg-card p-8 text-center shadow-sm">
-            <div className="flex size-14 items-center justify-center rounded-full bg-danger text-danger-foreground">
+            <div className="flex size-14 items-center justify-center rounded-full bg-danger-soft text-danger-foreground">
               <AlertCircle size={28} />
             </div>
             <p className="font-medium">บิลนี้ถูกลบแล้ว</p>
@@ -78,7 +78,7 @@ export default async function PayPage({ params }: PayPageProps) {
         <Topbar title="ชำระเงิน" subtitle={bill.bill_name} />
         <div className="flex flex-1 flex-col items-center justify-center p-4">
           <div className="flex w-full max-w-sm flex-col items-center gap-3 rounded-2xl border border-border bg-card p-8 text-center shadow-sm">
-            <div className="flex size-14 items-center justify-center rounded-full bg-success text-success-foreground">
+            <div className="flex size-14 items-center justify-center rounded-full bg-primary-soft text-success-foreground">
               <CheckCircle2 size={28} />
             </div>
             <p className="font-medium">รายการนี้ชำระเงินแล้ว</p>

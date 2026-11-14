@@ -127,8 +127,8 @@ export function BillDashboardActions({
           <div
             className={`flex size-14 items-center justify-center rounded-full ${
               closed
-                ? "bg-success text-success-foreground"
-                : "bg-warning text-warning-foreground"
+                ? "bg-primary-soft text-success-foreground"
+                : "bg-warning-soft text-warning-foreground"
             }`}
           >
             {closed ? <Lock size={26} /> : <CheckCircle2 size={26} />}
@@ -169,7 +169,7 @@ export function BillDashboardActions({
 
       <AlertDialog open={showDeleteConfirm} onOpenChange={setShowDeleteConfirm}>
         <AlertDialogContent className="flex flex-col items-center text-center">
-          <div className="flex size-14 items-center justify-center rounded-full bg-danger text-danger-foreground">
+          <div className="flex size-14 items-center justify-center rounded-full bg-danger-soft text-danger-foreground">
             <Trash2 size={26} />
           </div>
 

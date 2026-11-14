@@ -25,7 +25,7 @@ export function BillFormEqualTab({
 
   return (
     <div className="flex flex-col gap-3">
-      <div className="rounded-lg border border-primary-tint bg-success p-4">
+      <div className="rounded-lg border border-primary-tint bg-primary-soft p-4">
         <p className="text-xs text-success-foreground mb-1">
           คนละเท่ากัน ({totalCount} คน)
         </p>

@@ -43,8 +43,8 @@ export function BillCard({ bill, accentIndex = 0 }: BillCardProps) {
           className={cn(
             "text-xs rounded-full px-2.5 py-1",
             isPaid
-              ? "bg-success text-success-foreground"
-              : "bg-warning text-warning-foreground",
+              ? "bg-primary-soft text-success-foreground"
+              : "bg-warning-soft text-warning-foreground",
           )}
         >
           {isPaid ? "ชำระครบแล้ว" : `ค้างชำระ ${pendingCount} คน`}
