@@ -1,32 +1,32 @@
-import TopbarLoading from "@/components/TopbarLoading";
-
 export default function ProfileSetupLoading() {
   return (
-    <div className="flex min-h-dvh flex-col bg-background animate-pulse">
-      <TopbarLoading />
-
-      <div className="flex flex-col items-center pt-6">
-        <div className="size-16 shrink-0 rounded-full bg-muted-foreground/15" />
-        <div className="mt-2 h-2.5 w-24 rounded-full bg-muted-foreground/15" />
+    <main
+      aria-busy="true"
+      aria-label="กำลังโหลด"
+      className="flex flex-1 animate-pulse flex-col gap-3 px-4 py-6"
+    >
+      <div className="flex flex-col gap-2">
+        <div className="h-6 w-36 rounded-full bg-surface-muted-hover" />
+        <div className="h-3 w-44 rounded-full bg-surface-muted-hover" />
       </div>
 
-      <div className="flex flex-1 flex-col gap-5 px-4 pt-8">
-        <div className="h-14 w-full rounded-2xl bg-muted" />
-
-        <div className="flex flex-col gap-2">
-          <div className="h-2.5 w-20 rounded-full bg-muted-foreground/20" />
-          <div className="h-9 w-full rounded-lg bg-muted-foreground/10" />
+      <div className="flex flex-col gap-6 rounded-sm bg-surface px-6 py-6">
+        <div className="size-18 self-center rounded-full bg-surface-muted" />
+        <div className="flex items-center gap-3">
+          <div className="size-9 shrink-0 rounded-full bg-surface-muted" />
+          <div className="h-3 flex-1 rounded-full bg-surface-muted" />
         </div>
-
-        <div className="flex flex-col gap-2">
-          <div className="h-2.5 w-32 rounded-full bg-muted-foreground/20" />
-          <div className="h-9 w-full rounded-lg bg-muted-foreground/10" />
-        </div>
-
-        <div className="mt-auto pt-8 pb-6">
-          <div className="h-12 w-full rounded-xl bg-muted-foreground/15" />
+        <div className="flex flex-col gap-4">
+          {["w-20", "w-32"].map((w) => (
+            <div key={w} className="flex flex-col gap-2">
+              <div className={`h-3 ${w} rounded-full bg-surface-muted`} />
+              <div className="h-8 w-full rounded-sm bg-surface-muted" />
+            </div>
+          ))}
         </div>
       </div>
-    </div>
+
+      <div className="h-12 w-full rounded-md bg-surface-muted-hover" />
+    </main>
   );
 }

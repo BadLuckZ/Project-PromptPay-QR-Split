@@ -7,13 +7,19 @@ function Toaster(props: React.ComponentProps<typeof SonnerToaster>) {
   return (
     <SonnerToaster
       position="bottom-center"
-      theme="light"
-      richColors
-      style={{ fontFamily: "var(--font-anuphan)" }}
+      style={
+        {
+          fontFamily: "var(--font-sans)",
+          "--normal-bg": "var(--surface)",
+          "--normal-text": "var(--foreground)",
+          "--normal-border": "var(--border-strong)",
+          "--border-radius": "var(--radius)",
+        } as React.CSSProperties
+      }
       toastOptions={{
-        style: { maxWidth: "28rem", fontFamily: "var(--font-anuphan)" },
         classNames: {
-          toast: "rounded-xl! border! border-border! shadow-lg!",
+          toast: "border-2! text-sm! shadow-none!",
+          icon: "text-primary",
         },
       }}
       {...props}

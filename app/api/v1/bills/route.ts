@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/supabase/server";
+import { MAX_BILL_PEOPLE } from "@/lib/bill";
 import { ERROR_MESSAGES, MEMBER_AMOUNT_INVALID } from "@/lib/errors";
 import { Bill } from "@/types";
 
@@ -123,6 +124,13 @@ export async function POST(req: Request) {
   if (members.length === 0) {
     return NextResponse.json(
       { error: ERROR_MESSAGES.MEMBERS_REQUIRED },
+      { status: 400 },
+    );
+  }
+
+  if (members.length > MAX_BILL_PEOPLE - 1) {
+    return NextResponse.json(
+      { error: ERROR_MESSAGES.MEMBERS_TOO_MANY },
       { status: 400 },
     );
   }
