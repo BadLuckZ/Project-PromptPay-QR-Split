@@ -72,7 +72,7 @@ export default function LoginPage() {
       shape: "pill",
       text: "signin_with",
       locale: "th",
-      width: "320",
+      width: String(Math.min(320, buttonRef.current.clientWidth)),
     });
   }
 
@@ -110,7 +110,7 @@ export default function LoginPage() {
   }, []);
 
   return (
-    <main className="flex min-h-dvh flex-col px-6 py-8">
+    <main className="flex min-h-dvh flex-col px-4 py-8">
       <div className="flex flex-1 flex-col items-center justify-center gap-8">
         <div aria-hidden="true" className="w-56 -rotate-3">
           <ReceiptCard>
