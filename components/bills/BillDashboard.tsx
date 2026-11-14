@@ -187,7 +187,7 @@ export function BillDashboard({
               ผู้เข้าร่วม {members.length} คน
             </p>
             <Button
-              variant="outline-primary"
+              variant="soft"
               size="sm"
               onClick={copyAllLinks}
               disabled={closed}

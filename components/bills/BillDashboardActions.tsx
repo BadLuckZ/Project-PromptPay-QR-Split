@@ -100,7 +100,7 @@ export function BillDashboardActions({
   return (
     <div className="flex flex-col gap-1">
       <Button
-        variant="outline"
+        variant="soft"
         size="lg"
         className="w-full"
         onClick={() => {
@@ -190,7 +190,7 @@ export function BillDashboardActions({
               ยกเลิก
             </AlertDialogCancel>
             <AlertDialogAction
-              variant="destructive-outline"
+              variant="destructive"
               onClick={confirmDelete}
               disabled={submitting}
               size="lg"

@@ -4,25 +4,21 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 const buttonVariants = cva(
-  "group/button inline-flex min-h-(--target-min) min-w-(--target-min) shrink-0 cursor-pointer items-center justify-center rounded-md border-2 border-transparent bg-clip-padding text-sm font-medium whitespace-nowrap transition-colors duration-(--duration-fast) ease-(--ease) select-none active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:cursor-default disabled:opacity-50 aria-invalid:border-danger [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
+  "group/button inline-flex min-h-(--target-min) min-w-(--target-min) shrink-0 cursor-pointer items-center justify-center rounded-md text-sm font-medium whitespace-nowrap transition-colors duration-(--duration-fast) ease-(--ease) select-none active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:cursor-default disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
   {
     variants: {
       variant: {
         default:
           "bg-primary text-primary-foreground hover:bg-primary-hover active:bg-primary-active",
+        soft: "bg-primary-soft text-primary hover:bg-surface-muted-hover aria-expanded:bg-surface-muted-hover",
         outline:
-          "border-foreground bg-transparent text-foreground hover:bg-surface-muted aria-expanded:bg-surface-muted",
-        "outline-primary":
-          "border-primary bg-transparent text-primary hover:bg-primary-soft",
-        soft: "bg-primary-soft text-primary hover:bg-surface-muted-hover",
+          "bg-primary-soft text-primary hover:bg-surface-muted-hover aria-expanded:bg-surface-muted-hover",
         secondary:
           "bg-primary-soft text-primary hover:bg-surface-muted-hover aria-expanded:bg-surface-muted-hover",
         ghost:
           "bg-transparent text-foreground hover:bg-surface-muted-hover aria-expanded:bg-surface-muted-hover",
         destructive:
-          "bg-danger-soft text-danger-soft-foreground hover:border-danger",
-        "destructive-outline":
-          "border-danger bg-transparent text-danger hover:bg-danger-soft",
+          "bg-danger-soft text-danger-soft-foreground hover:text-danger",
         "destructive-ghost":
           "bg-transparent text-danger hover:bg-danger-soft",
         link: "text-primary underline-offset-4 hover:text-primary-hover hover:underline",

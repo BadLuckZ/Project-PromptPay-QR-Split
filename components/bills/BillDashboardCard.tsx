@@ -66,10 +66,10 @@ export function BillDashboardCard({
         onClick={onTogglePaid}
         disabled={disabled}
         className={cn(
-          "inline-flex min-h-(--target-min) shrink-0 cursor-pointer items-center gap-1 rounded-full border px-3 text-sm font-medium transition-colors disabled:pointer-events-none disabled:opacity-50",
+          "inline-flex min-h-(--target-min) shrink-0 cursor-pointer items-center gap-1 rounded-full px-3 text-sm font-medium transition-colors hover:bg-surface-muted-hover disabled:pointer-events-none disabled:opacity-50",
           member.is_paid
-            ? "border-transparent bg-primary-soft text-primary hover:border-primary"
-            : "border-warning bg-warning-soft text-warning-soft-foreground hover:bg-surface-muted",
+            ? "bg-primary-soft text-primary"
+            : "bg-warning-soft text-warning-soft-foreground",
         )}
       >
         {member.is_paid && <Check className="size-3.5" aria-hidden="true" />}

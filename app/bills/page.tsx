@@ -33,7 +33,7 @@ export default async function BillsPage() {
           <Link
             href="/profile"
             aria-label="โปรไฟล์"
-            className="flex size-11 shrink-0 items-center justify-center rounded-full border-2 border-foreground bg-surface font-semibold transition-colors hover:bg-surface-muted"
+            className="flex size-11 shrink-0 items-center justify-center rounded-full bg-primary-soft font-semibold text-primary transition-colors hover:bg-surface-muted-hover"
           >
             {getInitials(profile.display_name)}
           </Link>
