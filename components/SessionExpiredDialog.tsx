@@ -20,8 +20,8 @@ export function SessionExpiredDialog({ open }: SessionExpiredDialogProps) {
   return (
     <AlertDialog open={open}>
       <AlertDialogContent className="flex flex-col items-center text-center">
-        <div className="flex size-14 items-center justify-center rounded-2xl bg-primary text-primary-foreground">
-          <ShieldAlert size={24} />
+        <div className="flex size-14 items-center justify-center rounded-full bg-primary-soft text-primary">
+          <ShieldAlert size={26} />
         </div>
 
         <AlertDialogHeader>
@@ -36,9 +36,10 @@ export function SessionExpiredDialog({ open }: SessionExpiredDialogProps) {
           <AlertDialogAction
             nativeButton={false}
             render={<Link href="/login" />}
-            className="h-11 w-full rounded-xl"
+            size="lg"
+            className="w-full"
           >
-            <LogIn size={16} />
+            <LogIn />
             ไปหน้า Login
           </AlertDialogAction>
         </AlertDialogFooter>

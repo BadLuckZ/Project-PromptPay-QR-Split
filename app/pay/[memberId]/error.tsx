@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { AlertTriangle, RotateCw } from "lucide-react";
-import { PayStateReceipt } from "@/components/pay/PayStateReceipt";
+import { StateReceipt } from "@/components/receipt";
 import { Button } from "@/components/ui/button";
 
 interface ErrorPageProps {
@@ -18,7 +18,8 @@ export default function PayErrorPage({ reset }: ErrorPageProps) {
   }
 
   return (
-    <PayStateReceipt
+    <StateReceipt
+      subtitle="ใบเสร็จหารบิล"
       icon={AlertTriangle}
       tone="danger"
       title="เกิดข้อผิดพลาดบางอย่าง"
@@ -28,6 +29,6 @@ export default function PayErrorPage({ reset }: ErrorPageProps) {
         <RotateCw />
         ลองใหม่
       </Button>
-    </PayStateReceipt>
+    </StateReceipt>
   );
 }

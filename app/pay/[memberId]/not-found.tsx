@@ -1,9 +1,10 @@
 import { SearchX } from "lucide-react";
-import { PayStateReceipt } from "@/components/pay";
+import { StateReceipt } from "@/components/receipt";
 
 export default function PayNotFound() {
   return (
-    <PayStateReceipt
+    <StateReceipt
+      subtitle="ใบเสร็จหารบิล"
       icon={SearchX}
       tone="neutral"
       title="ไม่พบหน้านี้"

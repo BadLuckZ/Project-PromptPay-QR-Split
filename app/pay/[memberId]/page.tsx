@@ -1,6 +1,7 @@
 import { AlertCircle, Lock } from "lucide-react";
 import { notFound } from "next/navigation";
-import { PayReceipt, PayStateReceipt } from "@/components/pay";
+import { PayReceipt } from "@/components/pay";
+import { StateReceipt } from "@/components/receipt";
 import { SUPABASE } from "@/lib/supabase";
 import { createPromptPayQRDataUrl } from "@/lib/promptpay";
 import { MemberQRView } from "@/types";
@@ -35,7 +36,8 @@ export default async function PayPage({ params }: PayPageProps) {
 
   if (bill.deleted_at) {
     return (
-      <PayStateReceipt
+      <StateReceipt
+        subtitle="ใบเสร็จหารบิล"
         icon={AlertCircle}
         tone="danger"
         billName={bill.bill_name}
@@ -47,7 +49,8 @@ export default async function PayPage({ params }: PayPageProps) {
 
   if (bill.closed_at) {
     return (
-      <PayStateReceipt
+      <StateReceipt
+        subtitle="ใบเสร็จหารบิล"
         icon={Lock}
         tone="neutral"
         billName={bill.bill_name}
