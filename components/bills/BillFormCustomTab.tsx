@@ -25,7 +25,6 @@ export function BillFormCustomTab({
       <BillFormCard
         name={ownerName}
         isOwner
-        showAvatar={false}
         trailing={
           <AmountInput
             label={`ยอดของ ${ownerName}`}
@@ -38,7 +37,6 @@ export function BillFormCustomTab({
         <BillFormCard
           key={f.id}
           name={f.name}
-          showAvatar={false}
           onRemove={() => onRemove(i)}
           disabled={disabled}
           trailing={

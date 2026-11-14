@@ -1,7 +1,7 @@
 "use client";
 
 import { Copy, Check } from "lucide-react";
-import { cn, getInitials } from "@/lib/utils";
+import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Member } from "@/types";
 
@@ -23,17 +23,6 @@ export function BillDashboardCard({
 }: BillDashboardCardProps) {
   return (
     <li className="flex min-h-12 items-center gap-3 border-b-2 border-dotted border-border-strong py-2 last:border-b-0">
-      <span
-        className={cn(
-          "flex size-9 shrink-0 items-center justify-center rounded-full text-sm font-medium",
-          member.is_paid
-            ? "bg-primary-soft text-primary"
-            : "bg-warning-soft text-warning-soft-foreground",
-        )}
-      >
-        {getInitials(member.member_name)}
-      </span>
-
       <div className="min-w-0 flex-1">
         <p
           className={cn(

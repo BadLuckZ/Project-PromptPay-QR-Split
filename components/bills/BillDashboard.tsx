@@ -12,7 +12,7 @@ import {
   ReceiptCard,
   ReceiptDivider,
 } from "@/components/receipt";
-import { cn, getInitials } from "@/lib/utils";
+import { cn } from "@/lib/utils";
 import { Member } from "@/types";
 
 interface BillDashboardBill {
@@ -196,9 +196,6 @@ export function BillDashboard({
 
           <ul className="flex flex-col">
             <li className="flex min-h-12 items-center gap-3 border-b-2 border-dotted border-border-strong py-2">
-              <span className="flex size-9 shrink-0 items-center justify-center rounded-full bg-primary-soft text-sm font-medium text-primary">
-                {getInitials(bill.owner_name)}
-              </span>
               <p className="min-w-0 flex-1 line-clamp-2 font-medium wrap-break-word">
                 {bill.owner_name} (คุณ)
               </p>
