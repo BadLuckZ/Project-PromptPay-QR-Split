@@ -1,19 +1,10 @@
 import Link from "next/link";
-import { Users, ChevronRight } from "lucide-react";
+import { Users } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Bill } from "@/types";
 
-const ACCENT_BORDERS = [
-  "border-l-chart-1",
-  "border-l-chart-2",
-  "border-l-chart-3",
-  "border-l-chart-4",
-  "border-l-chart-5",
-];
-
 interface BillListCardProps {
   bill: Bill;
-  accentIndex?: number;
 }
 
 const STATUS_STYLES: Record<"closed" | "paid" | "pending", string> = {
@@ -22,10 +13,12 @@ const STATUS_STYLES: Record<"closed" | "paid" | "pending", string> = {
   pending: "bg-warning text-warning-foreground",
 };
 
-export function BillListCard({ bill, accentIndex = 0 }: BillListCardProps) {
+export function BillListCard({ bill }: BillListCardProps) {
   const isClosed = bill.closed_at !== null;
   const isPaid = bill.memberCount > 0 && bill.paidCount >= bill.memberCount;
   const pendingCount = bill.memberCount - bill.paidCount;
+  const paidPct =
+    bill.memberCount > 0 ? (bill.paidCount / bill.memberCount) * 100 : 0;
 
   const status = isClosed ? "closed" : isPaid ? "paid" : "pending";
   const statusLabel = isClosed
@@ -37,25 +30,40 @@ export function BillListCard({ bill, accentIndex = 0 }: BillListCardProps) {
   return (
     <Link
       href={`/bills/${bill.id}`}
-      className={cn(
-        "flex flex-wrap items-center justify-between gap-x-4 gap-y-2 rounded-lg border border-l-4 border-border bg-card p-4",
-        ACCENT_BORDERS[accentIndex % ACCENT_BORDERS.length],
-      )}
+      className="flex flex-col gap-3 rounded-xl bg-card p-4 shadow-card"
     >
-      <div className="flex flex-col gap-1.5 min-w-32 flex-1">
-        <p className="text-sm font-medium line-clamp-2 wrap-break-word">
-          {bill.bill_name}
-        </p>
-        <div className="flex items-center gap-2 text-xs text-muted-foreground whitespace-nowrap">
-          <span className="inline-flex items-center gap-1">
+      <div className="flex items-start justify-between gap-3">
+        <div className="flex flex-col gap-1 min-w-0 flex-1">
+          <p className="text-base font-medium line-clamp-2 wrap-break-word">
+            {bill.bill_name}
+          </p>
+          <span className="inline-flex items-center gap-1 text-xs text-muted-foreground">
             <Users size={12} />
             {bill.memberCount} คน
           </span>
-          <span>฿{bill.totalAmount.toLocaleString()}</span>
         </div>
+        <p className="shrink-0 text-lg font-semibold tabular-nums">
+          ฿{bill.totalAmount.toLocaleString()}
+        </p>
       </div>
 
-      <div className="flex items-center gap-2 shrink-0 ml-auto">
+      <div className="flex items-center gap-3">
+        <div
+          role="progressbar"
+          aria-label={`จ่ายแล้ว ${bill.paidCount} จาก ${bill.memberCount} คน`}
+          aria-valuemin={0}
+          aria-valuemax={bill.memberCount}
+          aria-valuenow={bill.paidCount}
+          className="h-1.5 flex-1 rounded-full bg-muted"
+        >
+          <div
+            className={cn(
+              "h-full rounded-full",
+              isClosed ? "bg-muted-foreground/40" : "bg-primary",
+            )}
+            style={{ width: `${paidPct}%` }}
+          />
+        </div>
         <span
           className={cn(
             "text-xs rounded-full px-2.5 py-1 whitespace-nowrap",
@@ -64,7 +72,6 @@ export function BillListCard({ bill, accentIndex = 0 }: BillListCardProps) {
         >
           {statusLabel}
         </span>
-        <ChevronRight size={16} className="text-muted-foreground" />
       </div>
     </Link>
   );

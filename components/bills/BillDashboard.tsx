@@ -117,12 +117,12 @@ export function BillDashboard({
       )}
 
       <div className="grid grid-cols-2 gap-3">
-        <div className="rounded-lg bg-success p-3.5">
+        <div className="rounded-xl bg-success p-3.5">
           <div className="flex items-center justify-between text-success-foreground">
             <p className="text-xs">รับแล้ว</p>
             <TrendingUp size={14} />
           </div>
-          <p className="text-xl font-semibold text-success-foreground">
+          <p className="mt-1 text-2xl font-semibold tabular-nums text-success-foreground">
             ฿{receivedAmount.toLocaleString()}
           </p>
           <div className="mt-2 h-1 rounded-full bg-success-foreground/15">
@@ -133,12 +133,12 @@ export function BillDashboard({
           </div>
         </div>
 
-        <div className="rounded-lg bg-warning p-3.5">
+        <div className="rounded-xl bg-warning p-3.5">
           <div className="flex items-center justify-between text-warning-foreground">
             <p className="text-xs">ค้างอยู่</p>
             <Clock size={14} />
           </div>
-          <p className="text-xl font-semibold text-warning-foreground">
+          <p className="mt-1 text-2xl font-semibold tabular-nums text-warning-foreground">
             ฿{pendingAmount.toLocaleString()}
           </p>
           <div className="mt-2 h-1 rounded-full bg-warning-foreground/15">
@@ -166,7 +166,7 @@ export function BillDashboard({
 
       {toggleError && <p className="text-xs text-destructive">{toggleError}</p>}
 
-      <div className="flex flex-col divide-y divide-border rounded-lg border border-border bg-card">
+      <div className="flex flex-col divide-y divide-border rounded-xl bg-card shadow-card">
         <div className="flex items-center gap-2 p-3">
           <Avatar className="shrink-0">
             <AvatarFallback className="bg-success text-success-foreground">

@@ -32,7 +32,7 @@ export function BillList({ bills }: BillList) {
 
   return (
     <div className="flex flex-col flex-1 min-h-0">
-      <div className="p-4 pt-6 pb-4 flex flex-col gap-3.5 shrink-0">
+      <div className="px-4 pt-1 pb-4 flex flex-col gap-3.5 shrink-0">
         <Button
           className="w-full"
           nativeButton={false}
@@ -41,17 +41,18 @@ export function BillList({ bills }: BillList) {
           <Plus size={16} /> สร้าง Bill ใหม่
         </Button>
 
-        <div className="flex flex-wrap gap-2">
+        <div className="flex gap-1 rounded-lg bg-muted p-1">
           {FILTERS.map((f) => (
             <button
               key={f.value}
               type="button"
               onClick={() => setFilter(f.value)}
+              aria-pressed={filter === f.value}
               className={cn(
-                "text-xs px-3 py-2 rounded-full border cursor-pointer whitespace-nowrap",
+                "flex-1 min-h-9 rounded-md px-3 text-sm cursor-pointer whitespace-nowrap transition-colors",
                 filter === f.value
-                  ? "bg-primary text-primary-foreground border-primary"
-                  : "bg-card text-muted-foreground border-border",
+                  ? "bg-card text-foreground shadow-sm"
+                  : "text-muted-foreground",
               )}
             >
               {f.label}
@@ -66,9 +67,7 @@ export function BillList({ bills }: BillList) {
             ไม่มี Bill ในหมวดนี้
           </p>
         ) : (
-          filtered.map((bill, i) => (
-            <BillListCard key={bill.id} bill={bill} accentIndex={i} />
-          ))
+          filtered.map((bill) => <BillListCard key={bill.id} bill={bill} />)
         )}
       </div>
     </div>
