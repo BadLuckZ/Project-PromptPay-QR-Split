@@ -25,6 +25,7 @@ export function BillFormCustomTab({
       <BillFormCard
         name={ownerName}
         isOwner
+        showAvatar={false}
         trailing={
           <AmountInput
             label={`ยอดของ ${ownerName}`}
@@ -37,6 +38,7 @@ export function BillFormCustomTab({
         <BillFormCard
           key={f.id}
           name={f.name}
+          showAvatar={false}
           onRemove={() => onRemove(i)}
           disabled={disabled}
           trailing={
@@ -57,7 +59,7 @@ function AmountInput({
   ...props
 }: React.ComponentProps<typeof Input> & { label: string }) {
   return (
-    <span className="flex items-center gap-1">
+    <span className="ms-auto flex shrink-0 items-center gap-1">
       <span aria-hidden="true" className="text-foreground-muted">
         ฿
       </span>
