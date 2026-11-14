@@ -152,7 +152,7 @@ export function ProfileForm({ profile, email }: ProfileFormProps) {
               <Input
                 id="promptpay_number"
                 variant="underline"
-                font="mono"
+                className="tabular-nums"
                 {...register("promptpay_number", {
                   required: "กรุณากรอกเบอร์โทรศัพท์",
                   pattern: {

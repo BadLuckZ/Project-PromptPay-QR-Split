@@ -9,7 +9,7 @@ export default function PayLoading() {
     <main
       aria-busy="true"
       aria-label="กำลังโหลด"
-      className="flex flex-1 animate-pulse flex-col gap-4 px-4 py-6"
+      className="flex flex-1 animate-pulse flex-col justify-center gap-4 px-4 py-6"
     >
       <ReceiptCard>
         <div className="flex flex-col items-center gap-2">

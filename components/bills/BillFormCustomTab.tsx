@@ -58,15 +58,14 @@ function AmountInput({
 }: React.ComponentProps<typeof Input> & { label: string }) {
   return (
     <span className="flex items-center gap-1">
-      <span aria-hidden="true" className="font-mono text-foreground-muted">
+      <span aria-hidden="true" className="text-foreground-muted">
         ฿
       </span>
       <Input
         type="number"
         variant="underline"
-        font="mono"
         aria-label={label}
-        className="w-20 text-right text-base"
+        className="w-20 text-right text-base tabular-nums"
         {...props}
       />
     </span>

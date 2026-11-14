@@ -13,14 +13,9 @@ const inputVariants = cva(
         underline:
           "[appearance:textfield] rounded-none border-0 border-b-2 border-foreground bg-transparent px-0 text-lg focus-visible:border-ring focus-visible:bg-surface-muted focus-visible:outline-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none",
       },
-      font: {
-        sans: "font-sans",
-        mono: "font-mono tabular-nums",
-      },
     },
     defaultVariants: {
       variant: "default",
-      font: "sans",
     },
   }
 )
@@ -29,14 +24,13 @@ function Input({
   className,
   type,
   variant,
-  font,
   ...props
 }: React.ComponentProps<"input"> & VariantProps<typeof inputVariants>) {
   return (
     <InputPrimitive
       type={type}
       data-slot="input"
-      className={cn(inputVariants({ variant, font }), className)}
+      className={cn(inputVariants({ variant }), className)}
       {...props}
     />
   )

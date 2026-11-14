@@ -22,7 +22,7 @@ export function PayReceipt({ member, qrCodeDataUrl }: PayReceiptProps) {
   const [integer, fraction] = amountFormatter.format(member.amount).split(".");
 
   return (
-    <main className="flex flex-1 flex-col gap-4 px-4 py-6">
+    <main className="flex flex-1 flex-col justify-center gap-4 px-4 py-6">
       <ReceiptCard>
         <ReceiptBrand subtitle="ใบเสร็จหารบิล" />
         <ReceiptDivider />
@@ -68,9 +68,6 @@ export function PayReceipt({ member, qrCodeDataUrl }: PayReceiptProps) {
           <div className="flex flex-col items-center gap-4 py-4">
             <p className="-rotate-6 rounded-md border-4 border-double border-primary px-6 py-2 text-2xl font-semibold tracking-wide text-primary">
               จ่ายแล้ว
-            </p>
-            <p className="text-center text-sm text-foreground-muted">
-              ได้รับเงินจาก {member.owner_name} แล้ว
             </p>
           </div>
         )}

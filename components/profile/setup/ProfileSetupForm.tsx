@@ -124,7 +124,7 @@ export function ProfileSetupForm({ email }: ProfileSetupFormProps) {
               <Input
                 id="promptpay_number"
                 variant="underline"
-                font="mono"
+                className="tabular-nums"
                 {...register("promptpay_number", {
                   required: "กรุณากรอกเบอร์โทรศัพท์",
                   pattern: {

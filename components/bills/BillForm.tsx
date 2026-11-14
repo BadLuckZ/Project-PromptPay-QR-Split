@@ -199,8 +199,7 @@ export function BillForm({ ownerName }: BillFormProps) {
               id="total"
               type="number"
               variant="underline"
-              font="mono"
-              className="text-xl font-medium"
+              className="text-xl font-medium tabular-nums"
               {...register("total", {
                 required: "กรุณากรอกยอดรวมมากกว่า 0",
                 validate: (v) => Number(v) > 0 || "กรุณากรอกยอดรวมมากกว่า 0",
